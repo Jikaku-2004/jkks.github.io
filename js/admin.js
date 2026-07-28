@@ -8,7 +8,7 @@
     const $$ = s => document.querySelectorAll(s);
 
     let config = {};
-    let siteNav = [], siteContact = {}, siteContent = {};
+    let siteNav = [], siteContact = {}, siteContent = {}, siteWelcome = {};
     let currentLang = 'zh', currentCategory = null, currentSubcategory = null;
     let contentSha = null, isDirty = false, editingEntry = null, editingSubId = null, editingCatIdx = null;
     let pendingUploads = new Map(), editingPendingUploads = new Map();
@@ -64,8 +64,13 @@
             const btn = e.target.closest('.edit-btn'); if (!btn) return;
             const block = btn.closest('.editable-block'); if (!block) return;
             const key = block.dataset.key; if (!key || !WELCOME_FIELDS[key]) return;
-            window._textCb = val => { WELCOME_FIELDS[key][currentLang] = val; updateWelcomeText(); markDirty(); toast('已更新','success'); };
-            openTextEditor('编辑: '+key, WELCOME_FIELDS[key][currentLang]);
+            var currentVal = (siteWelcome[key] && siteWelcome[key][currentLang]) ? siteWelcome[key][currentLang] : WELCOME_FIELDS[key][currentLang];
+            window._textCb = val => {
+                if (!siteWelcome[key]) siteWelcome[key] = {};
+                siteWelcome[key][currentLang] = val;
+                updateWelcomeText(); markDirty(); toast('已更新','success');
+            };
+            openTextEditor('编辑: '+key, currentVal);
         });
         // 语言切换
         setupAdminLangToggle();
@@ -110,6 +115,13 @@
         clearAllPendingUploads();
         siteNav=raw.navigation||[]; siteContact=raw.contact||{}; siteContent=raw.content||raw;
         if(Object.keys(siteContent).length===0&&!raw.navigation) siteContent=raw;
+        // 加载欢迎页数据，合并默认值
+        siteWelcome = raw.welcome || {};
+        Object.keys(WELCOME_FIELDS).forEach(function(k){
+            if (!siteWelcome[k]) siteWelcome[k] = {};
+            if (!siteWelcome[k].zh) siteWelcome[k].zh = WELCOME_FIELDS[k].zh;
+            if (!siteWelcome[k].en) siteWelcome[k].en = WELCOME_FIELDS[k].en;
+        });
         isDirty=false; updateStatus();
     }
 
@@ -131,8 +143,10 @@
                 '<button class="nav-del" data-ci="'+ci+'" title="删除">\u2715</button>';
             item.onclick=function(){toggleCat(ci);};
             li.appendChild(item);
-            if(cat.subItems&&cat.subItems.length>0){
-                var ul=document.createElement('ul'); ul.className='sub-nav'; ul.id='sub-'+ci;
+            // 始终创建子导航ul（即使subItems为空），支持后续添加子类
+            var hasSubs = cat.subItems && cat.subItems.length > 0;
+            var ul=document.createElement('ul'); ul.className='sub-nav'; ul.id='sub-'+ci;
+            if (hasSubs) {
                 cat.subItems.forEach(function(sub,si){
                     var sli=document.createElement('li');
                     var sel=document.createElement('div');
@@ -142,8 +156,8 @@
                     sel.onclick=function(e){e.stopPropagation();selectSub(ci,si);};
                     sli.appendChild(sel); ul.appendChild(sli);
                 });
-                li.appendChild(ul);
             }
+            li.appendChild(ul);
             list.appendChild(li);
         });
         var ali=document.createElement('li');
@@ -158,7 +172,15 @@
     }
 
     function toggleCat(ci) {
-        var s=document.getElementById('sub-'+ci); if(!s){selectSub(ci,0);return;}
+        var cat = siteNav[ci]; if (!cat) return;
+        var s=document.getElementById('sub-'+ci);
+        // 如果大类没有子类，直接打开子类管理面板
+        if (!cat.subItems || cat.subItems.length === 0) {
+            currentCategory = ci;
+            currentSubcategory = null;
+            manageSubcategories();
+            return;
+        }
         var isOpening=!s.classList.contains('open');
         var opens=document.querySelectorAll('.sub-nav.open');
         for(var i=0;i<opens.length;i++){if(opens[i].id!=='sub-'+ci)opens[i].classList.remove('open');}
@@ -244,7 +266,10 @@
         Object.keys(WELCOME_FIELDS).forEach(function(k){
             var b=document.querySelector('.editable-block[data-key="'+k+'"]'); if(!b)return;
             var el=b.querySelector('.welcome-title,.welcome-subtitle,.welcome-desc,.welcome-quote');
-            if(el) el.innerHTML=WELCOME_FIELDS[k][lang];
+            if(el){
+                var val = (siteWelcome[k] && siteWelcome[k][lang]) ? siteWelcome[k][lang] : WELCOME_FIELDS[k][lang];
+                el.innerHTML=val;
+            }
         });
     }
 
@@ -257,10 +282,30 @@
         var h='<div class="contact-card"><h2 class="contact-title">'+title+'</h2><p style="color:var(--text-secondary);margin-bottom:24px;">'+desc+'</p>';
         Object.keys(c).forEach(function(contactId){
             var i=c[contactId];
-            var lb=i.label?i.label[currentLang]||'':'';
-            h+='<div class="contact-item"><span class="contact-icon">'+pixelIconMarkup(contactId,i.icon)+'</span><span class="contact-label">'+esc(lb)+'</span><span class="contact-value">'+esc(i.value)+'</span></div>';
+            var lb=i.label?i.label[currentLang]||'':('');
+            h+='<div class="contact-item" data-contact-id="'+esc(contactId)+'"><span class="contact-icon">'+pixelIconMarkup(contactId,i.icon)+'</span><span class="contact-label">'+esc(lb)+'</span><span class="contact-value">'+esc(i.value)+'</span><button class="edit-btn contact-edit-btn" data-contact="'+esc(contactId)+'" title="编辑">[E]</button></div>';
         });
         h+='</div>'; $('#contactPage').innerHTML=h;
+        // 绑定联系方式编辑按钮
+        var cebs = $('#contactPage').querySelectorAll('.contact-edit-btn');
+        for (var i = 0; i < cebs.length; i++) {
+            (function(btn){
+                btn.onclick = function(){
+                    var cid = btn.dataset.contact;
+                    var item = siteContact[cid];
+                    if (!item) return;
+                    var currentVal = item.value || '';
+                    window._textCb = function(val){
+                        if (!siteContact[cid]) siteContact[cid] = {};
+                        siteContact[cid].value = val;
+                        showContact();
+                        markDirty();
+                        toast('联系方式已更新','success');
+                    };
+                    openTextEditor('编辑: ' + (item.label ? item.label[currentLang] : cid), currentVal);
+                };
+            })(cebs[i]);
+        }
     }
 
     function hidePages(){['welcomePage','categoryPage','contactPage'].forEach(function(id){$('#'+id).style.display='none';});}
@@ -502,10 +547,13 @@
         if(currentCategory===null)return;
         var cat=siteNav[currentCategory];if(!cat)return;
         $('#subModalTitle').textContent='管理子类: '+(cat.label?cat.label.zh:cat.id);
-        var h='<p style="margin-bottom:12px;color:var(--text-secondary);font-size:0.9rem;">点击删除, 底部添加新子类</p>';
+        var h='<p style="margin-bottom:12px;color:var(--text-secondary);font-size:0.9rem;">点击删除或编辑, 底部添加新子类</p>';
         (cat.subItems||[]).forEach(function(sub,si){
+            var subLabelZh = sub.label ? sub.label.zh : sub.id;
+            var subLabelEn = sub.label ? sub.label.en : '';
             h+='<div style="display:flex;align-items:center;padding:8px 10px;background:var(--bg);border-radius:6px;margin-bottom:4px;">'+
-                '<span style="flex:1">'+esc(sub.label?sub.label.zh:sub.id)+'</span>'+
+                '<span style="flex:1">'+esc(subLabelZh)+'</span>'+
+                '<button class="admin-btn admin-btn-sm admin-btn-outline sub-edit" data-si="'+si+'" style="margin-right:4px;">编辑</button>'+
                 '<button class="admin-btn admin-btn-sm admin-btn-danger sub-del" data-si="'+si+'">删除</button></div>';
         });
         h+='<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">'+
@@ -519,6 +567,36 @@
         for(var i=0;i<dels.length;i++){(function(d){d.onclick=function(){
             var si=parseInt(d.dataset.si);if(confirm('删除?')){cat.subItems.splice(si,1);manageSubcategories();renderNav();markDirty();toast('已删除','info');}
         };})(dels[i]);}
+        // 子类编辑按钮
+        var edits = $('#subModalBody').querySelectorAll('.sub-edit');
+        for(var j=0;j<edits.length;j++){(function(btn){
+            btn.onclick = function(){
+                var si = parseInt(btn.dataset.si);
+                var sub = cat.subItems[si];
+                var oldZh = sub.label ? sub.label.zh : sub.id;
+                var oldEn = sub.label ? sub.label.en : '';
+                var oldId = sub.id;
+                var newZh = prompt('中文名称:', oldZh);
+                if (newZh === null) return; // 取消
+                var newEn = prompt('English name:', oldEn);
+                if (newEn === null) return;
+                var newId = prompt('子类 ID:', oldId);
+                if (newId === null) return;
+                if (!newZh || !newId) { toast('名称和ID不能为空','error'); return; }
+                // 如果ID变更，迁移内容数据
+                if (newId !== oldId && siteContent[oldId]) {
+                    siteContent[newId] = siteContent[oldId];
+                    delete siteContent[oldId];
+                }
+                sub.id = newId;
+                sub.label = {zh: newZh, en: newEn || newZh};
+                if (!siteContent[newId]) siteContent[newId] = [];
+                manageSubcategories();
+                renderNav();
+                markDirty();
+                toast('子类已更新','success');
+            };
+        })(edits[j]);}
         document.getElementById('nsAddBtn').onclick=function(){
             var id=document.getElementById('nsId').value.trim();
             var zh=document.getElementById('nsZh').value.trim();
@@ -557,7 +635,7 @@
                 treeItems.push({path:path,mode:'100644',type:'blob',sha:imageBlob.sha});
             }
             btn.textContent='[WRITE] 写入内容...';
-            var data={navigation:siteNav,contact:siteContact,content:siteContent};
+            var data={navigation:siteNav,contact:siteContact,content:siteContent,welcome:siteWelcome};
             var json=JSON.stringify(data,null,4);
             var contentBlob=await githubRequest('/git/blobs',{
                 method:'POST',
@@ -628,7 +706,7 @@
     }
 
     function downloadContent(){
-        var data={navigation:siteNav,contact:siteContact,content:siteContent};
+        var data={navigation:siteNav,contact:siteContact,content:siteContent,welcome:siteWelcome};
         var json=JSON.stringify(data,null,4);
         var blob=new Blob([json],{type:'application/json'});
         var url=URL.createObjectURL(blob);
