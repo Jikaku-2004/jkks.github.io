@@ -422,6 +422,29 @@ body.admin-mode .sidebar-footer {
     opacity: 1;
 }
 
+/* 联系方式编辑按钮 */
+.contact-item {
+    position: relative;
+}
+
+.contact-item .edit-btn {
+    padding: 4px 7px;
+    border: 1px solid var(--accent);
+    background: #110b18;
+    color: var(--accent-light);
+    cursor: pointer;
+    opacity: 0.18;
+    transition: var(--transition);
+    font-family: var(--pixel);
+    font-size: 0.7rem;
+    margin-left: 8px;
+}
+
+.contact-item:hover .edit-btn,
+.contact-item .edit-btn:focus-visible {
+    opacity: 1;
+}
+
 .admin-cat-actions {
     display: flex;
     flex-wrap: wrap;
