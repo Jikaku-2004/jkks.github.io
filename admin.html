@@ -4,172 +4,193 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JKK 管理后台</title>
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/admin.css">
 </head>
-<body>
+<body class="admin-mode">
 
-    <!-- ── 设置界面（首次进入） ── -->
+    <!-- ── 设置界面 ── -->
     <div class="setup-screen" id="setupScreen">
         <div class="setup-card">
             <h1>⚙️ JKK 管理后台</h1>
             <p class="setup-desc">配置 GitHub 仓库信息，之后所有修改将通过 API 直接提交。</p>
             <div class="setup-field">
-                <label>GitHub 用户名 / 组织</label>
-                <input type="text" id="setupOwner" placeholder="例如: jkk">
+                <label>GitHub 用户名</label>
+                <input type="text" id="setupOwner" value="jkks-gitbub">
             </div>
             <div class="setup-field">
                 <label>仓库名称</label>
-                <input type="text" id="setupRepo" placeholder="例如: jkk.github.io">
+                <input type="text" id="setupRepo" value="jkks.github.io">
             </div>
             <div class="setup-field">
                 <label>Personal Access Token</label>
                 <input type="password" id="setupToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
                 <p class="setup-hint">
                     👆 <a href="https://github.com/settings/tokens" target="_blank">点此生成 Token</a>，
-                    勾选 <code>repo</code> 或 <code>public_repo</code> 权限。
+                    勾选 <code>public_repo</code> 权限。
                 </p>
             </div>
             <div class="setup-field">
-                <label>分支名称</label>
+                <label>分支</label>
                 <input type="text" id="setupBranch" value="main">
             </div>
             <button class="setup-btn" id="setupBtn">🔗 连接仓库</button>
             <p class="setup-error" id="setupError"></p>
-            <div class="setup-divider">
-                <span>或者</span>
-            </div>
-            <button class="setup-btn setup-btn-manual" id="manualModeBtn">📝 手动编辑模式（无需 Token）</button>
+            <div class="setup-divider"><span>或者</span></div>
+            <button class="setup-btn setup-btn-manual" id="manualModeBtn">📝 手动模式（无需 Token）</button>
         </div>
     </div>
 
-    <!-- ── 主界面 ── -->
-    <div class="admin-app" id="adminApp" style="display:none;">
-
-        <!-- 顶栏 -->
-        <header class="admin-header">
-            <div class="admin-header-left">
-                <h1 class="admin-title">📝 JKK 管理后台</h1>
-                <span class="admin-repo-badge" id="repoBadge"></span>
-            </div>
-            <div class="admin-header-right">
+    <!-- ── 顶栏 ── -->
+    <header class="top-bar" id="adminTopBar" style="display:none;">
+        <div class="top-bar-inner">
+            <span class="site-title" style="color:var(--accent)">📝 JKK 管理后台</span>
+            <span class="admin-repo-badge" id="repoBadge"></span>
+            <div class="top-bar-right">
                 <span class="admin-status" id="adminStatus">✅ 已加载</span>
-                <button class="admin-btn admin-btn-primary" id="saveBtn">💾 保存到 GitHub</button>
-                <button class="admin-btn admin-btn-outline" id="downloadBtn">📥 下载 content.json</button>
-                <button class="admin-btn admin-btn-outline" id="reloadBtn">🔄 重新加载</button>
-                <button class="admin-btn admin-btn-ghost" id="settingsBtn">⚙️</button>
+                <button class="admin-btn admin-btn-sm admin-btn-outline" id="reloadBtn" title="重新加载">🔄</button>
+                <button class="admin-btn admin-btn-sm" id="saveBtn">💾 保存到 GitHub</button>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <div class="admin-body">
-            <!-- 侧栏：分类列表 -->
-            <aside class="admin-sidebar">
-                <div class="admin-sidebar-section">
-                    <h3>📂 分类</h3>
-                    <ul class="admin-cat-list" id="catList">
-                        <!-- 由 JS 生成 -->
-                    </ul>
+    <div class="layout" id="adminLayout" style="display:none;">
+        <!-- ── 左侧导航 ── -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="nav-list" id="navList"></ul>
+            <div class="sidebar-footer">
+                <div class="nav-item" id="navWelcome" style="cursor:pointer;">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">欢迎页编辑</span>
                 </div>
-                <div class="admin-sidebar-section">
-                    <h3>🔗 快捷链接</h3>
-                    <ul class="admin-quick-links">
-                        <li><a href="index.html" target="_blank">🌐 查看公开网页</a></li>
-                        <li><a href="data/content.json" target="_blank">📄 查看 content.json</a></li>
-                    </ul>
+                <div class="nav-item" id="navContact" style="cursor:pointer;">
+                    <span class="nav-icon">✉️</span>
+                    <span class="nav-label">联系方式</span>
                 </div>
-            </aside>
+                <div class="nav-item" id="navDownload" style="cursor:pointer;">
+                    <span class="nav-icon">📄</span>
+                    <span class="nav-label">下载 content.json</span>
+                </div>
+            </div>
+        </nav>
 
-            <!-- 主编辑区 -->
-            <main class="admin-main">
-                <!-- 分类标题 -->
-                <div class="admin-cat-header">
-                    <h2 id="currentCatTitle">选择分类</h2>
-                    <span class="admin-entry-count" id="entryCount">0 条</span>
-                    <button class="admin-btn admin-btn-accent" id="addEntryBtn">＋ 新增条目</button>
-                </div>
-
-                <!-- 条目列表 -->
-                <div class="admin-entry-list" id="entryList">
-                    <p class="admin-placeholder">请从左侧选择一个分类</p>
-                </div>
-
-                <!-- 编辑器面板 -->
-                <div class="admin-editor" id="editor" style="display:none;">
-                    <div class="editor-header">
-                        <h3 id="editorTitle">编辑条目</h3>
-                        <div class="editor-actions">
-                            <button class="admin-btn admin-btn-sm" id="editorCloseBtn">✕ 关闭</button>
-                        </div>
+        <!-- ── 右侧内容 ── -->
+        <main class="content" id="mainContent">
+            <!-- 欢迎页（可编辑） -->
+            <div class="welcome-page" id="welcomePage">
+                <div class="welcome-card">
+                    <div class="avatar-area">
+                        <div class="avatar-placeholder">JKK</div>
                     </div>
-                    <div class="editor-body">
-                        <div class="editor-row">
-                            <div class="editor-field">
-                                <label>中文标题 *</label>
-                                <input type="text" id="editTitleZh" placeholder="中文标题">
-                            </div>
-                            <div class="editor-field">
-                                <label>English Title *</label>
-                                <input type="text" id="editTitleEn" placeholder="English title">
-                            </div>
-                        </div>
-                        <div class="editor-row">
-                            <div class="editor-field">
-                                <label>日期 *</label>
-                                <input type="date" id="editDate">
-                            </div>
-                            <div class="editor-field">
-                                <label>ID（自动生成，可手动改）</label>
-                                <input type="text" id="editId" placeholder="自动生成">
-                            </div>
-                        </div>
-                        <div class="editor-row">
-                            <div class="editor-field">
-                                <label>中文标签（逗号分隔）</label>
-                                <input type="text" id="editTagsZh" placeholder="小说, 日本文学">
-                            </div>
-                            <div class="editor-field">
-                                <label>English Tags</label>
-                                <input type="text" id="editTagsEn" placeholder="Fiction, Japanese">
-                            </div>
-                        </div>
-                        <div class="editor-field">
-                            <label>中文内容（Markdown）</label>
-                            <textarea id="editContentZh" rows="5" placeholder="支持 Markdown 格式"></textarea>
-                        </div>
-                        <div class="editor-field">
-                            <label>English Content (Markdown)</label>
-                            <textarea id="editContentEn" rows="5" placeholder="Markdown supported"></textarea>
-                        </div>
-                        <div class="editor-row">
-                            <div class="editor-field">
-                                <label>图片路径（每行一个）</label>
-                                <textarea id="editImages" rows="2" placeholder="images/photo.jpg"></textarea>
-                            </div>
-                            <div class="editor-field">
-                                <label>外部链接（每行：文字,网址）</label>
-                                <textarea id="editLinks" rows="2" placeholder="豆瓣,https://example.com"></textarea>
-                            </div>
-                            <div class="editor-field">
-                                <label>视频链接（每行一个）</label>
-                                <textarea id="editVideos" rows="2" placeholder="https://www.bilibili.com/video/BVxxx"></textarea>
-                            </div>
-                        </div>
+                    <div class="editable-block" data-key="welcomeTitle">
+                        <h1 class="welcome-title">欢迎来到 JKK 的个人网页</h1>
+                        <button class="edit-btn" title="编辑">✏️</button>
                     </div>
-                    <div class="editor-footer">
-                        <button class="admin-btn admin-btn-danger" id="deleteEntryBtn">🗑 删除此条目</button>
-                        <span class="editor-save-hint">更改会在点击顶部"保存到 GitHub"后统一提交</span>
-                        <button class="admin-btn admin-btn-primary" id="editorApplyBtn">✓ 应用更改</button>
+                    <div class="editable-block" data-key="welcomeSubtitle">
+                        <p class="welcome-subtitle">探索 · 思考 · 记录</p>
+                        <button class="edit-btn" title="编辑">✏️</button>
+                    </div>
+                    <div class="editable-block" data-key="welcomeDesc">
+                        <div class="welcome-desc"><p>这里是我记录阅读、艺术、运动与研究的个人空间。</p><p>请从左侧导航栏选择感兴趣的分类开始探索。</p></div>
+                        <button class="edit-btn" title="编辑">✏️</button>
+                    </div>
+                    <div class="editable-block" data-key="welcomeQuote">
+                        <div class="welcome-quote"><blockquote>"人生还不如一行波德莱尔。" —— 芥川龙之介</blockquote></div>
+                        <button class="edit-btn" title="编辑">✏️</button>
                     </div>
                 </div>
+            </div>
 
-                <!-- 未保存更改提示条 -->
-                <div class="unsaved-bar" id="unsavedBar" style="display:none;">
-                    ⚠️ 有未保存的更改
+            <!-- 分类内容 -->
+            <div class="category-page" id="categoryPage" style="display:none;">
+                <div class="category-header">
+                    <h2 class="category-title" id="categoryTitle"></h2>
+                    <p class="category-desc" id="categoryDesc"></p>
+                    <div class="admin-cat-actions" id="catActions">
+                        <button class="admin-btn admin-btn-sm admin-btn-outline" id="editCatBtn">📝 编辑大类</button>
+                        <button class="admin-btn admin-btn-sm admin-btn-outline" id="addSubBtn">＋ 添加子类</button>
+                    </div>
                 </div>
-            </main>
+                <div class="subcategory-tabs" id="subcategoryTabs"></div>
+                <div class="entries-container" id="entriesContainer">
+                    <div class="empty-state" id="emptyState" style="display:none;">
+                        <p>暂无条目</p>
+                        <button class="admin-btn admin-btn-accent" id="addEntryBtn">＋ 添加新条目</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 联系方式 -->
+            <div class="contact-page" id="contactPage" style="display:none;"></div>
+        </main>
+    </div>
+
+    <!-- ── 文本编辑器浮层 ── -->
+    <div class="modal-overlay" id="textEditorModal" style="display:none;">
+        <div class="modal-panel" style="max-width:600px;">
+            <div class="modal-header">
+                <h3 id="textEditorTitle">编辑</h3>
+                <span class="modal-close" id="textEditorModalClose">&times;</span>
+            </div>
+            <div class="modal-body">
+                <textarea id="textEditorInput" rows="6" style="width:100%;padding:10px;border:1px solid var(--border);border-radius:6px;font-size:0.95rem;font-family:inherit;resize:vertical;"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="admin-btn admin-btn-outline" id="textEditorCancel">取消</button>
+                <button class="admin-btn admin-btn-primary" id="textEditorSave">✓ 保存</button>
+            </div>
         </div>
     </div>
 
-    <!-- ── Toast 消息 ── -->
+    <!-- ── 条目编辑器浮层 ── -->
+    <div class="modal-overlay" id="entryModal" style="display:none;">
+        <div class="modal-panel" style="max-width:700px;">
+            <div class="modal-header">
+                <h3 id="entryModalTitle">编辑条目</h3>
+                <span class="modal-close" id="entryModalClose">&times;</span>
+            </div>
+            <div class="modal-body" id="entryModalBody"></div>
+            <div class="modal-footer">
+                <button class="admin-btn admin-btn-danger" id="entryModalDelete">🗑 删除</button>
+                <span style="flex:1"></span>
+                <button class="admin-btn admin-btn-outline" id="entryModalCancel">取消</button>
+                <button class="admin-btn admin-btn-primary" id="entryModalSave">✓ 保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── 分类编辑浮层 ── -->
+    <div class="modal-overlay" id="catModal" style="display:none;">
+        <div class="modal-panel" style="max-width:500px;">
+            <div class="modal-header">
+                <h3 id="catModalTitle">编辑大类</h3>
+                <span class="modal-close" id="catModalClose">&times;</span>
+            </div>
+            <div class="modal-body" id="catModalBody"></div>
+            <div class="modal-footer">
+                <button class="admin-btn admin-btn-danger" id="catModalDelete">🗑 删除此大类</button>
+                <span style="flex:1"></span>
+                <button class="admin-btn admin-btn-outline" id="catModalCancel">取消</button>
+                <button class="admin-btn admin-btn-primary" id="catModalSave">✓ 保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── 子类管理浮层 ── -->
+    <div class="modal-overlay" id="subModal" style="display:none;">
+        <div class="modal-panel" style="max-width:500px;">
+            <div class="modal-header">
+                <h3 id="subModalTitle">管理子类</h3>
+                <span class="modal-close" id="subModalClose">&times;</span>
+            </div>
+            <div class="modal-body" id="subModalBody"></div>
+            <div class="modal-footer">
+                <button class="admin-btn admin-btn-outline" id="subModalCancel">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ── Toast ── -->
     <div class="toast-container" id="toastContainer"></div>
 
     <script src="js/data.js"></script>
