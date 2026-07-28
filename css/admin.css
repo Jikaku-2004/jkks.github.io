@@ -78,9 +78,39 @@ body.admin-mode {
 .admin-repo-badge { font-size:0.78rem; background:rgba(255,255,255,0.1); padding:3px 10px; border-radius:12px; opacity:0.7; }
 
 /* ── 顶栏覆盖 ── */
-body.admin-mode .top-bar { background: var(--sidebar-bg); }
-body.admin-mode .top-bar .site-title { flex: 0; margin-right: 12px; }
-body.admin-mode .top-bar .top-bar-right { gap: 6px; }
+body.admin-mode .top-bar {
+    background: var(--sidebar-bg);
+    height: auto;
+    min-height: var(--topbar-height);
+}
+body.admin-mode .top-bar .top-bar-inner {
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 8px 16px;
+}
+body.admin-mode .top-bar .site-title {
+    flex: 0 1 auto;
+    margin-right: 8px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+body.admin-mode .top-bar .top-bar-right {
+    gap: 4px;
+    flex-wrap: wrap;
+    flex: 1;
+    justify-content: flex-end;
+    min-width: 0;
+}
+body.admin-mode .admin-repo-badge {
+    flex: 0 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+    font-size: 0.72rem;
+}
+body.admin-mode .admin-status {
+    white-space: nowrap;
+}
 
 /* ── 侧栏覆盖 ── */
 body.admin-mode .sidebar .nav-item { cursor: pointer; position: relative; }
@@ -88,6 +118,18 @@ body.admin-mode .sidebar .nav-item.active { background: var(--sidebar-active); b
 body.admin-mode .sidebar .sub-nav-item.active { opacity: 1; border-left-color: var(--accent); color: var(--accent-light); }
 body.admin-mode .sidebar-footer .nav-item { text-decoration: none; color: var(--text-sidebar); }
 body.admin-mode .sidebar-footer .nav-item:hover { background: var(--bg-sidebar-hover); }
+
+/* ── 侧栏保证可滚动且不遮挡 ── */
+body.admin-mode .sidebar {
+    overflow-y: auto;
+    padding-bottom: 0;
+}
+body.admin-mode .sidebar-footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--bg-sidebar);
+    z-index: 1;
+}
 
 /* ── 删除按钮（导航上） ── */
 .nav-del {
