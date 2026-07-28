@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JKK's Personal Page</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Markdown渲染库 -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+    <!-- 顶部导航栏 -->
+    <header class="top-bar">
+        <div class="top-bar-inner">
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                <span></span><span></span><span></span>
+            </button>
+            <a href="#" class="site-title" id="siteTitle" data-key="siteTitle">JKK</a>
+            <div class="top-bar-right">
+                <div class="lang-toggle" id="langToggle">
+                    <span class="lang-option active" data-lang="zh">中</span>
+                    <span class="lang-divider">|</span>
+                    <span class="lang-option" data-lang="en">EN</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- 左侧导航 -->
+        <nav class="sidebar" id="sidebar">
+            <ul class="nav-list" id="navList">
+                <!-- 由JS动态生成 -->
+            </ul>
+            <div class="sidebar-footer">
+                <a href="#" class="nav-item" id="navContact" data-key="navContact">
+                    <span class="nav-icon">✉️</span>
+                    <span class="nav-label" data-key="contact">联系方式</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- 右侧内容区 -->
+        <main class="content" id="mainContent">
+            <!-- 欢迎页面 -->
+            <div class="welcome-page" id="welcomePage">
+                <div class="welcome-card">
+                    <div class="avatar-area">
+                        <div class="avatar-placeholder">JKK</div>
+                    </div>
+                    <h1 class="welcome-title" data-key="welcomeTitle">欢迎来到JKK的个人网页</h1>
+                    <p class="welcome-subtitle" data-key="welcomeSubtitle">探索 · 思考 · 记录</p>
+                    <div class="welcome-desc" data-key="welcomeDesc">
+                        <p>这里是我记录阅读、艺术、运动与研究的个人空间。</p>
+                        <p>请从左侧导航栏选择感兴趣的分类开始探索。</p>
+                    </div>
+                    <div class="welcome-quote">
+                        <blockquote data-key="welcomeQuote">
+                            "人生还不如一行波德莱尔。" —— 芥川龙之介
+                        </blockquote>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 分类内容容器 -->
+            <div class="category-page" id="categoryPage" style="display:none;">
+                <div class="category-header">
+                    <h2 class="category-title" id="categoryTitle"></h2>
+                    <p class="category-desc" id="categoryDesc"></p>
+                </div>
+                <div class="subcategory-tabs" id="subcategoryTabs">
+                    <!-- 子分类标签由JS生成 -->
+                </div>
+                <div class="entries-container" id="entriesContainer">
+                    <!-- 条目由JS生成 -->
+                </div>
+            </div>
+
+            <!-- 联系方式页面 -->
+            <div class="contact-page" id="contactPage" style="display:none;">
+                <!-- 由JS生成 -->
+            </div>
+        </main>
+    </div>
+
+    <!-- 快速添加按钮 -->
+    <button class="quick-add-btn" id="quickAddBtn" title="快速添加新条目">+</button>
+
+    <!-- 快速添加面板 -->
+    <div class="quick-add-overlay" id="quickAddOverlay">
+        <div class="quick-add-panel">
+            <div class="quick-add-header">
+                <h3 data-key="quickAddTitle">快速添加新条目</h3>
+                <span class="quick-add-close" id="quickAddClose">&times;</span>
+            </div>
+            <div class="quick-add-body">
+                <div class="qa-hint" data-key="quickAddHint">填写以下信息，然后复制生成的 JSON 代码，粘贴到 data/content.json 中对应分类数组里。</div>
+
+                <div class="qa-field">
+                    <label data-key="qaCategory">所属分类 *</label>
+                    <select id="qaCategory">
+                        <option value="books">阅读 - 书目</option>
+                        <option value="movies">阅读 - 电影</option>
+                        <option value="tv">阅读 - 影视</option>
+                        <option value="music">艺术 - 音乐</option>
+                        <option value="calligraphy">艺术 - 书法</option>
+                        <option value="running">运动 - 长跑</option>
+                        <option value="other-sports">运动 - 其他</option>
+                        <option value="ecology">研究 - 生态</option>
+                        <option value="sociology">研究 - 社会学</option>
+                        <option value="journal">河童的话 - 日志</option>
+                    </select>
+                </div>
+
+                <div class="qa-row">
+                    <div class="qa-field qa-half">
+                        <label data-key="qaTitleZh">中文标题 *</label>
+                        <input type="text" id="qaTitleZh" placeholder="例如：读《人间失格》">
+                    </div>
+                    <div class="qa-field qa-half">
+                        <label data-key="qaTitleEn">English Title *</label>
+                        <input type="text" id="qaTitleEn" placeholder="e.g. Reading No Longer Human">
+                    </div>
+                </div>
+
+                <div class="qa-field">
+                    <label data-key="qaDate">日期 *</label>
+                    <input type="date" id="qaDate">
+                </div>
+
+                <div class="qa-row">
+                    <div class="qa-field qa-half">
+                        <label data-key="qaTagsZh">中文标签（逗号分隔）</label>
+                        <input type="text" id="qaTagsZh" placeholder="小说, 日本文学">
+                    </div>
+                    <div class="qa-field qa-half">
+                        <label data-key="qaTagsEn">English Tags (comma-separated)</label>
+                        <input type="text" id="qaTagsEn" placeholder="Fiction, Japanese">
+                    </div>
+                </div>
+
+                <div class="qa-field">
+                    <label data-key="qaContentZh">中文内容（Markdown）</label>
+                    <textarea id="qaContentZh" rows="4" placeholder="支持 **Markdown** 格式"></textarea>
+                </div>
+
+                <div class="qa-field">
+                    <label data-key="qaContentEn">English Content (Markdown)</label>
+                    <textarea id="qaContentEn" rows="4" placeholder="**Markdown** supported"></textarea>
+                </div>
+
+                <div class="qa-field">
+                    <label data-key="qaImages">图片路径（每行一个）</label>
+                    <textarea id="qaImages" rows="2" placeholder="images/photo1.jpg"></textarea>
+                </div>
+
+                <div class="qa-field">
+                    <label data-key="qaLinks">外部链接（每行一个：文字,网址）</label>
+                    <textarea id="qaLinks" rows="2" placeholder="豆瓣,https://example.com"></textarea>
+                </div>
+
+                <div class="qa-field">
+                    <label data-key="qaVideos">视频链接（每行一个）</label>
+                    <textarea id="qaVideos" rows="2" placeholder="https://www.bilibili.com/video/BVxxx"></textarea>
+                </div>
+
+                <button class="qa-generate-btn" id="qaGenerateBtn" data-key="qaGenerateBtn">生成 JSON</button>
+
+                <div class="qa-output" id="qaOutput" style="display:none;">
+                    <div class="qa-output-header">
+                        <span data-key="qaResultLabel">✅ 生成的 JSON：</span>
+                        <button class="qa-copy-btn" id="qaCopyBtn" data-key="qaCopyBtn">📋 复制</button>
+                    </div>
+                    <pre id="qaResult"></pre>
+                    <div class="qa-output-hint" data-key="qaOutputHint">
+                        👆 复制上面的代码，打开 GitHub 上的 data/content.json，
+                        找到对应分类数组，粘贴进去即可。
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 图片灯箱 -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img class="lightbox-content" id="lightboxImg">
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <span data-key="footerText">© 2026 JKK. 用 ❤️ 打造</span>
+        </div>
+    </footer>
+
+    <!-- 脚本 -->
+    <script src="js/i18n.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
