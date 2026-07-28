@@ -2,7 +2,7 @@
     "navigation": [
         {
             "id": "reading",
-            "icon": "📚",
+            "icon": "RD",
             "label": {
                 "zh": "阅读",
                 "en": "Reading"
@@ -37,7 +37,7 @@
         },
         {
             "id": "art",
-            "icon": "🎨",
+            "icon": "AR",
             "label": {
                 "zh": "艺术",
                 "en": "Art"
@@ -65,7 +65,7 @@
         },
         {
             "id": "sports",
-            "icon": "🏃",
+            "icon": "SP",
             "label": {
                 "zh": "运动",
                 "en": "Sports"
@@ -93,7 +93,7 @@
         },
         {
             "id": "research",
-            "icon": "🔬",
+            "icon": "RS",
             "label": {
                 "zh": "研究",
                 "en": "Research"
@@ -121,7 +121,7 @@
         },
         {
             "id": "kappa",
-            "icon": "👺",
+            "icon": "KP",
             "label": {
                 "zh": "河童的话",
                 "en": "Kappa's Words"
@@ -148,7 +148,7 @@
                 "en": "Email"
             },
             "value": "jkk@example.com",
-            "icon": "✉️"
+            "icon": "ML"
         }
     },
     "content": {

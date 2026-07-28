@@ -36,8 +36,8 @@ const I18N = {
         en: "Feel free to reach out to me"
     },
     footerText: {
-        zh: "© 2026 JKK. 用 ❤️ 打造",
-        en: "© 2026 JKK. Made with ❤️"
+        zh: "© 2026 JKK // SIGNAL BUILT",
+        en: "© 2026 JKK // SIGNAL BUILT"
     },
     navContact: {
         zh: "联系方式",

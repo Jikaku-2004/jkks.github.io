@@ -17,6 +17,10 @@
         'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif',
         'image/webp': 'webp', 'image/avif': 'avif'
     };
+    const PIXEL_ICONS = Object.freeze({
+        reading: 'RD', art: 'AR', sports: 'SP', research: 'RS',
+        kappa: 'KP', contact: 'CT', email: 'ML', welcome: 'HM', download: 'DL'
+    });
 
     const WELCOME_FIELDS = {
         welcomeTitle: { zh: '欢迎来到 JKK 的个人网页', en: "Welcome to JKK's Personal Page" },
@@ -89,7 +93,7 @@
             else if(m.includes('404')) showError('仓库或文件不存在');
             else showError(m);
         }
-        btn.disabled=false; btn.textContent='连接仓库';
+        btn.disabled=false; btn.textContent='LINK // 连接仓库';
     }
 
     async function enterManualMode() {
@@ -99,7 +103,7 @@
             parseData(await r.json()); contentSha=null; config={};
             enterApp(); toast('已加载','success');
         } catch(e) { showError(e.message); }
-        btn.textContent='手动模式';
+        btn.textContent='MANUAL // 手动模式（无需 Token）';
     }
 
     function parseData(raw) {
@@ -123,7 +127,7 @@
             var item=document.createElement('div');
             item.className='nav-item'; item.dataset.ci=ci;
             var cl=cat.label?(cat.label[currentLang]||cat.label.zh||cat.id):cat.id;
-            item.innerHTML='<span class="nav-icon">'+(cat.icon||'')+'</span><span class="nav-label">'+esc(cl)+'</span><span class="nav-arrow">\u25B6</span>'+
+            item.innerHTML='<span class="nav-icon">'+pixelIconMarkup(cat.id,cat.icon)+'</span><span class="nav-label">'+esc(cl)+'</span><span class="nav-arrow">\u25B6</span>'+
                 '<button class="nav-del" data-ci="'+ci+'" title="删除">\u2715</button>';
             item.onclick=function(){toggleCat(ci);};
             li.appendChild(item);
@@ -144,7 +148,7 @@
         });
         var ali=document.createElement('li');
         ali.style.padding='10px 20px';
-        ali.innerHTML='<button class="admin-btn admin-btn-sm admin-btn-accent" id="addCatBtn" style="width:100%">+ 添加新大类</button>';
+        ali.innerHTML='<button class="admin-btn admin-btn-sm admin-btn-accent" id="addCatBtn" style="width:100%">[+] 添加新大类</button>';
         list.appendChild(ali);
         document.getElementById('addCatBtn').onclick=addNewCategory;
         var dels=document.querySelectorAll('.nav-del');
@@ -199,7 +203,11 @@
         var c=document.getElementById('entriesContainer'); c.innerHTML='';
         var entries=siteContent[subId]||[];
         if(entries.length===0){
-            c.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-secondary)"><p>暂无条目</p><button class="admin-btn admin-btn-accent" onclick="document.getElementById(\'addEntryBtn\').click()">+ 添加新条目</button></div>';
+            var empty=document.createElement('div');
+            empty.className='empty-state admin-empty-state';
+            empty.innerHTML='<p>NO RECORDS // 暂无条目</p><button class="admin-btn admin-btn-accent">[+] 添加新条目</button>';
+            empty.querySelector('button').onclick=addNewEntry;
+            c.appendChild(empty);
             return;
         }
         var sorted=entries.slice().sort(function(a,b){return(b.date||'').localeCompare(a.date||'');});
@@ -210,8 +218,8 @@
             var body=currentLang==='zh'?entry.content_zh:entry.content_en;
             card.innerHTML='<div class="entry-header"><h3 class="entry-title">'+esc(title)+'</h3>'+
                 '<span class="entry-date">'+(entry.date||'')+'</span>'+
-                '<button class="entry-edit-btn" title="编辑">\u270E</button>'+
-                '<button class="entry-del-btn" title="删除">\uD83D\uDDD1</button></div>'+
+                '<button class="entry-edit-btn" title="编辑">EDIT</button>'+
+                '<button class="entry-del-btn" title="删除">DEL</button></div>'+
 
                 '<div class="entry-tags">'+tags.map(function(t){return'<span class="entry-tag">'+esc(t)+'</span>';}).join('')+'</div>'+
                 '<div class="entry-body"><p>'+esc((body||'').substring(0,200))+((body||'').length>200?'...':'')+'</p></div>';
@@ -225,7 +233,7 @@
         });
         // 始终显示添加新条目按钮
         var addBtn=document.createElement('div'); addBtn.style.cssText='text-align:center;padding:24px 0;';
-        addBtn.innerHTML='<button class="admin-btn admin-btn-accent">+ 添加新条目</button>';
+        addBtn.innerHTML='<button class="admin-btn admin-btn-accent">[+] 添加新条目</button>';
         addBtn.querySelector('button').onclick=function(){addNewEntry();};
         c.appendChild(addBtn);
     }
@@ -247,10 +255,10 @@
         var desc=lang==='zh'?'欢迎通过以下方式与我联系':'Feel free to reach out to me';
         var c=Object.keys(siteContact).length>0?siteContact:{email:{label:{zh:'邮箱',en:'Email'},value:'jkk@example.com',icon:'\u2709'}};
         var h='<div class="contact-card"><h2 class="contact-title">'+title+'</h2><p style="color:var(--text-secondary);margin-bottom:24px;">'+desc+'</p>';
-        var vals=Object.values(c);
-        vals.forEach(function(i){
+        Object.keys(c).forEach(function(contactId){
+            var i=c[contactId];
             var lb=i.label?i.label[currentLang]||'':'';
-            h+='<div class="contact-item"><span class="contact-icon">'+(i.icon||'')+'</span><span class="contact-label">'+esc(lb)+'</span><span class="contact-value">'+esc(i.value)+'</span></div>';
+            h+='<div class="contact-item"><span class="contact-icon">'+pixelIconMarkup(contactId,i.icon)+'</span><span class="contact-label">'+esc(lb)+'</span><span class="contact-value">'+esc(i.value)+'</span></div>';
         });
         h+='</div>'; $('#contactPage').innerHTML=h;
     }
@@ -444,8 +452,7 @@
         var cat=siteNav[currentCategory]; if(!cat||!cat.subItems||currentSubcategory===null)return toast('请先选择子类','error');
         var sub=cat.subItems[currentSubcategory];
         var entry={id:'new-'+Date.now(),title_zh:'',title_en:'',date:new Date().toISOString().split('T')[0],tags_zh:[],tags_en:[],content_zh:'',content_en:'',images:[],videos:[],links:[]};
-        var arr=siteContent[sub.id]||[];arr.push(entry);siteContent[sub.id]=arr;
-        openEntryEditor(sub.id,entry);markDirty();
+        openEntryEditor(sub.id,entry);
     }
 
     function openCatEditor(ci){
@@ -456,7 +463,7 @@
             '<div class="editor-field"><label>大类 ID</label><input type="text" id="ceId" value="'+esc(cat.id)+'"></div>'+
             '<div class="editor-row"><div class="editor-field"><label>中文名称</label><input type="text" id="ceZh" value="'+esc(cat.label?cat.label.zh:'')+'"></div>'+
             '<div class="editor-field"><label>English</label><input type="text" id="ceEn" value="'+esc(cat.label?cat.label.en:'')+'"></div></div>'+
-            '<div class="editor-field"><label>图标 Emoji</label><input type="text" id="ceIcon" value="'+esc(cat.icon||'')+'"></div>'+
+            '<div class="editor-field"><label>像素图标代码（1-3 个字母）</label><input type="text" id="ceIcon" maxlength="3" value="'+esc(pixelIconCode(cat.id,cat.icon))+'"></div>'+
             '<div class="editor-field"><label>中文描述</label><textarea id="ceDescZh" rows="2">'+esc(d.zh||'')+'</textarea></div>'+
             '<div class="editor-field"><label>English Description</label><textarea id="ceDescEn" rows="2">'+esc(d.en||'')+'</textarea></div>';
         $('#catModal').style.display='flex';
@@ -467,7 +474,7 @@
         var cat=siteNav[editingCatIdx];
         cat.id=$('#ceId').value.trim()||cat.id;
         cat.label={zh:$('#ceZh').value.trim(),en:$('#ceEn').value.trim()};
-        cat.icon=$('#ceIcon').value.trim()||'';
+        cat.icon=normalizeIconCode($('#ceIcon').value,cat.id);
         cat.desc={zh:$('#ceDescZh').value.trim(),en:$('#ceDescEn').value.trim()};
         closeCatEditor();renderNav();
         if(currentCategory!==null&&siteNav[currentCategory]){
@@ -486,8 +493,8 @@
         var id=prompt('大类ID (如 travel):');if(!id)return;
         var zh=prompt('中文名称 (如 旅行):');if(!zh)return;
         var en=prompt('English name:');if(!en)return;
-        var icon=prompt('图标 Emoji:','');
-        siteNav.push({id:id,icon:icon||'',label:{zh:zh,en:en},desc:{zh:'',en:''},subItems:[]});
+        var icon=prompt('像素图标代码（1-3 个字母）:',normalizeIconCode('',id));
+        siteNav.push({id:id,icon:normalizeIconCode(icon,id),label:{zh:zh,en:en},desc:{zh:'',en:''},subItems:[]});
         renderNav();markDirty();toast('已添加, 记得添加子类','success');
     }
 
@@ -506,7 +513,7 @@
             '<div class="editor-field"><label>子类 ID</label><input type="text" id="nsId" placeholder="places"></div>'+
             '<div class="editor-row"><div class="editor-field"><label>中文名称</label><input type="text" id="nsZh" placeholder="去过的地方"></div>'+
             '<div class="editor-field"><label>English</label><input type="text" id="nsEn" placeholder="Places"></div></div>'+
-            '<button class="admin-btn admin-btn-accent admin-btn-sm" id="nsAddBtn">+ 添加</button></div>';
+            '<button class="admin-btn admin-btn-accent admin-btn-sm" id="nsAddBtn">[+] 添加</button></div>';
         $('#subModalBody').innerHTML=h;$('#subModal').style.display='flex';
         var dels=$('#subModalBody').querySelectorAll('.sub-del');
         for(var i=0;i<dels.length;i++){(function(d){d.onclick=function(){
@@ -532,7 +539,7 @@
             return;
         }
         if(!isDirty&&!pendingUploads.size){toast('没有需要保存的更改','info');return;}
-        var btn=$('#saveBtn');btn.disabled=true;btn.textContent='保存中...';
+        var btn=$('#saveBtn');btn.disabled=true;btn.textContent='[WAIT] 保存中...';
         try{
             var branchPath=config.branch.split('/').map(encodeURIComponent).join('/');
             var ref=await githubRequest('/git/ref/heads/'+branchPath);
@@ -541,7 +548,7 @@
             var treeItems=[];
             var uploads=Array.from(pendingUploads.entries());
             for(var i=0;i<uploads.length;i++){
-                btn.textContent='上传图片 '+(i+1)+'/'+uploads.length;
+                btn.textContent='[UP] 图片 '+(i+1)+'/'+uploads.length;
                 var path=uploads[i][0],file=uploads[i][1].file;
                 var imageBlob=await githubRequest('/git/blobs',{
                     method:'POST',
@@ -549,7 +556,7 @@
                 });
                 treeItems.push({path:path,mode:'100644',type:'blob',sha:imageBlob.sha});
             }
-            btn.textContent='写入内容...';
+            btn.textContent='[WRITE] 写入内容...';
             var data={navigation:siteNav,contact:siteContact,content:siteContent};
             var json=JSON.stringify(data,null,4);
             var contentBlob=await githubRequest('/git/blobs',{
@@ -578,7 +585,7 @@
             isDirty=false;updateStatus();
             toast('保存成功！内容与图片已在同一次提交中上传','success');
         }catch(e){toast('保存失败: '+e.message,'error');}
-        btn.disabled=false;btn.textContent='保存到 GitHub';
+        btn.disabled=false;btn.textContent='[SAVE] 保存到 GitHub';
     }
 
     async function githubRequest(path,options){
@@ -657,6 +664,14 @@
         setTimeout(function(){el.style.opacity='0';el.style.transform='translateX(40px)';setTimeout(function(){el.remove();},300);},3000);
     }
     function showError(msg){var el=$('#setupError');el.textContent=msg;el.style.display='block';}
+    function normalizeIconCode(value,id){
+        var clean=String(value||'').toUpperCase().replace(/[^A-Z0-9@]/g,'').slice(0,3);
+        return clean||PIXEL_ICONS[id]||String(id||'UI').replace(/[^A-Za-z0-9]/g,'').slice(0,2).toUpperCase()||'UI';
+    }
+    function pixelIconCode(id,fallback){return normalizeIconCode(fallback,id);}
+    function pixelIconMarkup(id,fallback){
+        return '<span class="pixel-icon" aria-hidden="true">'+esc(pixelIconCode(id,fallback))+'</span>';
+    }
     function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
     // ── 语言切换 ──

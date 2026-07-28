@@ -12,7 +12,7 @@ const SITE_DATA = {
     navigation: [
         {
             id: "reading",
-            icon: "📚",
+            icon: "RD",
             labelKey: "categoryReading",
             subItems: [
                 { id: "books", labelKey: "subBooks" },
@@ -22,7 +22,7 @@ const SITE_DATA = {
         },
         {
             id: "art",
-            icon: "🎨",
+            icon: "AR",
             labelKey: "categoryArt",
             subItems: [
                 { id: "music", labelKey: "subMusic" },
@@ -31,7 +31,7 @@ const SITE_DATA = {
         },
         {
             id: "sports",
-            icon: "🏃",
+            icon: "SP",
             labelKey: "categorySports",
             subItems: [
                 { id: "running", labelKey: "subRunning" },
@@ -40,7 +40,7 @@ const SITE_DATA = {
         },
         {
             id: "research",
-            icon: "🔬",
+            icon: "RS",
             labelKey: "categoryResearch",
             subItems: [
                 { id: "ecology", labelKey: "subEcology" },
@@ -49,7 +49,7 @@ const SITE_DATA = {
         },
         {
             id: "kappa",
-            icon: "👺",
+            icon: "KP",
             labelKey: "categoryKappa",
             subItems: [
                 { id: "journal", labelKey: "subJournal" }
@@ -63,7 +63,7 @@ const SITE_DATA = {
             label_zh: "邮箱",
             label_en: "Email",
             value: "jkk@example.com",
-            icon: "✉️"
+            icon: "ML"
         }
     }
 };

@@ -7,7 +7,7 @@
     <title>JKK 管理后台</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Silkscreen:wght@400;700&family=ZCOOL+QingKe+HuangYou&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/admin.css">
 </head>
@@ -41,10 +41,10 @@
                 <label>分支</label>
                 <input type="text" id="setupBranch" value="main">
             </div>
-            <button class="setup-btn" id="setupBtn">🔗 连接仓库</button>
+            <button class="setup-btn" id="setupBtn">LINK // 连接仓库</button>
             <p class="setup-error" id="setupError"></p>
             <div class="setup-divider"><span>或者</span></div>
-            <button class="setup-btn setup-btn-manual" id="manualModeBtn">📝 手动模式（无需 Token）</button>
+            <button class="setup-btn setup-btn-manual" id="manualModeBtn">MANUAL // 手动模式（无需 Token）</button>
         </div>
     </div>
 
@@ -60,8 +60,8 @@
                     <span class="lang-option" data-lang="en">EN</span>
                 </div>
                 <span class="admin-status" id="adminStatus">已保存</span>
-                <button class="admin-btn admin-btn-sm admin-btn-outline" id="reloadBtn" title="重新加载">🔄</button>
-                <button class="admin-btn admin-btn-sm" id="saveBtn">💾 保存到 GitHub</button>
+                <button class="admin-btn admin-btn-sm admin-btn-outline" id="reloadBtn" title="重新加载">[SYNC]</button>
+                <button class="admin-btn admin-btn-sm admin-btn-primary" id="saveBtn">[SAVE] 保存到 GitHub</button>
             </div>
         </div>
     </header>
@@ -72,15 +72,15 @@
             <ul class="nav-list" id="navList"></ul>
             <div class="sidebar-footer">
                 <div class="nav-item" id="navWelcome" style="cursor:pointer;">
-                    <span class="nav-icon">🏠</span>
+                    <span class="nav-icon"><span class="pixel-icon">HM</span></span>
                     <span class="nav-label">欢迎页编辑</span>
                 </div>
                 <div class="nav-item" id="navContact" style="cursor:pointer;">
-                    <span class="nav-icon">✉️</span>
+                    <span class="nav-icon"><span class="pixel-icon">CT</span></span>
                     <span class="nav-label">联系方式</span>
                 </div>
                 <div class="nav-item" id="navDownload" style="cursor:pointer;">
-                    <span class="nav-icon">📄</span>
+                    <span class="nav-icon"><span class="pixel-icon">DL</span></span>
                     <span class="nav-label">下载 content.json</span>
                 </div>
             </div>
@@ -96,19 +96,19 @@
                     </div>
                     <div class="editable-block" data-key="welcomeTitle">
                         <h1 class="welcome-title">欢迎来到 JKK 的个人网页</h1>
-                        <button class="edit-btn" title="编辑">✏️</button>
+                        <button class="edit-btn" title="编辑">[E]</button>
                     </div>
                     <div class="editable-block" data-key="welcomeSubtitle">
                         <p class="welcome-subtitle">探索 · 思考 · 记录</p>
-                        <button class="edit-btn" title="编辑">✏️</button>
+                        <button class="edit-btn" title="编辑">[E]</button>
                     </div>
                     <div class="editable-block" data-key="welcomeDesc">
                         <div class="welcome-desc"><p>这里是我记录阅读、艺术、运动与研究的个人空间。</p><p>请从左侧导航栏选择感兴趣的分类开始探索。</p></div>
-                        <button class="edit-btn" title="编辑">✏️</button>
+                        <button class="edit-btn" title="编辑">[E]</button>
                     </div>
                     <div class="editable-block" data-key="welcomeQuote">
                         <div class="welcome-quote"><blockquote>"人生还不如一行波德莱尔。" —— 芥川龙之介</blockquote></div>
-                        <button class="edit-btn" title="编辑">✏️</button>
+                        <button class="edit-btn" title="编辑">[E]</button>
                     </div>
                 </div>
             </div>
@@ -119,15 +119,15 @@
                     <h2 class="category-title" id="categoryTitle"></h2>
                     <p class="category-desc" id="categoryDesc"></p>
                     <div class="admin-cat-actions" id="catActions">
-                        <button class="admin-btn admin-btn-sm admin-btn-outline" id="editCatBtn">📝 编辑大类</button>
-                        <button class="admin-btn admin-btn-sm admin-btn-outline" id="addSubBtn">＋ 添加子类</button>
+                        <button class="admin-btn admin-btn-sm admin-btn-outline" id="editCatBtn">[EDIT] 编辑大类</button>
+                        <button class="admin-btn admin-btn-sm admin-btn-outline" id="addSubBtn">[+] 添加子类</button>
                     </div>
                 </div>
                 <div class="subcategory-tabs" id="subcategoryTabs"></div>
                 <div class="entries-container" id="entriesContainer">
                     <div class="empty-state" id="emptyState" style="display:none;">
                         <p>暂无条目</p>
-                        <button class="admin-btn admin-btn-accent" id="addEntryBtn">＋ 添加新条目</button>
+                        <button class="admin-btn admin-btn-accent" id="addEntryBtn">[+] 添加新条目</button>
                     </div>
                 </div>
             </div>
@@ -163,7 +163,7 @@
             </div>
             <div class="modal-body" id="entryModalBody"></div>
             <div class="modal-footer">
-                <button class="admin-btn admin-btn-danger" id="entryModalDelete">🗑 删除</button>
+                <button class="admin-btn admin-btn-danger" id="entryModalDelete">[DEL] 删除</button>
                 <span style="flex:1"></span>
                 <button class="admin-btn admin-btn-outline" id="entryModalCancel">取消</button>
                 <button class="admin-btn admin-btn-primary" id="entryModalSave">✓ 保存</button>
@@ -180,7 +180,7 @@
             </div>
             <div class="modal-body" id="catModalBody"></div>
             <div class="modal-footer">
-                <button class="admin-btn admin-btn-danger" id="catModalDelete">🗑 删除此大类</button>
+                <button class="admin-btn admin-btn-danger" id="catModalDelete">[DEL] 删除此大类</button>
                 <span style="flex:1"></span>
                 <button class="admin-btn admin-btn-outline" id="catModalCancel">取消</button>
                 <button class="admin-btn admin-btn-primary" id="catModalSave">✓ 保存</button>

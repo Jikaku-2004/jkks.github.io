@@ -105,7 +105,7 @@ git push
 ```javascript
 {
     id: "travel",           // 分类ID（唯一）
-    icon: "✈️",             // 图标（Emoji）
+    icon: "TR",             // 像素图标代码（1-3 个字母）
     labelKey: "categoryTravel",  // 对应 i18n 中的键名
     subItems: [
         { id: "places", labelKey: "subPlaces" }
@@ -236,7 +236,7 @@ jkk-personal-site/
 | **编辑条目** | 点击条目打开编辑器 → 修改 → 保存条目 → 保存到 GitHub |
 | **本地图片** | 选择或拖入多张图片 → 预览/移除 → API 自动上传并保存引用 |
 | **删除条目** | 悬停条目右侧 ✕ 按钮 |
-| **原子保存** | 图片与内容统一通过 **"💾 保存到 GitHub"** 在一次提交中写入 |
+| **原子保存** | 图片与内容统一通过 **"[SAVE] 保存到 GitHub"** 在一次提交中写入 |
 | **未保存提醒** | 有更改未保存时，底部会显示提示条 |
 
 ---

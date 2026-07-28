@@ -17,6 +17,8 @@ body.admin-mode {
     background-color: var(--bg);
     color: var(--text);
     font-family: var(--font-zh);
+    font-size: 1rem;
+    letter-spacing: .03em;
 }
 
 .setup-screen {
@@ -40,7 +42,9 @@ body.admin-mode {
     width: min(100%, 490px);
     padding: 76px 38px 36px;
     border: 2px solid var(--border-bright);
-    background: #09070e;
+    background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px),
+        #09070e;
     box-shadow: 9px 9px 0 #030205, 12px 12px 0 #3a1e43, 0 0 48px rgba(255,47,135,.14);
     animation: page-in .42s steps(6, end);
 }
@@ -53,7 +57,7 @@ body.admin-mode {
     margin-bottom: 8px;
     color: var(--cyan);
     font-family: var(--pixel);
-    font-size: .58rem;
+    font-size: .66rem;
     letter-spacing: .09em;
     text-align: center;
 }
@@ -62,7 +66,7 @@ body.admin-mode {
     margin-bottom: 8px;
     color: #fff;
     font-family: var(--pixel);
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     text-align: center;
     text-shadow: 2px 2px 0 #74103d;
 }
@@ -70,7 +74,7 @@ body.admin-mode {
 .setup-desc {
     margin-bottom: 25px;
     color: var(--text-secondary);
-    font-size: .88rem;
+    font-size: .98rem;
     line-height: 1.65;
     text-align: center;
 }
@@ -84,7 +88,7 @@ body.admin-mode {
     display: block;
     margin-bottom: 6px;
     color: #d8cede;
-    font-size: .82rem;
+    font-size: .92rem;
     font-weight: 600;
 }
 
@@ -94,7 +98,7 @@ body.admin-mode {
     color: var(--accent);
     content: ">";
     font-family: var(--pixel);
-    font-size: .65rem;
+    font-size: .72rem;
 }
 
 .setup-field input,
@@ -111,7 +115,7 @@ body.admin-mode {
     color: #f5eef8;
     caret-color: var(--cyan);
     font-family: "Cascadia Mono", var(--font-zh), monospace;
-    font-size: .86rem;
+    font-size: .96rem;
     transition: border-color var(--transition), box-shadow var(--transition);
 }
 
@@ -127,7 +131,7 @@ body.admin-mode {
 .setup-hint {
     margin-top: 5px;
     color: #776d82;
-    font-size: .75rem;
+    font-size: .84rem;
     line-height: 1.55;
 }
 
@@ -144,7 +148,9 @@ body.admin-mode {
     border-radius: 0;
     cursor: pointer;
     font-family: var(--font-zh);
+    font-size: .92rem;
     font-weight: 600;
+    letter-spacing: .035em;
     line-height: 1.35;
     white-space: nowrap;
     transition: transform var(--transition), color var(--transition), background var(--transition), border-color var(--transition), box-shadow var(--transition);
@@ -202,7 +208,7 @@ body.admin-mode {
     margin: 18px 0;
     color: #665c70;
     font-family: var(--pixel);
-    font-size: .52rem;
+    font-size: .6rem;
 }
 
 .setup-divider::before,
@@ -220,7 +226,7 @@ body.admin-mode {
     display: none;
     margin-top: 14px;
     color: var(--danger);
-    font-size: .82rem;
+    font-size: .92rem;
     text-align: center;
 }
 
@@ -238,7 +244,7 @@ body.admin-mode .site-title {
     flex: 0 0 auto;
     margin-right: 2px;
     color: #fff !important;
-    font-size: .78rem;
+    font-size: .88rem;
 }
 
 body.admin-mode .top-bar-right {
@@ -251,7 +257,7 @@ body.admin-mode .top-bar-right {
 body.admin-mode .lang-toggle {
     gap: 6px !important;
     font-family: var(--pixel);
-    font-size: .59rem !important;
+    font-size: .67rem !important;
 }
 
 .admin-repo-badge {
@@ -262,7 +268,7 @@ body.admin-mode .lang-toggle {
     background: #08060c;
     color: var(--cyan);
     font-family: var(--pixel);
-    font-size: .52rem;
+    font-size: .6rem;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -270,7 +276,7 @@ body.admin-mode .lang-toggle {
 .admin-status {
     color: var(--cyan);
     font-family: var(--pixel);
-    font-size: .53rem;
+    font-size: .61rem;
     white-space: nowrap;
 }
 
@@ -282,7 +288,7 @@ body.admin-mode .lang-toggle {
 
 .admin-btn {
     padding: 8px 14px;
-    font-size: .8rem;
+    font-size: .9rem;
 }
 
 .admin-btn-primary,
@@ -320,7 +326,7 @@ body.admin-mode .lang-toggle {
 
 .admin-btn-sm {
     padding: 5px 10px;
-    font-size: .72rem;
+    font-size: .8rem;
 }
 
 body.admin-mode .content {
@@ -437,7 +443,9 @@ body.admin-mode .sidebar-footer {
     max-height: 88vh;
     overflow: hidden;
     border: 2px solid var(--border-bright);
-    background: var(--bg-card);
+    background:
+        repeating-linear-gradient(135deg, rgba(255,255,255,.012) 0 1px, transparent 1px 5px),
+        var(--bg-card);
     box-shadow: 9px 9px 0 #030205, 12px 12px 0 #391e42, 0 0 40px rgba(255,47,135,.12);
     animation: page-in .3s steps(5, end);
 }
@@ -468,7 +476,7 @@ body.admin-mode .sidebar-footer {
     margin: 0;
     color: #fff;
     font-family: var(--pixel);
-    font-size: .68rem;
+    font-size: .76rem;
     letter-spacing: .04em;
 }
 
@@ -547,12 +555,12 @@ body.admin-mode .sidebar-footer {
 .image-dropzone strong {
     margin-top: 4px;
     font-family: var(--pixel);
-    font-size: .65rem;
+    font-size: .73rem;
 }
 
 .image-dropzone small {
     color: #7e7289;
-    font-size: .73rem;
+    font-size: .82rem;
 }
 
 .upload-pixel-icon {
@@ -567,7 +575,7 @@ body.admin-mode .sidebar-footer {
     min-height: 46px;
     margin-top: 9px;
     color: #82758e;
-    font-size: .72rem;
+    font-size: .82rem;
 }
 
 .image-upload-list {
@@ -581,7 +589,7 @@ body.admin-mode .sidebar-footer {
     border: 1px dashed #382940;
     color: #665b70;
     font-family: var(--pixel);
-    font-size: .51rem;
+    font-size: .59rem;
     text-align: center;
 }
 
@@ -628,13 +636,13 @@ body.admin-mode .sidebar-footer {
 
 .image-upload-meta strong {
     color: #d9d0de;
-    font-size: .76rem;
+    font-size: .86rem;
 }
 
 .image-upload-meta small {
     color: #716579;
     font-family: "Cascadia Mono", monospace;
-    font-size: .65rem;
+    font-size: .74rem;
 }
 
 .upload-state {
@@ -643,7 +651,7 @@ body.admin-mode .sidebar-footer {
     border: 1px solid rgba(255,209,102,.4);
     color: var(--warning);
     font-family: var(--pixel);
-    font-size: .48rem;
+    font-size: .56rem;
 }
 
 .upload-state.saved {
@@ -682,7 +690,7 @@ body.admin-mode .sidebar-footer {
     border: 1px solid currentColor;
     background: #09070d;
     box-shadow: 5px 5px 0 rgba(0,0,0,.55);
-    font-size: .82rem;
+    font-size: .92rem;
     animation: card-in .3s steps(4, end);
 }
 
@@ -749,7 +757,7 @@ body.admin-mode .sidebar-footer {
 
     .admin-btn {
         padding: 7px 9px;
-        font-size: .71rem;
+        font-size: .8rem;
     }
 
     .modal-footer {

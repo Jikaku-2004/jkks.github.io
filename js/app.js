@@ -13,6 +13,10 @@
     let siteContent = {};      // 从 content.json 加载的条目内容
     let siteNavigation = [];   // 从 content.json 加载的导航
     let siteContact = {};      // 从 content.json 加载的联系方式
+    const PIXEL_ICONS = Object.freeze({
+        reading: 'RD', art: 'AR', sports: 'SP', research: 'RS',
+        kappa: 'KP', contact: 'CT', email: 'ML'
+    });
 
     // ── DOM引用 ──
     const $ = (sel) => document.querySelector(sel);
@@ -73,7 +77,7 @@
             item.dataset.category = cat.id;
             const catLabel = cat.label ? cat.label[currentLang] : (I18N[cat.labelKey] ? I18N[cat.labelKey][currentLang] : cat.id);
             item.innerHTML = `
-                <span class="nav-icon">${cat.icon}</span>
+                <span class="nav-icon">${pixelIconMarkup(cat.id, cat.icon)}</span>
                 <span class="nav-label">${catLabel}</span>
                 ${cat.subItems.length > 0 ? '<span class="nav-arrow">▶</span>' : ''}
             `;
@@ -274,7 +278,7 @@
             if (entry.links && entry.links.length > 0) {
                 html += `<div class="entry-links">`;
                 entry.links.forEach(link => {
-                    html += `<a href="${link.url}" class="entry-link" target="_blank" rel="noopener">🔗 ${escapeHtml(link.text)}</a>`;
+                    html += `<a href="${link.url}" class="entry-link" target="_blank" rel="noopener">[LINK] ${escapeHtml(link.text)}</a>`;
                 });
                 html += `</div>`;
             }
@@ -314,7 +318,7 @@
                 <p style="color: var(--text-secondary); margin-bottom: 24px;">${t('contactDesc')}</p>
         `;
 
-        Object.values(contact).forEach(item => {
+        Object.entries(contact).forEach(([contactId, item]) => {
             // 兼容两种格式：内联 label {zh,en} 或旧版 label_zh/label_en
             let label;
             if (item.label && item.label.zh) {
@@ -329,7 +333,7 @@
 
             html += `
                 <div class="contact-item">
-                    <span class="contact-icon">${item.icon || '✉️'}</span>
+                    <span class="contact-icon">${pixelIconMarkup(contactId, item.icon)}</span>
                     <span class="contact-label">${escapeHtml(label)}</span>
                     ${valueHtml}
                 </div>
@@ -449,6 +453,12 @@
 
     function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function pixelIconMarkup(id, fallback) {
+        const safeFallback = String(fallback || '').match(/[A-Za-z0-9@]{1,3}/);
+        const code = safeFallback ? safeFallback[0].toUpperCase() : (PIXEL_ICONS[id] || String(id || 'UI').slice(0, 2).toUpperCase());
+        return `<span class="pixel-icon" aria-hidden="true">${escapeHtml(code)}</span>`;
     }
 
     function escapeHtml(str) {
