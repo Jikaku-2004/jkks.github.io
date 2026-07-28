@@ -3,12 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#120d1f">
+    <meta name="description" content="JKK 的个人记录终端：阅读、艺术、运动与研究。">
     <title>JKK's Personal Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <!-- Markdown渲染库 -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
+    <a class="skip-link" href="#mainContent">跳至主要内容</a>
+    <div class="crt-overlay" aria-hidden="true"></div>
 
     <!-- 顶部导航栏 -->
     <header class="top-bar">
@@ -16,8 +23,9 @@
             <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
                 <span></span><span></span><span></span>
             </button>
-            <a href="#" class="site-title" id="siteTitle" data-key="siteTitle">JKK</a>
+            <a href="#" class="site-title" id="siteTitle"><span class="title-prompt">&gt;</span> JKK.OS</a>
             <div class="top-bar-right">
+                <span class="system-status"><i></i> ONLINE</span>
                 <div class="lang-toggle" id="langToggle">
                     <span class="lang-option active" data-lang="zh">中</span>
                     <span class="lang-divider">|</span>
@@ -30,11 +38,13 @@
     <div class="layout">
         <!-- 左侧导航 -->
         <nav class="sidebar" id="sidebar">
+            <div class="sidebar-label"><span>CHANNELS</span><span>01—05</span></div>
             <ul class="nav-list" id="navList">
                 <!-- 由JS动态生成 -->
             </ul>
             <div class="sidebar-footer">
-                <a href="#" class="nav-item" id="navContact" data-key="navContact">
+                <span class="sidebar-label footer-label">UPLINK</span>
+                <a href="#" class="nav-item" id="navContact">
                     <span class="nav-icon">✉️</span>
                     <span class="nav-label" data-key="contact">联系方式</span>
                 </a>
@@ -46,9 +56,14 @@
             <!-- 欢迎页面 -->
             <div class="welcome-page" id="welcomePage">
                 <div class="welcome-card">
+                    <div class="window-bar">
+                        <span>WELCOME.EXE</span>
+                        <span class="window-controls">■ □ ×</span>
+                    </div>
                     <div class="avatar-area">
                         <div class="avatar-placeholder">JKK</div>
                     </div>
+                    <p class="welcome-kicker">PERSONAL ARCHIVE // EST.2026</p>
                     <h1 class="welcome-title" data-key="welcomeTitle">欢迎来到JKK的个人网页</h1>
                     <p class="welcome-subtitle" data-key="welcomeSubtitle">探索 · 思考 · 记录</p>
                     <div class="welcome-desc" data-key="welcomeDesc">
@@ -66,6 +81,10 @@
             <!-- 分类内容容器 -->
             <div class="category-page" id="categoryPage" style="display:none;">
                 <div class="category-header">
+                    <div class="window-bar">
+                        <span>ARCHIVE.DB</span>
+                        <span class="window-controls">■ □ ×</span>
+                    </div>
                     <h2 class="category-title" id="categoryTitle"></h2>
                     <p class="category-desc" id="categoryDesc"></p>
                 </div>
@@ -93,7 +112,9 @@
     <!-- 页脚 -->
     <footer class="site-footer">
         <div class="footer-inner">
+            <span class="footer-signal">◆ SIGNAL STABLE</span>
             <span data-key="footerText">© 2026 JKK. 用 ❤️ 打造</span>
+            <span class="footer-clock" id="systemClock">00:00:00 CST</span>
         </div>
     </footer>
 

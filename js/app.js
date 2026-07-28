@@ -40,6 +40,7 @@
         setupMenuToggle();
         setupLightbox();
         setupContactNav();
+        setupSystemClock();
         applyLanguage(currentLang);
     }
 
@@ -184,6 +185,7 @@
 
         // 子分类标签
         subcategoryTabs.innerHTML = '';
+        subcategoryTabs.style.display = '';
         if (cat.subItems.length > 1) {
             cat.subItems.forEach(sub => {
                 const tab = document.createElement('button');
@@ -251,7 +253,7 @@
             if (entry.images && entry.images.length > 0) {
                 html += `<div class="entry-images">`;
                 entry.images.forEach(img => {
-                    html += `<img src="${img}" alt="" loading="lazy">`;
+                    html += `<img src="${escapeHtml(img)}" alt="${escapeHtml(title || '')}" loading="lazy">`;
                 });
                 html += `</div>`;
             }
@@ -284,6 +286,7 @@
         // 绑定图片点击（灯箱）
         entriesContainer.querySelectorAll('.entry-body img, .entry-images img').forEach(img => {
             img.addEventListener('click', () => openLightbox(img.src));
+            img.addEventListener('error', () => img.closest('.entry-images') && img.classList.add('image-load-error'));
         });
     }
 
@@ -422,6 +425,21 @@
     function openLightbox(src) {
         lightboxImg.src = src;
         lightbox.classList.add('show');
+    }
+
+    // ── 顶栏系统时钟 ──
+    function setupSystemClock() {
+        const clock = $('#systemClock');
+        if (!clock) return;
+        const update = () => {
+            const now = new Date();
+            clock.textContent = now.toLocaleTimeString('zh-CN', {
+                hour12: false,
+                timeZone: 'Asia/Shanghai'
+            }) + ' CST';
+        };
+        update();
+        window.setInterval(update, 1000);
     }
 
     // ── 工具函数 ──

@@ -11,6 +11,12 @@
     let siteNav = [], siteContact = {}, siteContent = {};
     let currentLang = 'zh', currentCategory = null, currentSubcategory = null;
     let contentSha = null, isDirty = false, editingEntry = null, editingSubId = null, editingCatIdx = null;
+    let pendingUploads = new Map(), editingPendingUploads = new Map();
+    const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+    const IMAGE_TYPES = {
+        'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif',
+        'image/webp': 'webp', 'image/avif': 'avif'
+    };
 
     const WELCOME_FIELDS = {
         welcomeTitle: { zh: '欢迎来到 JKK 的个人网页', en: "Welcome to JKK's Personal Page" },
@@ -97,6 +103,7 @@
     }
 
     function parseData(raw) {
+        clearAllPendingUploads();
         siteNav=raw.navigation||[]; siteContact=raw.contact||{}; siteContent=raw.content||raw;
         if(Object.keys(siteContent).length===0&&!raw.navigation) siteContent=raw;
         isDirty=false; updateStatus();
@@ -213,7 +220,7 @@
             editBtns[0].onclick=function(){openEntryEditor(subId,entry);};
             var delBtns=card.querySelectorAll('.entry-del-btn');
             delBtns[0].onclick=function(){
-                if(confirm('删除?')){var a=siteContent[subId]||[];var i=a.findIndex(function(e){return e.id===entry.id;});if(i>=0)a.splice(i,1);renderEntries(subId);markDirty();toast('已删除','info');}
+                if(confirm('删除?')){var a=siteContent[subId]||[];var i=a.findIndex(function(e){return e.id===entry.id;});if(i>=0)a.splice(i,1);cleanupUnreferencedPendingUploads();renderEntries(subId);markDirty();toast('已删除','info');}
             };
         });
         // 始终显示添加新条目按钮
@@ -255,6 +262,7 @@
 
     function openEntryEditor(subId,entry){
         editingSubId=subId; editingEntry=entry;
+        discardEditingUploads();
         var isZh=currentLang==='zh';
         $('#entryModalTitle').textContent='Edit: '+(entry.title_zh||entry.title_en||entry.id);
         $('#entryModalBody').innerHTML=
@@ -266,16 +274,33 @@
             '<div class="editor-field"><label>'+(isZh?'英文标签':'English Tags')+'</label><input type="text" id="eeTagsEn" value="'+esc((entry.tags_en||[]).join(', '))+'"></div></div>'+
             '<div class="editor-field"><label>'+(isZh?'中文内容 (Markdown)':'Chinese Content')+'</label><textarea id="eeContentZh" rows="4">'+esc(entry.content_zh||'')+'</textarea></div>'+
             '<div class="editor-field"><label>'+(isZh?'英文内容':'English Content (Markdown)')+'</label><textarea id="eeContentEn" rows="4">'+esc(entry.content_en||'')+'</textarea></div>'+
-            '<div class="editor-row"><div class="editor-field"><label>'+(isZh?'图片路径':'Images')+'</label><textarea id="eeImages" rows="2">'+esc((entry.images||[]).join('\n'))+'</textarea></div>'+
-            '<div class="editor-field"><label>'+(isZh?'链接 (文字,网址)':'Links')+'</label><textarea id="eeLinks" rows="2">'+esc((entry.links||[]).map(function(l){return l.text+','+l.url;}).join('\n'))+'</textarea></div>'+
+            '<div class="editor-field image-editor-field">'+
+                '<label>'+(isZh?'本地图片':'Local images')+'</label>'+
+                '<div class="image-dropzone" id="imageDropzone" tabindex="0" role="button" aria-label="选择或拖入本地图片">'+
+                    '<input type="file" id="eeImageFiles" accept="image/jpeg,image/png,image/gif,image/webp,image/avif" multiple hidden>'+
+                    '<span class="upload-pixel-icon">▣</span>'+
+                    '<strong>'+(isZh?'点击选择或拖入图片':'Choose or drop images')+'</strong>'+
+                    '<small>'+(isZh?'JPG / PNG / GIF / WEBP / AVIF，单张最大 10MB；保存时与内容一并上传':'JPG / PNG / GIF / WEBP / AVIF, max 10MB each; uploaded with content')+'</small>'+
+                '</div>'+
+                '<textarea id="eeImages" rows="2" aria-label="图片引用路径">'+esc((entry.images||[]).join('\n'))+'</textarea>'+
+                '<div class="image-upload-list" id="imageUploadList"></div>'+
+            '</div>'+
+            '<div class="editor-row"><div class="editor-field"><label>'+(isZh?'链接 (文字,网址)':'Links')+'</label><textarea id="eeLinks" rows="2">'+esc((entry.links||[]).map(function(l){return l.text+','+l.url;}).join('\n'))+'</textarea></div>'+
             '<div class="editor-field"><label>'+(isZh?'视频链接':'Videos')+'</label><textarea id="eeVideos" rows="2">'+esc((entry.videos||[]).map(function(v){return v.url;}).join('\n'))+'</textarea></div></div>';
+        setupImagePicker();
+        renderImageUploadList();
         $('#entryModal').style.display='flex';
     }
-    function closeEntryEditor(){$('#entryModal').style.display='none';editingEntry=null;}
+    function closeEntryEditor(){
+        discardEditingUploads();
+        $('#entryModal').style.display='none';
+        editingEntry=null;
+    }
     function saveEntry(){
         if(!editingEntry||!editingSubId)return;
         var e=editingEntry;
         e.title_zh=$('#eeZh').value.trim(); e.title_en=$('#eeEn').value.trim();
+        if(!e.title_zh&&!e.title_en)return toast('请至少填写一个标题','error');
         e.date=$('#eeDate').value; e.id=$('#eeId').value.trim()||e.id;
         e.tags_zh=$('#eeTagsZh').value.split(/[,，]/).map(function(s){return s.trim();}).filter(Boolean);
         e.tags_en=$('#eeTagsEn').value.split(/[,，]/).map(function(s){return s.trim();}).filter(Boolean);
@@ -283,11 +308,14 @@
         e.images=$('#eeImages').value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
         e.links=$('#eeLinks').value.split('\n').map(function(s){var p=s.split(/[,，]/);return p.length>=2?{url:p[1].trim(),text:p[0].trim()}:null;}).filter(Boolean);
         e.videos=$('#eeVideos').value.split('\n').map(function(s){var u=s.trim();return u?{url:u,platform:u.includes('bilibili')?'bilibili':'youtube'}:null;}).filter(Boolean);
+        editingPendingUploads.forEach(function(upload,path){pendingUploads.set(path,upload);});
+        editingPendingUploads=new Map();
         closeEntryEditor();
         var arr=siteContent[editingSubId]||[];
         var i=arr.findIndex(function(x){return x.id===e.id;});
         if(i>=0)arr[i]=e;else arr.push(e);
         siteContent[editingSubId]=arr;
+        cleanupUnreferencedPendingUploads();
         if(currentCategory!==null&&siteNav[currentCategory]){
             var cat=siteNav[currentCategory];var sub=cat.subItems?cat.subItems[currentSubcategory||0]:null;
             if(sub)showCatPage(cat,sub);
@@ -300,11 +328,115 @@
         var i=arr.findIndex(function(e){return e.id===editingEntry.id;});
         if(i>=0)arr.splice(i,1);
         closeEntryEditor();
+        cleanupUnreferencedPendingUploads();
         if(currentCategory!==null&&siteNav[currentCategory]){
             var cat=siteNav[currentCategory];var sub=cat.subItems?cat.subItems[currentSubcategory||0]:null;
             if(sub)showCatPage(cat,sub);
         }
         markDirty();toast('已删除','info');
+    }
+
+    function setupImagePicker(){
+        var dropzone=$('#imageDropzone'),input=$('#eeImageFiles'),refs=$('#eeImages');
+        if(!dropzone||!input||!refs)return;
+        dropzone.onclick=function(){input.click();};
+        dropzone.onkeydown=function(e){
+            if(e.key==='Enter'||e.key===' '){e.preventDefault();input.click();}
+        };
+        input.onchange=function(){addLocalImages(input.files);input.value='';};
+        ['dragenter','dragover'].forEach(function(type){
+            dropzone.addEventListener(type,function(e){e.preventDefault();dropzone.classList.add('drag-over');});
+        });
+        ['dragleave','drop'].forEach(function(type){
+            dropzone.addEventListener(type,function(e){e.preventDefault();dropzone.classList.remove('drag-over');});
+        });
+        dropzone.addEventListener('drop',function(e){addLocalImages(e.dataTransfer.files);});
+        refs.addEventListener('input',renderImageUploadList);
+    }
+
+    function addLocalImages(fileList){
+        if(!fileList||!fileList.length)return;
+        var refs=$('#eeImages');
+        var paths=refs.value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+        var added=0;
+        Array.prototype.forEach.call(fileList,function(file){
+            if(!IMAGE_TYPES[file.type]){
+                toast('不支持的图片格式: '+file.name,'error');return;
+            }
+            if(file.size>MAX_IMAGE_BYTES){
+                toast('图片超过 10MB: '+file.name,'error');return;
+            }
+            var path=createImagePath(file);
+            var previewUrl=URL.createObjectURL(file);
+            editingPendingUploads.set(path,{file:file,previewUrl:previewUrl});
+            paths.push(path);added++;
+        });
+        refs.value=paths.join('\n');
+        renderImageUploadList();
+        if(added)toast('已加入 '+added+' 张图片，提交时自动上传','success');
+    }
+
+    function createImagePath(file){
+        var stamp=new Date().toISOString().replace(/\D/g,'').slice(0,14);
+        var id=($('#eeId')&&$('#eeId').value.trim())||(editingEntry&&editingEntry.id)||'entry';
+        var entrySlug=id.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,28)||'entry';
+        var rawName=(file.name||'image').replace(/\.[^.]+$/,'');
+        var fileSlug=rawName.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,28)||'image';
+        var ext=IMAGE_TYPES[file.type];
+        var suffix=Math.random().toString(36).slice(2,7);
+        return 'images/'+stamp+'-'+entrySlug+'-'+fileSlug+'-'+suffix+'.'+ext;
+    }
+
+    function renderImageUploadList(){
+        var refs=$('#eeImages'),list=$('#imageUploadList');
+        if(!refs||!list)return;
+        var paths=refs.value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+        if(!paths.length){
+            list.innerHTML='<p class="image-empty">NO IMAGE REFERENCES</p>';return;
+        }
+        list.innerHTML=paths.map(function(path,index){
+            var upload=editingPendingUploads.get(path)||pendingUploads.get(path);
+            var src=upload?upload.previewUrl:path;
+            return '<div class="image-upload-item">'+
+                '<div class="image-upload-thumb"><img src="'+esc(src)+'" alt=""></div>'+
+                '<div class="image-upload-meta"><strong>'+esc(path.split('/').pop())+'</strong>'+
+                '<small>'+esc(path)+'</small></div>'+
+                (upload?'<span class="upload-state">待上传</span>':'<span class="upload-state saved">已引用</span>')+
+                '<button type="button" class="image-remove-btn" data-image-index="'+index+'" aria-label="移除图片">×</button>'+
+                '</div>';
+        }).join('');
+        var buttons=list.querySelectorAll('.image-remove-btn');
+        for(var i=0;i<buttons.length;i++)buttons[i].onclick=function(){
+            var index=parseInt(this.dataset.imageIndex,10);
+            var path=paths[index];
+            var staged=editingPendingUploads.get(path);
+            if(staged){URL.revokeObjectURL(staged.previewUrl);editingPendingUploads.delete(path);}
+            paths.splice(index,1);refs.value=paths.join('\n');renderImageUploadList();
+        };
+    }
+
+    function discardEditingUploads(){
+        editingPendingUploads.forEach(function(upload){URL.revokeObjectURL(upload.previewUrl);});
+        editingPendingUploads.clear();
+    }
+
+    function cleanupUnreferencedPendingUploads(){
+        var referenced=new Set();
+        Object.keys(siteContent).forEach(function(key){
+            (siteContent[key]||[]).forEach(function(entry){
+                (entry.images||[]).forEach(function(path){referenced.add(path);});
+            });
+        });
+        pendingUploads.forEach(function(upload,path){
+            if(!referenced.has(path)){URL.revokeObjectURL(upload.previewUrl);pendingUploads.delete(path);}
+        });
+        updateStatus();
+    }
+
+    function clearAllPendingUploads(){
+        discardEditingUploads();
+        pendingUploads.forEach(function(upload){URL.revokeObjectURL(upload.previewUrl);});
+        pendingUploads.clear();
     }
 
     function addNewEntry(){
@@ -394,27 +526,98 @@
     function closeSubEditor(){document.getElementById('subModal').style.display='none';}
 
     async function saveToGitHub(){
-        if(!config.token){downloadContent();toast('手动模式: 已下载','info');return;}
+        if(!config.token){
+            downloadContent();
+            toast(pendingUploads.size?'手动模式已下载 JSON；本地图片需手动上传到 images 文件夹':'手动模式: 已下载','info');
+            return;
+        }
+        if(!isDirty&&!pendingUploads.size){toast('没有需要保存的更改','info');return;}
         var btn=$('#saveBtn');btn.disabled=true;btn.textContent='保存中...';
         try{
-            var url='https://api.github.com/repos/'+config.owner+'/'+config.repo+'/contents/data/content.json?ref='+config.branch;
-            var cr=await fetch(url,{headers:{'Authorization':'token '+config.token,'Accept':'application/vnd.github.v3+json'}});
-            var sha=contentSha;
-            if(cr.ok){var l=await cr.json();sha=l.sha;}
+            var branchPath=config.branch.split('/').map(encodeURIComponent).join('/');
+            var ref=await githubRequest('/git/ref/heads/'+branchPath);
+            var headSha=ref.object.sha;
+            var headCommit=await githubRequest('/git/commits/'+headSha);
+            var treeItems=[];
+            var uploads=Array.from(pendingUploads.entries());
+            for(var i=0;i<uploads.length;i++){
+                btn.textContent='上传图片 '+(i+1)+'/'+uploads.length;
+                var path=uploads[i][0],file=uploads[i][1].file;
+                var imageBlob=await githubRequest('/git/blobs',{
+                    method:'POST',
+                    body:JSON.stringify({content:await fileToBase64(file),encoding:'base64'})
+                });
+                treeItems.push({path:path,mode:'100644',type:'blob',sha:imageBlob.sha});
+            }
+            btn.textContent='写入内容...';
             var data={navigation:siteNav,contact:siteContact,content:siteContent};
             var json=JSON.stringify(data,null,4);
-            var enc=btoa(unescape(encodeURIComponent(json)));
-            var pr=await fetch('https://api.github.com/repos/'+config.owner+'/'+config.repo+'/contents/data/content.json',{
-                method:'PUT',
-                headers:{'Authorization':'token '+config.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-                body:JSON.stringify({message:'后台编辑更新',content:enc,sha:sha||undefined,branch:config.branch})
+            var contentBlob=await githubRequest('/git/blobs',{
+                method:'POST',
+                body:JSON.stringify({content:utf8ToBase64(json),encoding:'base64'})
             });
-            if(!pr.ok){var ed={};try{ed=await pr.json();}catch(e){}throw new Error(ed.message||'HTTP '+pr.status);}
-            var res=await pr.json();contentSha=res.content.sha;
+            treeItems.push({path:'data/content.json',mode:'100644',type:'blob',sha:contentBlob.sha});
+            var tree=await githubRequest('/git/trees',{
+                method:'POST',
+                body:JSON.stringify({base_tree:headCommit.tree.sha,tree:treeItems})
+            });
+            var commit=await githubRequest('/git/commits',{
+                method:'POST',
+                body:JSON.stringify({
+                    message:uploads.length?'后台更新内容并上传 '+uploads.length+' 张图片':'后台编辑更新',
+                    tree:tree.sha,
+                    parents:[headSha]
+                })
+            });
+            await githubRequest('/git/refs/heads/'+branchPath,{
+                method:'PATCH',
+                body:JSON.stringify({sha:commit.sha,force:false})
+            });
+            contentSha=contentBlob.sha;
+            clearAllPendingUploads();
             isDirty=false;updateStatus();
-            toast('保存成功! 1-2分钟后更新','success');
+            toast('保存成功！内容与图片已在同一次提交中上传','success');
         }catch(e){toast('保存失败: '+e.message,'error');}
         btn.disabled=false;btn.textContent='保存到 GitHub';
+    }
+
+    async function githubRequest(path,options){
+        options=options||{};
+        var response=await fetch('https://api.github.com/repos/'+encodeURIComponent(config.owner)+'/'+encodeURIComponent(config.repo)+path,{
+            method:options.method||'GET',
+            headers:{
+                'Authorization':'Bearer '+config.token,
+                'Accept':'application/vnd.github+json',
+                'Content-Type':'application/json',
+                'X-GitHub-Api-Version':'2022-11-28'
+            },
+            body:options.body
+        });
+        if(!response.ok){
+            var detail={};
+            try{detail=await response.json();}catch(ignore){}
+            if(response.status===409||response.status===422)throw new Error('远端内容已变化，请重新加载后再保存');
+            throw new Error(detail.message||('GitHub API '+response.status));
+        }
+        return response.status===204?{}:response.json();
+    }
+
+    function fileToBase64(file){
+        return new Promise(function(resolve,reject){
+            var reader=new FileReader();
+            reader.onload=function(){resolve(String(reader.result).split(',')[1]||'');};
+            reader.onerror=function(){reject(new Error('读取图片失败: '+file.name));};
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function utf8ToBase64(text){
+        var bytes=new TextEncoder().encode(text);
+        var binary='',chunk=0x8000;
+        for(var i=0;i<bytes.length;i+=chunk){
+            binary+=String.fromCharCode.apply(null,bytes.subarray(i,i+chunk));
+        }
+        return btoa(binary);
     }
 
     function downloadContent(){
@@ -442,7 +645,11 @@
     }
 
     function markDirty(){isDirty=true;updateStatus();}
-    function updateStatus(){var s=$('#adminStatus');if(!s)return;s.textContent=isDirty?'未保存':'已保存';s.style.color=isDirty?'#ff9800':'';}
+    function updateStatus(){
+        var s=$('#adminStatus');if(!s)return;
+        s.textContent=isDirty?('未保存'+(pendingUploads.size?' · 图片 '+pendingUploads.size:'')):'已保存';
+        s.style.color=isDirty?'var(--warning)':'';
+    }
 
     function toast(msg,type){
         var el=document.createElement('div');el.className='toast '+(type||'info');

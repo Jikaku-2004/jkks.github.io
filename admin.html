@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#120d1f">
     <title>JKK 管理后台</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/admin.css">
 </head>
 <body class="admin-mode">
+    <div class="crt-overlay" aria-hidden="true"></div>
 
     <!-- ── 设置界面 ── -->
     <div class="setup-screen" id="setupScreen">
         <div class="setup-card">
-            <h1>⚙️ JKK 管理后台</h1>
+            <div class="window-bar"><span>ADMIN.LOGIN</span><span class="window-controls">■ □ ×</span></div>
+            <p class="setup-kicker">SECURE CONTENT UPLINK</p>
+            <h1>JKK 管理终端</h1>
             <p class="setup-desc">配置 GitHub 仓库信息，之后所有修改将通过 API 直接提交。</p>
             <div class="setup-field">
                 <label>GitHub 用户名</label>
@@ -24,7 +31,7 @@
             </div>
             <div class="setup-field">
                 <label>Personal Access Token</label>
-                <input type="password" id="setupToken" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
+                <input type="password" id="setupToken" placeholder="在此粘贴 Token">
                 <p class="setup-hint">
                     👆 <a href="https://github.com/settings/tokens" target="_blank">点此生成 Token</a>，
                     勾选 <code>public_repo</code> 权限。
@@ -44,7 +51,7 @@
     <!-- ── 顶栏 ── -->
     <header class="top-bar" id="adminTopBar" style="display:none;">
         <div class="top-bar-inner">
-            <span class="site-title" style="color:var(--accent)">📝 JKK 管理后台</span>
+            <span class="site-title"><span class="title-prompt">&gt;</span> JKK.ADMIN</span>
             <span class="admin-repo-badge" id="repoBadge"></span>
             <div class="top-bar-right">
                 <div class="lang-toggle" id="adminLangToggle" style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;font-weight:600;">
@@ -149,7 +156,7 @@
 
     <!-- ── 条目编辑器浮层 ── -->
     <div class="modal-overlay" id="entryModal" style="display:none;">
-        <div class="modal-panel" style="max-width:700px;">
+        <div class="modal-panel entry-modal-panel" style="max-width:820px;">
             <div class="modal-header">
                 <h3 id="entryModalTitle">编辑条目</h3>
                 <span class="modal-close" id="entryModalClose">&times;</span>
