@@ -137,6 +137,13 @@
                         "zh": "日志感想",
                         "en": "Journal"
                     }
+                },
+                {
+                    "id": "123",
+                    "label": {
+                        "zh": "123",
+                        "en": "123"
+                    }
                 }
             ]
         },
@@ -165,6 +172,25 @@
         }
     },
     "content": {
+        "123": [
+            {
+                "id": "new-1785264069810",
+                "title_zh": "12",
+                "title_en": "12",
+                "date": "2026-07-28",
+                "tags_zh": [
+                    "1"
+                ],
+                "tags_en": [
+                    "1"
+                ],
+                "content_zh": "123",
+                "content_en": "231",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
         "books": [
             {
                 "id": "example-book",
