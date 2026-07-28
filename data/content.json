@@ -180,12 +180,18 @@
             {
                 "id": "new-1785254781821",
                 "title_zh": "维特根斯坦私人笔记1914-1916",
-                "title_en": "",
-                "date": "2026-07-28",
-                "tags_zh": [],
-                "tags_en": [],
-                "content_zh": "我觉得还是有所收获的。至少我知道W也是跟我相同，为卑劣感到不满，为世界不遵守一个应然秩序恼怒，对自己也感到不满。",
-                "content_en": "waiting for ……",
+                "title_en": "Wittgenstein Private Notebooks 1914-1916",
+                "date": "2026-07-27",
+                "tags_zh": [
+                    "哲学",
+                    "日记"
+                ],
+                "tags_en": [
+                    "philosophy",
+                    "diary"
+                ],
+                "content_zh": "我觉得还是有所收获的。至少让我知道W也是跟我相同：为卑劣感到不满，为世界不遵守一个应然秩序恼怒，对自己也感到不满。",
+                "content_en": "I think I still gained something. At least let me know that W is the same as me: dissatisfied with baseness, angry that the world does not follow a proper order, and dissatisfied with himself.",
                 "images": [],
                 "videos": [],
                 "links": []
@@ -267,17 +273,34 @@
         "running": [
             {
                 "id": "example-run",
-                "title_zh": "示例跑步记录",
-                "title_en": "Sample Running Log",
-                "date": "2026-07-28",
+                "title_zh": "海南儋州半程马拉松",
+                "title_en": "Half-marathon in Danzhou, Hainan",
+                "date": "2025-12-21",
                 "tags_zh": [
-                    "10公里"
+                    "半马"
                 ],
                 "tags_en": [
-                    "10K"
+                    "Half marathon"
                 ],
-                "content_zh": "今日跑了10公里，用时50分钟。\n\n状态不错。",
-                "content_en": "Ran 10K today in 50 minutes.\n\nFeeling good.",
+                "content_zh": "1:48:44\n24年和25年训练很少。这个成绩比预想中的好。原本计划1：55：00。\n赛道走洋浦大桥来回。爬升很大。",
+                "content_en": "1:48:44\nThere was very little training in 2024 and 2025. This result is better than expected. The original plan was 1:55：00\nThe track runs back and forth across Yangpu Bridge. There is a significant climb.",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785261231308",
+                "title_zh": "厦门海沧半程马拉松",
+                "title_en": "Half-marathon in Haicang， Xiamen， Fujian",
+                "date": "2023-12-03",
+                "tags_zh": [
+                    "半马"
+                ],
+                "tags_en": [
+                    "Half-marathon"
+                ],
+                "content_zh": "1：40：42\n第一次半程马拉松。经验不足，在配速和补给上没有做充分的准备，20km处已经出现轻微肌肉痉挛。由于起跑区域差也影响了发挥。或许当时真实实力能达到1：35：00。",
+                "content_en": "1:40:42\nMy first half marathon. Due to a lack of experience, I didn't make adequate preparations in terms of pace and supplies. I had already experienced mild muscle spasms at the 20-kilometer mark. The performance was also affected because the starting area was far back. Perhaps the actual strength at that time could have reached 1:35:00.",
                 "images": [],
                 "videos": [],
                 "links": []
