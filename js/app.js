@@ -10,7 +10,9 @@
     let currentLang = 'zh';
     let currentCategory = null;
     let currentSubCategory = null;
-    let siteContent = {};  // 从 content.json 加载
+    let siteContent = {};      // 从 content.json 加载的条目内容
+    let siteNavigation = [];   // 从 content.json 加载的导航
+    let siteContact = {};      // 从 content.json 加载的联系方式
 
     // ── DOM引用 ──
     const $ = (sel) => document.querySelector(sel);
@@ -38,7 +40,6 @@
         setupMenuToggle();
         setupLightbox();
         setupContactNav();
-        setupQuickAdd();
         applyLanguage(currentLang);
     }
 
@@ -46,9 +47,14 @@
     async function loadContent() {
         try {
             const resp = await fetch('data/content.json');
-            siteContent = await resp.json();
+            const data = await resp.json();
+            siteNavigation = data.navigation || [];
+            siteContact = data.contact || {};
+            siteContent = data.content || {};
         } catch (e) {
-            console.warn('无法加载 content.json，使用空内容', e);
+            console.warn('无法加载 content.json，使用后备数据', e);
+            siteNavigation = SITE_DATA.navigation || [];
+            siteContact = SITE_DATA.contact || {};
             siteContent = {};
         }
     }
@@ -56,16 +62,18 @@
     // ── 导航渲染 ──
     function renderNavigation() {
         navList.innerHTML = '';
-        SITE_DATA.navigation.forEach(cat => {
+        const nav = siteNavigation.length > 0 ? siteNavigation : (SITE_DATA.navigation || []);
+        nav.forEach(cat => {
             const li = document.createElement('li');
 
             // 主分类项
             const item = document.createElement('div');
             item.className = 'nav-item';
             item.dataset.category = cat.id;
+            const catLabel = cat.label ? cat.label[currentLang] : (I18N[cat.labelKey] ? I18N[cat.labelKey][currentLang] : cat.id);
             item.innerHTML = `
                 <span class="nav-icon">${cat.icon}</span>
-                <span class="nav-label" data-i18n="${cat.labelKey}">${cat.labelKey}</span>
+                <span class="nav-label">${catLabel}</span>
                 ${cat.subItems.length > 0 ? '<span class="nav-arrow">▶</span>' : ''}
             `;
             item.addEventListener('click', () => toggleCategory(cat.id, item));
@@ -83,7 +91,8 @@
                     subItem.className = 'sub-nav-item';
                     subItem.dataset.category = cat.id;
                     subItem.dataset.subcategory = sub.id;
-                    subItem.innerHTML = `<span data-i18n="${sub.labelKey}">${sub.labelKey}</span>`;
+                    const subLabel = sub.label ? sub.label[currentLang] : (I18N[sub.labelKey] ? I18N[sub.labelKey][currentLang] : sub.id);
+                    subItem.innerHTML = `<span>${subLabel}</span>`;
                     subItem.addEventListener('click', (e) => {
                         e.stopPropagation();
                         navigateTo(cat.id, sub.id);
@@ -164,12 +173,14 @@
 
     // ── 渲染分类页面 ──
     function renderCategoryPage(category, subCategory) {
-        const cat = SITE_DATA.navigation.find(c => c.id === category);
+        const nav = siteNavigation.length > 0 ? siteNavigation : (SITE_DATA.navigation || []);
+        const cat = nav.find(c => c.id === category);
         if (!cat) return;
 
-        // 标题和描述
-        categoryTitle.textContent = t(cat.labelKey);
-        categoryDesc.textContent = t(`desc${capitalize(category)}`);
+        // 标题和描述（优先使用 content.json 中的内联翻译，其次 i18n）
+        const lang = currentLang;
+        categoryTitle.textContent = cat.label ? cat.label[lang] : (t(cat.labelKey) || cat.id);
+        categoryDesc.textContent = cat.desc ? cat.desc[lang] : (t(`desc${capitalize(category)}`) || '');
 
         // 子分类标签
         subcategoryTabs.innerHTML = '';
@@ -180,7 +191,7 @@
                 if (!subCategory || sub.id === subCategory) {
                     tab.classList.add('active');
                 }
-                tab.textContent = t(sub.labelKey);
+                tab.textContent = sub.label ? sub.label[lang] : (t(sub.labelKey) || sub.id);
                 tab.dataset.subcategory = sub.id;
                 tab.addEventListener('click', () => navigateTo(category, sub.id));
                 subcategoryTabs.appendChild(tab);
@@ -293,7 +304,7 @@
         categoryPage.style.display = 'none';
         contactPage.style.display = 'flex';
 
-        const contact = SITE_DATA.contact;
+        const contact = Object.keys(siteContact).length > 0 ? siteContact : (SITE_DATA.contact || {});
         let html = `
             <div class="contact-card">
                 <h2 class="contact-title">${t('contactTitle')}</h2>
@@ -301,7 +312,13 @@
         `;
 
         Object.values(contact).forEach(item => {
-            const label = currentLang === 'zh' ? item.label_zh : item.label_en;
+            // 兼容两种格式：内联 label {zh,en} 或旧版 label_zh/label_en
+            let label;
+            if (item.label && item.label.zh) {
+                label = item.label[currentLang] || item.label.zh;
+            } else {
+                label = currentLang === 'zh' ? (item.label_zh || item.label) : (item.label_en || item.label);
+            }
             const isEmail = item.value && item.value.includes('@');
             const valueHtml = isEmail
                 ? `<a href="mailto:${item.value}">${item.value}</a>`
@@ -309,7 +326,7 @@
 
             html += `
                 <div class="contact-item">
-                    <span class="contact-icon">${item.icon}</span>
+                    <span class="contact-icon">${item.icon || '✉️'}</span>
                     <span class="contact-label">${escapeHtml(label)}</span>
                     ${valueHtml}
                 </div>
@@ -318,116 +335,6 @@
 
         html += `</div>`;
         contactPage.innerHTML = html;
-    }
-
-    // ── 快速添加工具 ──
-    function setupQuickAdd() {
-        const btn = $('#quickAddBtn');
-        const overlay = $('#quickAddOverlay');
-        const closeBtn = $('#quickAddClose');
-        const generateBtn = $('#qaGenerateBtn');
-        const copyBtn = $('#qaCopyBtn');
-        const output = $('#qaOutput');
-        const result = $('#qaResult');
-        const dateInput = $('#qaDate');
-
-        // 默认日期为今天
-        const today = new Date().toISOString().split('T')[0];
-        if (dateInput) dateInput.value = today;
-
-        // 打开
-        if (btn) {
-            btn.addEventListener('click', () => {
-                overlay.style.display = 'flex';
-                output.style.display = 'none';
-            });
-        }
-
-        // 关闭
-        function closeQA() {
-            overlay.style.display = 'none';
-        }
-        if (closeBtn) closeBtn.addEventListener('click', closeQA);
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) closeQA();
-        });
-
-        // 生成 JSON
-        if (generateBtn) {
-            generateBtn.addEventListener('click', () => {
-                const category = document.getElementById('qaCategory').value;
-                const titleZh = document.getElementById('qaTitleZh').value.trim();
-                const titleEn = document.getElementById('qaTitleEn').value.trim();
-                const date = dateInput.value;
-                const tagsZh = document.getElementById('qaTagsZh').value.trim();
-                const tagsEn = document.getElementById('qaTagsEn').value.trim();
-                const contentZh = document.getElementById('qaContentZh').value.trim();
-                const contentEn = document.getElementById('qaContentEn').value.trim();
-                const imagesText = document.getElementById('qaImages').value.trim();
-                const linksText = document.getElementById('qaLinks').value.trim();
-                const videosText = document.getElementById('qaVideos').value.trim();
-
-                if (!titleZh || !titleEn || !date) {
-                    alert(currentLang === 'zh' ? '请至少填写中文标题、英文标题和日期！' : 'Please fill in Chinese title, English title, and date!');
-                    return;
-                }
-
-                // 生成唯一 ID
-                const id = titleZh.replace(/[^\w\u4e00-\u9fff]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '').toLowerCase()
-                    + '-' + date.replace(/-/g, '');
-
-                // 构建条目
-                const entry = {
-                    id: id,
-                    title_zh: titleZh,
-                    title_en: titleEn,
-                    date: date,
-                    tags_zh: tagsZh ? tagsZh.split(/[,，]/).map(s => s.trim()).filter(Boolean) : [],
-                    tags_en: tagsEn ? tagsEn.split(/[,，]/).map(s => s.trim()).filter(Boolean) : [],
-                    content_zh: contentZh,
-                    content_en: contentEn,
-                    images: imagesText ? imagesText.split('\n').map(s => s.trim()).filter(Boolean) : [],
-                    videos: videosText ? videosText.split('\n').map(s => {
-                        const url = s.trim();
-                        if (!url) return null;
-                        const isBilibili = url.includes('bilibili.com');
-                        return { url, platform: isBilibili ? 'bilibili' : 'youtube' };
-                    }).filter(Boolean) : [],
-                    links: linksText ? linksText.split('\n').map(s => {
-                        const parts = s.split(/[,，]/);
-                        if (parts.length >= 2) {
-                            return { url: parts[1].trim(), text: parts[0].trim() };
-                        }
-                        return null;
-                    }).filter(Boolean) : []
-                };
-
-                // 显示结果
-                const jsonStr = JSON.stringify(entry, null, 4);
-                result.textContent = jsonStr;
-                output.style.display = 'block';
-                result.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-        }
-
-        // 复制
-        if (copyBtn) {
-            copyBtn.addEventListener('click', async () => {
-                try {
-                    await navigator.clipboard.writeText(result.textContent);
-                    const original = copyBtn.textContent;
-                    copyBtn.textContent = currentLang === 'zh' ? '✅ 已复制！' : '✅ Copied!';
-                    setTimeout(() => { copyBtn.textContent = original; }, 2000);
-                } catch {
-                    // 回退：选中文本
-                    const range = document.createRange();
-                    range.selectNodeContents(result);
-                    const sel = window.getSelection();
-                    sel.removeAllRanges();
-                    sel.addRange(range);
-                }
-            });
-        }
     }
 
     // ── 语言切换 ──

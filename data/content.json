@@ -1,86 +1,147 @@
 {
-  "books": [
+  "navigation": [
     {
-      "id": "example-book",
-      "title_zh": "示例书目",
-      "title_en": "Sample Book",
-      "date": "2026-07-28",
-      "tags_zh": ["小说", "日本文学"],
-      "tags_en": ["Fiction", "Japanese Literature"],
-      "content_zh": "这是一本示例书目的笔记。\n\n**感想：** 这是一本很棒的书。\n\n> \"有名的句子引用\"",
-      "content_en": "This is a sample book note.\n\n**Thoughts:** This is a great book.\n\n> \"Famous quote\"",
-      "images": [],
-      "videos": [],
-      "links": [
-        { "url": "https://example.com/book", "text": "豆瓣链接" }
+      "id": "reading",
+      "icon": "📚",
+      "label": { "zh": "阅读", "en": "Reading" },
+      "desc": { "zh": "阅读书目、电影与影视作品的记录与感想", "en": "Books, movies, and video reviews and thoughts" },
+      "subItems": [
+        { "id": "books", "label": { "zh": "阅读书目与感想", "en": "Books & Thoughts" } },
+        { "id": "movies", "label": { "zh": "电影", "en": "Movies" } },
+        { "id": "tv", "label": { "zh": "其他影视作品", "en": "TV & Videos" } }
+      ]
+    },
+    {
+      "id": "art",
+      "icon": "🎨",
+      "label": { "zh": "艺术", "en": "Art" },
+      "desc": { "zh": "音乐活动与书法习作的展示", "en": "Music activities and calligraphy works" },
+      "subItems": [
+        { "id": "music", "label": { "zh": "音乐活动", "en": "Music" } },
+        { "id": "calligraphy", "label": { "zh": "书法习作", "en": "Calligraphy" } }
+      ]
+    },
+    {
+      "id": "sports",
+      "icon": "🏃",
+      "label": { "zh": "运动", "en": "Sports" },
+      "desc": { "zh": "长跑及其他运动的记录", "en": "Running and other sports records" },
+      "subItems": [
+        { "id": "running", "label": { "zh": "长跑", "en": "Long-distance Running" } },
+        { "id": "other-sports", "label": { "zh": "其他运动", "en": "Other Sports" } }
+      ]
+    },
+    {
+      "id": "research",
+      "icon": "🔬",
+      "label": { "zh": "研究", "en": "Research" },
+      "desc": { "zh": "生态环境与社会学的研究进展", "en": "Research progress in ecology and sociology" },
+      "subItems": [
+        { "id": "ecology", "label": { "zh": "生态环境", "en": "Ecology" } },
+        { "id": "sociology", "label": { "zh": "社会学", "en": "Sociology" } }
+      ]
+    },
+    {
+      "id": "kappa",
+      "icon": "👺",
+      "label": { "zh": "河童的话", "en": "Kappa's Words" },
+      "desc": { "zh": "灵感来源于芥川龙之介《侏儒的话》——日志中的零星感想", "en": "Inspired by Akutagawa's 'The Words of a Dwarf' — scattered thoughts in journals" },
+      "subItems": [
+        { "id": "journal", "label": { "zh": "日志感想", "en": "Journal" } }
       ]
     }
   ],
-  "movies": [
-    {
-      "id": "example-movie",
-      "title_zh": "示例电影",
-      "title_en": "Sample Movie",
-      "date": "2026-07-28",
-      "tags_zh": ["剧情", "日本"],
-      "tags_en": ["Drama", "Japanese"],
-      "content_zh": "电影观后感……\n\n- 值得一看\n- 摄影很美",
-      "content_en": "Movie review...\n\n- Worth watching\n- Great cinematography",
-      "images": [],
-      "videos": [],
-      "links": []
+  "contact": {
+    "email": {
+      "label": { "zh": "邮箱", "en": "Email" },
+      "value": "jkk@example.com",
+      "icon": "✉️"
     }
-  ],
-  "tv": [],
-  "music": [
-    {
-      "id": "example-music",
-      "title_zh": "示例音乐活动",
-      "title_en": "Sample Music Activity",
-      "date": "2026-07-28",
-      "tags_zh": ["演出"],
-      "tags_en": ["Performance"],
-      "content_zh": "记录了某次音乐活动……",
-      "content_en": "Record of a music activity...",
-      "images": [],
-      "videos": [
-        { "url": "https://www.bilibili.com/video/BV1GJ411x7Z7", "platform": "bilibili" }
-      ],
-      "links": []
-    }
-  ],
-  "calligraphy": [],
-  "running": [
-    {
-      "id": "example-run",
-      "title_zh": "示例跑步记录",
-      "title_en": "Sample Running Log",
-      "date": "2026-07-28",
-      "tags_zh": ["10公里"],
-      "tags_en": ["10K"],
-      "content_zh": "今日跑了10公里，用时50分钟。\n\n状态不错。",
-      "content_en": "Ran 10K today in 50 minutes.\n\nFeeling good.",
-      "images": [],
-      "videos": [],
-      "links": []
-    }
-  ],
-  "other-sports": [],
-  "ecology": [],
-  "sociology": [],
-  "journal": [
-    {
-      "id": "example-journal",
-      "title_zh": "示例感想",
-      "title_en": "Sample Thought",
-      "date": "2026-07-28",
-      "tags_zh": ["随笔"],
-      "tags_en": ["Essay"],
-      "content_zh": "> 侏儒的话：人生不过是一行波德莱尔。\n\n今日的一些感想……",
-      "content_en": "> A dwarf's words: Life is but a line of Baudelaire.\n\nSome thoughts today...",
-      "images": [],
-      "videos": [],
-      "links": []
-    }
-  ]
+  },
+  "content": {
+    "books": [
+      {
+        "id": "example-book",
+        "title_zh": "示例书目",
+        "title_en": "Sample Book",
+        "date": "2026-07-28",
+        "tags_zh": ["小说", "日本文学"],
+        "tags_en": ["Fiction", "Japanese Literature"],
+        "content_zh": "这是一本示例书目的笔记。\n\n**感想：** 这是一本很棒的书。\n\n> \"有名的句子引用\"",
+        "content_en": "This is a sample book note.\n\n**Thoughts:** This is a great book.\n\n> \"Famous quote\"",
+        "images": [],
+        "videos": [],
+        "links": [
+          { "url": "https://example.com/book", "text": "豆瓣链接" }
+        ]
+      }
+    ],
+    "movies": [
+      {
+        "id": "example-movie",
+        "title_zh": "示例电影",
+        "title_en": "Sample Movie",
+        "date": "2026-07-28",
+        "tags_zh": ["剧情", "日本"],
+        "tags_en": ["Drama", "Japanese"],
+        "content_zh": "电影观后感……\n\n- 值得一看\n- 摄影很美",
+        "content_en": "Movie review...\n\n- Worth watching\n- Great cinematography",
+        "images": [],
+        "videos": [],
+        "links": []
+      }
+    ],
+    "tv": [],
+    "music": [
+      {
+        "id": "example-music",
+        "title_zh": "示例音乐活动",
+        "title_en": "Sample Music Activity",
+        "date": "2026-07-28",
+        "tags_zh": ["演出"],
+        "tags_en": ["Performance"],
+        "content_zh": "记录了某次音乐活动……",
+        "content_en": "Record of a music activity...",
+        "images": [],
+        "videos": [
+          { "url": "https://www.bilibili.com/video/BV1GJ411x7Z7", "platform": "bilibili" }
+        ],
+        "links": []
+      }
+    ],
+    "calligraphy": [],
+    "running": [
+      {
+        "id": "example-run",
+        "title_zh": "示例跑步记录",
+        "title_en": "Sample Running Log",
+        "date": "2026-07-28",
+        "tags_zh": ["10公里"],
+        "tags_en": ["10K"],
+        "content_zh": "今日跑了10公里，用时50分钟。\n\n状态不错。",
+        "content_en": "Ran 10K today in 50 minutes.\n\nFeeling good.",
+        "images": [],
+        "videos": [],
+        "links": []
+      }
+    ],
+    "other-sports": [],
+    "ecology": [],
+    "sociology": [],
+    "journal": [
+      {
+        "id": "example-journal",
+        "title_zh": "示例感想",
+        "title_en": "Sample Thought",
+        "date": "2026-07-28",
+        "tags_zh": ["随笔"],
+        "tags_en": ["Essay"],
+        "content_zh": "> 侏儒的话：人生不过是一行波德莱尔。\n\n今日的一些感想……",
+        "content_en": "> A dwarf's words: Life is but a line of Baudelaire.\n\nSome thoughts today...",
+        "images": [],
+        "videos": [],
+        "links": []
+      }
+    ]
+  }
 }

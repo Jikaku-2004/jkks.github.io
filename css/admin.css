@@ -128,6 +128,33 @@ a:hover { color: var(--accent); }
 .setup-btn:hover { background: var(--accent-dark); }
 .setup-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
+.setup-btn-manual {
+    background: transparent;
+    color: var(--accent);
+    border: 2px dashed var(--accent);
+    margin-top: 4px;
+}
+.setup-btn-manual:hover {
+    background: rgba(201, 169, 110, 0.08);
+}
+
+.setup-divider {
+    display: flex;
+    align-items: center;
+    margin: 16px 0;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+}
+.setup-divider::before,
+.setup-divider::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border);
+}
+.setup-divider span {
+    padding: 0 12px;
+}
+
 .setup-error {
     color: var(--danger);
     font-size: 0.85rem;
@@ -618,4 +645,94 @@ a:hover { color: var(--accent); }
     .setup-card {
         padding: 24px 20px;
     }
+}
+
+/* ── 分类管理卡片 ── */
+.cat-mgr-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    border: 1px solid var(--border);
+}
+
+.cat-mgr-header {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    gap: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.cat-mgr-icon {
+    font-size: 1.3rem;
+}
+
+.cat-mgr-label {
+    flex: 1;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.cat-mgr-sub-count {
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    margin-right: 8px;
+}
+
+.cat-mgr-subs {
+    padding: 8px 16px 12px;
+}
+
+.cat-mgr-sub {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--bg);
+    margin-bottom: 4px;
+    font-size: 0.88rem;
+}
+
+.cat-mgr-sub span {
+    flex: 1;
+}
+
+.cat-mgr-sub-del {
+    background: none;
+    border: none;
+    cursor: pointer;
+    opacity: 0.3;
+    font-size: 0.9rem;
+    padding: 2px 6px;
+    transition: opacity 0.2s;
+}
+
+.cat-mgr-sub-del:hover {
+    opacity: 1;
+    color: var(--danger);
+}
+
+.cat-mgr-add-sub {
+    width: 100%;
+    padding: 6px;
+    background: none;
+    border: 1px dashed var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 0.82rem;
+    margin-top: 4px;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.cat-mgr-add-sub:hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+}
+
+.cat-mgr-actions {
+    margin-top: 16px;
+    text-align: center;
 }

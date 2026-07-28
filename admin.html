@@ -33,8 +33,12 @@
                 <label>分支名称</label>
                 <input type="text" id="setupBranch" value="main">
             </div>
-            <button class="setup-btn" id="setupBtn">连接仓库 →</button>
+            <button class="setup-btn" id="setupBtn">🔗 连接仓库</button>
             <p class="setup-error" id="setupError"></p>
+            <div class="setup-divider">
+                <span>或者</span>
+            </div>
+            <button class="setup-btn setup-btn-manual" id="manualModeBtn">📝 手动编辑模式（无需 Token）</button>
         </div>
     </div>
 
@@ -50,6 +54,7 @@
             <div class="admin-header-right">
                 <span class="admin-status" id="adminStatus">✅ 已加载</span>
                 <button class="admin-btn admin-btn-primary" id="saveBtn">💾 保存到 GitHub</button>
+                <button class="admin-btn admin-btn-outline" id="downloadBtn">📥 下载 content.json</button>
                 <button class="admin-btn admin-btn-outline" id="reloadBtn">🔄 重新加载</button>
                 <button class="admin-btn admin-btn-ghost" id="settingsBtn">⚙️</button>
             </div>

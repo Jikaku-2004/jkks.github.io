@@ -57,28 +57,23 @@
 
     // ── 状态 ──
     let config = {};
-    let contentData = {};       // 当前编辑中的 content 数据
-    let originalContent = {};   // 上次保存时的快照（用于检测未保存更改）
-    let currentCategory = null;
+    let contentData = {
+        navigation: [],
+        contact: {},
+        content: {}
+    };       // 完整数据：{ navigation, contact, content }
+    let originalContent = {};   // 上次保存时的快照
+    let currentCategory = null; // 当前选中的子分类ID（如 "books"）
     let currentEntryId = null;  // 正在编辑的条目 ID
-    let contentSha = null;      // GitHub 文件 SHA（用于更新）
+    let contentSha = null;      // GitHub 文件 SHA
     let isDirty = false;
+    let adminMode = 'entries';  // 'entries' 或 'categories'
 
-    // 导航图标映射
-    const CAT_ICONS = {
-        books: '📖', movies: '🎬', tv: '📺',
-        music: '🎵', calligraphy: '🖌️',
-        running: '🏃', 'other-sports': '🎾',
-        ecology: '🌿', sociology: '👥',
-        journal: '📝'
-    };
-    const CAT_LABELS = {
-        books: '阅读 - 书目', movies: '阅读 - 电影', tv: '阅读 - 影视',
-        music: '艺术 - 音乐', calligraphy: '艺术 - 书法',
-        running: '运动 - 长跑', 'other-sports': '运动 - 其他',
-        ecology: '研究 - 生态', sociology: '研究 - 社会学',
-        journal: '河童的话 - 日志'
-    };
+    // ── 辅助：获取条目数据 ──
+    function getEntries(catId) { return contentData.content[catId] || []; }
+    function setEntries(catId, arr) { contentData.content[catId] = arr; }
+    function getNavigation() { return contentData.navigation || []; }
+    function getContact() { return contentData.contact || {}; }
 
     // ── 初始化 ──
     function init() {
@@ -108,7 +103,7 @@
         };
 
         if (!config.owner || !config.repo || !config.token) {
-            showSetupError('请填写完整信息');
+            showSetupError('请填写完整信息（用户名、仓库名、Token）');
             return;
         }
 
@@ -122,13 +117,57 @@
             setupScreen.style.display = 'none';
             adminApp.style.display = 'flex';
             repoBadge.textContent = `${config.owner}/${config.repo} @${config.branch}`;
-            renderCategories();
+            renderSidebar();
             showToast('✅ 已连接到仓库', 'success');
         } catch (err) {
-            showSetupError('连接失败：' + (err.message || '请检查 Token 权限和仓库信息'));
+            const msg = err.message || '';
+            let hint = '';
+            if (msg.includes('401')) hint = '❌ Token 无效，请重新生成';
+            else if (msg.includes('403')) hint = '❌ Token 权限不足，需要 public_repo 权限';
+            else if (msg.includes('404')) hint = '❌ 仓库或文件不存在，检查仓库名是否正确';
+            else hint = '❌ ' + msg;
+            showSetupError(hint + '\n\n💡 如果不想配置 Token，点击下方"手动编辑模式"');
         } finally {
             setupBtn.disabled = false;
-            setupBtn.textContent = '连接仓库 →';
+            setupBtn.textContent = '🔗 连接仓库';
+        }
+    }
+
+    // ── 手动模式（无需 Token，直接加载当前 content.json） ──
+    async function enterManualMode() {
+        setupBtn.disabled = true;
+        const btn = document.getElementById('manualModeBtn');
+        if (btn) btn.textContent = '⏳ 加载中...';
+        setupError.style.display = 'none';
+
+        try {
+            // 直接从网站加载 content.json
+            const resp = await fetch('data/content.json');
+            if (!resp.ok) throw new Error('无法加载 content.json（HTTP ' + resp.status + '）');
+            const raw = await resp.json();
+            // 适配新旧结构
+            contentData = {
+                navigation: raw.navigation || [],
+                contact: raw.contact || {},
+                content: raw.content || raw   // 旧格式：内容直接在根级
+            };
+            // 如果旧格式且 content 为空，将根级数据当作 content
+            if (Object.keys(contentData.content).length === 0 && !raw.navigation) {
+                contentData.content = raw;
+            }
+            originalContent = JSON.parse(JSON.stringify(contentData));
+            contentSha = null;
+
+            setupScreen.style.display = 'none';
+            adminApp.style.display = 'flex';
+            repoBadge.textContent = '📝 手动模式（未连接 GitHub）';
+            renderSidebar();
+            showToast('✅ 已加载 content.json，可在"分类管理"中增删大类', 'success');
+        } catch (err) {
+            showSetupError('❌ 加载失败：' + (err.message || '未知错误'));
+        } finally {
+            setupBtn.disabled = false;
+            if (btn) btn.textContent = '📝 手动编辑模式（无需 Token）';
         }
     }
 
@@ -144,8 +183,7 @@
 
         if (!resp.ok) {
             if (resp.status === 404) {
-                // 文件不存在，创建空内容
-                contentData = {};
+                contentData = { navigation: [], contact: {}, content: {} };
                 originalContent = {};
                 contentSha = null;
                 return;
@@ -156,14 +194,25 @@
         const fileData = await resp.json();
         contentSha = fileData.sha;
         const decoded = atob(fileData.content);
-        contentData = JSON.parse(decoded);
-        // 深拷贝作为原始快照
+        const raw = JSON.parse(decoded);
+        // 适配新旧结构
+        contentData = {
+            navigation: raw.navigation || [],
+            contact: raw.contact || {},
+            content: raw.content || raw
+        };
         originalContent = JSON.parse(JSON.stringify(contentData));
         setDirty(false);
     }
 
     // ── 保存到 GitHub ──
     async function saveToGitHub() {
+        // 手动模式提示
+        if (!config.token) {
+            showToast('📥 手动模式下请点击"下载"按钮保存文件，然后上传到 GitHub', 'info');
+            return;
+        }
+
         saveBtn.disabled = true;
         saveBtn.textContent = '⏳ 保存中...';
         adminStatus.textContent = '⏳ 保存中...';
@@ -184,7 +233,13 @@
                 sha = latest.sha;
             }
 
-            const jsonStr = JSON.stringify(contentData, null, 4);
+            // 构建完整的 content.json（包含 navigation + contact + content）
+            const saveData = {
+                navigation: getNavigation(),
+                contact: getContact(),
+                content: contentData.content || {}
+            };
+            const jsonStr = JSON.stringify(saveData, null, 4);
             const encoded = btoa(unescape(encodeURIComponent(jsonStr)));
 
             const putResp = await fetch(
@@ -225,48 +280,56 @@
         }
     }
 
-    // ── 渲染分类列表 ──
-    function renderCategories() {
+    // ── 渲染侧栏 ──
+    function renderSidebar() {
         catList.innerHTML = '';
-        const navData = window.SITE_DATA ? SITE_DATA.navigation : [];
+        const nav = getNavigation();
 
-        // 先渲染导航中的分类
-        const seen = new Set();
-        navData.forEach(cat => {
-            cat.subItems.forEach(sub => {
-                seen.add(sub.id);
-                const li = document.createElement('li');
-                li.className = 'admin-cat-item';
-                li.dataset.cat = sub.id;
-                li.innerHTML = `
-                    <span class="admin-cat-icon">${CAT_ICONS[sub.id] || '📄'}</span>
-                    <span class="admin-cat-label">${CAT_LABELS[sub.id] || sub.id}</span>
-                    <span class="admin-cat-count">${(contentData[sub.id] || []).length}</span>
-                `;
-                li.addEventListener('click', () => selectCategory(sub.id));
-                catList.appendChild(li);
-            });
-        });
-
-        // 再渲染 content.json 中有数据但导航中没定义的分类
-        Object.keys(contentData).forEach(key => {
-            if (!seen.has(key) && Array.isArray(contentData[key])) {
-                const li = document.createElement('li');
-                li.className = 'admin-cat-item';
-                li.dataset.cat = key;
-                li.innerHTML = `
-                    <span class="admin-cat-icon">📄</span>
-                    <span class="admin-cat-label">${key}</span>
-                    <span class="admin-cat-count">${contentData[key].length}</span>
-                `;
-                li.addEventListener('click', () => selectCategory(key));
-                catList.appendChild(li);
+        // 模式切换按钮
+        const modeItem = document.createElement('li');
+        modeItem.className = 'admin-cat-item';
+        modeItem.style.borderBottom = '1px solid rgba(255,255,255,0.06)';
+        modeItem.style.marginBottom = '8px';
+        modeItem.innerHTML = `
+            <span class="admin-cat-icon">${adminMode === 'entries' ? '📝' : '📂'}</span>
+            <span class="admin-cat-label">${adminMode === 'entries' ? '分类管理' : '← 返回条目'}</span>
+        `;
+        modeItem.addEventListener('click', () => {
+            adminMode = adminMode === 'entries' ? 'categories' : 'entries';
+            renderSidebar();
+            if (adminMode === 'entries') {
+                const first = catList.querySelector('.admin-cat-item[data-cat]');
+                if (first) selectCategory(first.dataset.cat);
+            } else {
+                showCategoryManager();
             }
         });
+        catList.appendChild(modeItem);
+
+        if (adminMode === 'entries') {
+            // 条目分类模式
+            nav.forEach(cat => {
+                if (!cat.subItems) return;
+                cat.subItems.forEach(sub => {
+                    const li = document.createElement('li');
+                    li.className = 'admin-cat-item';
+                    li.dataset.cat = sub.id;
+                    const label = sub.label ? (sub.label.zh || sub.id) : sub.id;
+                    const count = getEntries(sub.id).length;
+                    li.innerHTML = `
+                        <span class="admin-cat-icon">${cat.icon || '📄'}</span>
+                        <span class="admin-cat-label">${label}</span>
+                        <span class="admin-cat-count">${count}</span>
+                    `;
+                    li.addEventListener('click', () => selectCategory(sub.id));
+                    catList.appendChild(li);
+                });
+            });
+        }
 
         // 默认选中第一个
-        const first = catList.querySelector('.admin-cat-item');
-        if (first) selectCategory(first.dataset.cat);
+        const first = catList.querySelector('.admin-cat-item[data-cat]');
+        if (first && adminMode === 'entries') selectCategory(first.dataset.cat);
     }
 
     // ── 选择分类 ──
@@ -287,8 +350,10 @@
 
         const label = CAT_LABELS[catId] || catId;
         currentCatTitle.textContent = label;
+        addEntryBtn.style.display = '';
+        entryList.style.display = '';
 
-        const entries = contentData[catId] || [];
+        const entries = getEntries(catId);
         entryCount.textContent = `${entries.length} 条`;
         renderEntries(entries);
     }
@@ -379,7 +444,7 @@
     function applyEditorChanges() {
         if (!currentCategory || !currentEntryId) return;
 
-        const entries = contentData[currentCategory] || [];
+        const entries = getEntries(currentCategory);
         const idx = entries.findIndex(e => e.id === currentEntryId);
         if (idx === -1) return;
 
@@ -447,10 +512,10 @@
             links: []
         };
 
-        if (!contentData[currentCategory]) {
-            contentData[currentCategory] = [];
+        if (!contentData.content[currentCategory]) {
+            contentData.content[currentCategory] = [];
         }
-        contentData[currentCategory].push(newEntry);
+        contentData.content[currentCategory].push(newEntry);
 
         // 刷新列表
         renderEntries(contentData[currentCategory]);
@@ -466,7 +531,7 @@
     function deleteEntry(catId, entryId) {
         if (!confirm('确定要删除这条条目吗？')) return;
 
-        const entries = contentData[catId] || [];
+        const entries = getEntries(catId);
         const idx = entries.findIndex(e => e.id === entryId);
         if (idx === -1) return;
 
@@ -487,10 +552,165 @@
     function updateCatCounts() {
         $$('.admin-cat-item').forEach(el => {
             const cat = el.dataset.cat;
-            const count = (contentData[cat] || []).length;
+            const count = getEntries(cat).length;
             const countEl = el.querySelector('.admin-cat-count');
             if (countEl) countEl.textContent = count;
         });
+    }
+
+    // ── 显示分类管理 ──
+    function showCategoryManager() {
+        editor.style.display = 'none';
+        currentCatTitle.textContent = '📂 分类管理';
+        entryCount.textContent = '';
+        addEntryBtn.style.display = 'none';
+
+        let html = `<p style="color:var(--text-secondary);margin-bottom:16px;">管理大类和小类。修改后记得保存到 GitHub 或下载。</p>`;
+
+        const nav = getNavigation();
+        nav.forEach((cat, ci) => {
+            html += `<div class="cat-mgr-card" data-ci="${ci}">
+                <div class="cat-mgr-header">
+                    <span class="cat-mgr-icon">${cat.icon || '📄'}</span>
+                    <span class="cat-mgr-label">${cat.label ? cat.label.zh : cat.id}</span>
+                    <span class="cat-mgr-sub-count">${(cat.subItems || []).length} 子类</span>
+                    <button class="admin-btn admin-btn-sm admin-btn-outline cat-mgr-edit" data-ci="${ci}">✏️</button>
+                    <button class="admin-btn admin-btn-sm admin-btn-danger cat-mgr-del" data-ci="${ci}">🗑</button>
+                </div>
+                <div class="cat-mgr-subs">
+                    ${(cat.subItems || []).map((sub, si) => `
+                        <div class="cat-mgr-sub">
+                            <span>${sub.label ? sub.label.zh : sub.id}</span>
+                            <button class="cat-mgr-sub-del" data-ci="${ci}" data-si="${si}">✕</button>
+                        </div>
+                    `).join('')}
+                    <button class="cat-mgr-add-sub" data-ci="${ci}">＋ 添加子类</button>
+                </div>
+            </div>`;
+        });
+
+        html += `<div class="cat-mgr-actions">
+            <button class="admin-btn admin-btn-accent" id="catMgrAddBtn">＋ 添加新大类</button>
+        </div>`;
+
+        const container = document.querySelector('.admin-entry-list') || entryList;
+        container.innerHTML = html;
+        container.style.display = 'block';
+
+        // 绑定事件
+        // 编辑大类
+        container.querySelectorAll('.cat-mgr-edit').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const ci = parseInt(btn.dataset.ci);
+                editCategoryDialog(ci);
+            });
+        });
+        // 删除大类
+        container.querySelectorAll('.cat-mgr-del').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const ci = parseInt(btn.dataset.ci);
+                if (confirm('确定删除这个大类及其所有子类吗？（条目数据不会丢失）')) {
+                    contentData.navigation.splice(ci, 1);
+                    renderSidebar();
+                    showCategoryManager();
+                    setDirty(true);
+                    showToast('🗑 大类已删除', 'info');
+                }
+            });
+        });
+        // 删除子类
+        container.querySelectorAll('.cat-mgr-sub-del').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const ci = parseInt(btn.dataset.ci);
+                const si = parseInt(btn.dataset.si);
+                if (confirm('确定删除这个子类吗？')) {
+                    contentData.navigation[ci].subItems.splice(si, 1);
+                    renderSidebar();
+                    showCategoryManager();
+                    setDirty(true);
+                    showToast('🗑 子类已删除', 'info');
+                }
+            });
+        });
+        // 添加子类
+        container.querySelectorAll('.cat-mgr-add-sub').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const ci = parseInt(btn.dataset.ci);
+                const id = prompt('子类ID（英文，如 "places"）：');
+                if (!id) return;
+                const zh = prompt('中文名称（如 "去过的地方"）：');
+                if (!zh) return;
+                const en = prompt('English name (e.g. "Places"）：');
+                if (!en) return;
+                contentData.navigation[ci].subItems.push({
+                    id: id,
+                    label: { zh, en }
+                });
+                // 确保有对应的内容数组
+                if (!contentData.content[id]) contentData.content[id] = [];
+                renderSidebar();
+                showCategoryManager();
+                setDirty(true);
+                showToast('✅ 已添加子类', 'success');
+            });
+        });
+        // 添加大类
+        const addBtn = document.getElementById('catMgrAddBtn');
+        if (addBtn) {
+            addBtn.addEventListener('click', () => {
+                addCategoryDialog();
+            });
+        }
+    }
+
+    // ── 编辑大类对话框 ──
+    function editCategoryDialog(ci) {
+        const cat = contentData.navigation[ci];
+        if (!cat) return;
+        const zh = prompt('大类中文名称：', cat.label ? cat.label.zh : '');
+        if (!zh) return;
+        const en = prompt('English name:', cat.label ? cat.label.en : '');
+        if (!en) return;
+        const icon = prompt('图标（Emoji，如 🌍）：', cat.icon || '📄');
+        if (!icon) return;
+        const descZh = prompt('中文描述：', cat.desc ? cat.desc.zh : '');
+        const descEn = prompt('English description:', cat.desc ? cat.desc.en : '');
+
+        cat.label = { zh, en };
+        cat.icon = icon;
+        if (descZh) cat.desc = { zh: descZh, en: descEn || descZh };
+
+        renderSidebar();
+        showCategoryManager();
+        setDirty(true);
+        showToast('✅ 大类已更新', 'success');
+    }
+
+    // ── 添加大类对话框 ──
+    function addCategoryDialog() {
+        const id = prompt('大类ID（英文，如 "travel"）：');
+        if (!id) return;
+        const zh = prompt('大类中文名称（如 "旅行"）：');
+        if (!zh) return;
+        const en = prompt('English name (e.g. "Travel")：');
+        if (!en) return;
+        const icon = prompt('图标（Emoji，如 🌍）：', '📄');
+        const descZh = prompt('中文描述：');
+        const descEn = prompt('English description:');
+
+        const newCat = {
+            id: id,
+            icon: icon || '📄',
+            label: { zh, en },
+            desc: descZh ? { zh: descZh, en: descEn || descZh } : { zh: '', en: '' },
+            subItems: []
+        };
+
+        contentData.navigation.push(newCat);
+        renderSidebar();
+        showCategoryManager();
+        setDirty(true);
+        showToast('✅ 已添加大类，别忘了添加子类', 'success');
     }
 
     // ── 脏状态 ──
@@ -554,11 +774,37 @@
     });
 
     settingsBtn.addEventListener('click', () => {
-        if (confirm('返回设置页面？配置信息会保留。')) {
-            adminApp.style.display = 'none';
-            setupScreen.style.display = 'flex';
-        }
+        if (isDirty && !confirm('有未保存的更改，返回设置将丢失这些更改。确定吗？')) return;
+        adminApp.style.display = 'none';
+        setupScreen.style.display = 'flex';
     });
+
+    // 手动模式按钮
+    const manualBtn = document.getElementById('manualModeBtn');
+    if (manualBtn) manualBtn.addEventListener('click', enterManualMode);
+
+    // 下载 content.json
+    const downloadBtn = document.getElementById('downloadBtn');
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            const saveData = {
+                navigation: getNavigation(),
+                contact: getContact(),
+                content: contentData.content || {}
+            };
+            const jsonStr = JSON.stringify(saveData, null, 4);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'content.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showToast('📥 已下载 content.json，请手动上传到 GitHub', 'success');
+        });
+    }
 
     addEntryBtn.addEventListener('click', addNewEntry);
     editorCloseBtn.addEventListener('click', () => {
