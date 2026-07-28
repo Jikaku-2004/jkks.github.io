@@ -144,13 +144,6 @@
                         "zh": "日志感想",
                         "en": "Journal"
                     }
-                },
-                {
-                    "id": "123",
-                    "label": {
-                        "zh": "123",
-                        "en": "123"
-                    }
                 }
             ]
         },
@@ -347,12 +340,7 @@
                 "content_zh": "记录了某次音乐活动……",
                 "content_en": "Record of a music activity...",
                 "images": [],
-                "videos": [
-                    {
-                        "url": "https://www.bilibili.com/video/BV1GJ411x7Z7",
-                        "platform": "bilibili"
-                    }
-                ],
+                "videos": [],
                 "links": []
             },
             {
@@ -501,7 +489,21 @@
                 "links": []
             }
         ],
-        "place": [],
+        "place": [
+            {
+                "id": "new-1785268208891",
+                "title_zh": "深圳&香港",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
         "albums": [
             {
                 "id": "new-1785266250059",
