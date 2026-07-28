@@ -113,8 +113,8 @@
             var item=document.createElement('div');
             item.className='nav-item'; item.dataset.ci=ci;
             var cl=cat.label?cat.label.zh||cat.id:cat.id;
-            item.innerHTML='<span class="nav-icon">'+(cat.icon||'')+'</span><span class="nav-label">'+esc(cl)+'</span><span class="nav-arrow">&#9656;</span>'+
-                '<button class="nav-del" data-ci="'+ci+'" title="删除">&#10005;</button>';
+            item.innerHTML='<span class="nav-icon">'+(cat.icon||'')+'</span><span class="nav-label">'+esc(cl)+'</span><span class="nav-arrow">\u25B6</span>'+
+                '<button class="nav-del" data-ci="'+ci+'" title="删除">\u2715</button>';
             item.onclick=function(){toggleCat(ci);};
             li.appendChild(item);
             if(cat.subItems&&cat.subItems.length>0){
@@ -123,7 +123,8 @@
                     var sli=document.createElement('li');
                     var sel=document.createElement('div');
                     sel.className='sub-nav-item'; sel.dataset.ci=ci; sel.dataset.si=si;
-                    sel.innerHTML='<span>'+(sub.label?sub.label.zh||sub.id:sub.id)+'</span>';
+                    var sl=sub.label?sub.label.zh||sub.id:sub.id;
+                    sel.innerHTML='<span>'+esc(sl)+'</span>';
                     sel.onclick=function(e){e.stopPropagation();selectSub(ci,si);};
                     sli.appendChild(sel); ul.appendChild(sli);
                 });
@@ -147,6 +148,9 @@
         var opens=document.querySelectorAll('.sub-nav.open');
         for(var i=0;i<opens.length;i++){if(opens[i].id!=='sub-'+ci)opens[i].classList.remove('open');}
         s.classList.toggle('open');
+        // 同步展开箭头
+        var item=document.querySelector('.nav-item[data-ci="'+ci+'"]');
+        if(item)item.classList.toggle('expanded');
     }
 
     function selectSub(ci,si) {
@@ -191,8 +195,9 @@
             var body=currentLang==='zh'?entry.content_zh:entry.content_en;
             card.innerHTML='<div class="entry-header"><h3 class="entry-title">'+esc(title)+'</h3>'+
                 '<span class="entry-date">'+(entry.date||'')+'</span>'+
-                '<button class="entry-edit-btn" title="编辑">&#9998;</button>'+
-                '<button class="entry-del-btn" title="删除">&#128465;</button></div>'+
+                '<button class="entry-edit-btn" title="编辑">\u270E</button>'+
+                '<button class="entry-del-btn" title="删除">\uD83D\uDDD1</button></div>'+
+
                 '<div class="entry-tags">'+tags.map(function(t){return'<span class="entry-tag">'+esc(t)+'</span>';}).join('')+'</div>'+
                 '<div class="entry-body"><p>'+esc((body||'').substring(0,200))+((body||'').length>200?'...':'')+'</p></div>';
             c.appendChild(card);
@@ -217,7 +222,7 @@
 
     function showContact(){
         hidePages();$('#contactPage').style.display='';
-        var c=Object.keys(siteContact).length>0?siteContact:{email:{label:{zh:'邮箱',en:'Email'},value:'jkk@example.com',icon:'&#9993;'}};
+        var c=Object.keys(siteContact).length>0?siteContact:{email:{label:{zh:'邮箱',en:'Email'},value:'jkk@example.com',icon:'\u2709'}};
         var h='<div class="contact-card"><h2 class="contact-title">联系方式</h2><p style="color:var(--text-secondary);margin-bottom:24px;">欢迎通过以下方式与我联系</p>';
         var vals=Object.values(c);
         vals.forEach(function(i){
