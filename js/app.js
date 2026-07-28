@@ -347,6 +347,8 @@
 
             currentLang = lang;
             $$('.lang-option').forEach(el => el.classList.toggle('active', el.dataset.lang === lang));
+            // 重新渲染导航（labels 从 content.json 取，需要跟着语言变）
+            renderNavigation();
             applyLanguage(lang);
 
             // 刷新当前页面
