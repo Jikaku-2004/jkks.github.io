@@ -13,6 +13,7 @@
     let siteContent = {};      // 从 content.json 加载的条目内容
     let siteNavigation = [];   // 从 content.json 加载的导航
     let siteContact = {};      // 从 content.json 加载的联系方式
+    let siteWelcome = {};      // 从 content.json 加载的欢迎页数据
     const PIXEL_ICONS = Object.freeze({
         reading: 'RD', art: 'AR', sports: 'SP', research: 'RS',
         kappa: 'KP', contact: 'CT', email: 'ML'
@@ -56,11 +57,13 @@
             siteNavigation = data.navigation || [];
             siteContact = data.contact || {};
             siteContent = data.content || {};
+            siteWelcome = data.welcome || {};
         } catch (e) {
             console.warn('无法加载 content.json，使用后备数据', e);
             siteNavigation = SITE_DATA.navigation || [];
             siteContact = SITE_DATA.contact || {};
             siteContent = {};
+            siteWelcome = {};
         }
     }
 
@@ -370,11 +373,23 @@
     }
 
     function applyLanguage(lang) {
+        // 欢迎页关键词（支持 content.json 覆盖，且使用 innerHTML 渲染 HTML 内容）
+        const WELCOME_KEYS = ['welcomeTitle','welcomeSubtitle','welcomeDesc','welcomeQuote'];
         // 更新所有 data-key 元素
         $$('[data-key]').forEach(el => {
             const key = el.dataset.key;
+            // 优先使用 content.json 中的欢迎页数据
+            if (WELCOME_KEYS.includes(key) && siteWelcome[key] && siteWelcome[key][lang]) {
+                el.innerHTML = siteWelcome[key][lang];
+                return;
+            }
             if (I18N[key]) {
-                el.textContent = I18N[key][lang];
+                // 欢迎页内容含 HTML，用 innerHTML；其余用 textContent
+                if (WELCOME_KEYS.includes(key)) {
+                    el.innerHTML = I18N[key][lang];
+                } else {
+                    el.textContent = I18N[key][lang];
+                }
             }
         });
 
