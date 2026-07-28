@@ -1,4 +1,12 @@
 /* JKK.OS — cyberpunk pixel interface */
+@font-face {
+    font-family: "Fusion Pixel 12px";
+    src: url("../fonts/fusion-pixel-12px-zh-hans.woff2") format("woff2");
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
+}
+
 :root {
     --bg-primary: #100b1b;
     --bg-secondary: #171126;
@@ -27,12 +35,13 @@
     --topbar-height: 68px;
     --footer-height: 38px;
     --transition: 160ms steps(2, end);
-    --font-body: "Noto Sans SC", "Microsoft YaHei", sans-serif;
-    --font-display: "ZCOOL QingKe HuangYou", "Noto Sans SC", sans-serif;
-    --font-zh: var(--font-body);
-    --font-en: var(--font-body);
-    --font-mono: "Silkscreen", "Cascadia Mono", monospace;
-    --pixel: "Silkscreen", "ZCOOL QingKe HuangYou", "Noto Sans SC", monospace;
+    --font-pixel: "Fusion Pixel 12px", "Microsoft YaHei", monospace;
+    --font-body: var(--font-pixel);
+    --font-display: var(--font-pixel);
+    --font-zh: var(--font-pixel);
+    --font-en: var(--font-pixel);
+    --font-mono: var(--font-pixel);
+    --pixel: var(--font-pixel);
 }
 
 *, *::before, *::after {
@@ -59,13 +68,20 @@ body {
     background-size: 24px 24px, 24px 24px, auto, auto, auto;
     color: var(--text-primary);
     font-family: var(--font-zh);
-    font-size: 17px;
+    font-size: 18px;
+    font-synthesis: none;
+    font-weight: 400;
     font-variant-ligatures: none;
-    letter-spacing: .012em;
-    line-height: 1.72;
-    text-rendering: optimizeLegibility;
+    letter-spacing: .025em;
+    line-height: 1.68;
+    text-rendering: geometricPrecision;
     -webkit-font-smoothing: auto;
     animation: grid-drift 18s linear infinite;
+}
+
+strong,
+b {
+    font-weight: 400;
 }
 
 body::before {
@@ -85,6 +101,7 @@ a {
 
 button, input, textarea {
     font: inherit;
+    font-weight: 400;
 }
 
 button, a, [role="button"] {
@@ -200,7 +217,7 @@ img {
     color: #fff;
     font-family: var(--pixel);
     font-size: 1.06rem;
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: .08em;
     text-shadow: 1px 0 var(--accent), -1px 0 var(--blue);
     animation: title-flicker 8s steps(1, end) infinite;
@@ -650,7 +667,7 @@ img {
 .category-title,
 .contact-title {
     color: #fff;
-    font-weight: 700;
+    font-weight: 400;
     line-height: 1.25;
 }
 
@@ -800,6 +817,7 @@ img {
     flex: 1;
     color: #fff;
     font-family: var(--font-display);
+    font-weight: 400;
     font-size: 1.34rem;
     line-height: 1.4;
 }
@@ -867,7 +885,7 @@ img {
     border: 1px solid #352640;
     background: #050409;
     color: var(--cyan);
-    font-family: "Cascadia Mono", monospace;
+    font-family: var(--font-pixel);
     font-size: .88em;
 }
 
@@ -993,6 +1011,7 @@ img {
     margin-bottom: 8px;
     color: var(--accent-light);
     font-family: var(--pixel);
+    font-weight: 400;
     font-size: 1.62rem;
 }
 
