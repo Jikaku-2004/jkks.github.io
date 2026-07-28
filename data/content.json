@@ -139,6 +139,19 @@
                     }
                 }
             ]
+        },
+        {
+            "id": "travel",
+            "icon": "",
+            "label": {
+                "zh": "旅行",
+                "en": "Travel"
+            },
+            "desc": {
+                "zh": "",
+                "en": ""
+            },
+            "subItems": []
         }
     ],
     "contact": {
@@ -200,19 +213,19 @@
         "movies": [
             {
                 "id": "example-movie",
-                "title_zh": "示例电影",
-                "title_en": "Sample Movie",
+                "title_zh": "情书",
+                "title_en": "Love Letter",
                 "date": "2026-07-28",
                 "tags_zh": [
-                    "剧情",
+                    "岩井俊二",
                     "日本"
                 ],
                 "tags_en": [
-                    "Drama",
-                    "Japanese"
+                    "Shunji Iwai",
+                    "Japan"
                 ],
-                "content_zh": "电影观后感……\n\n- 值得一看\n- 摄影很美",
-                "content_en": "Movie review...\n\n- Worth watching\n- Great cinematography",
+                "content_zh": "关于爱，生死，我们如何去应对失去。",
+                "content_en": "Regarding love, life and death, and how do we deal with loss?",
                 "images": [],
                 "videos": [],
                 "links": []
@@ -301,6 +314,23 @@
                 ],
                 "content_zh": "1：40：42\n第一次半程马拉松。经验不足，在配速和补给上没有做充分的准备，20km处已经出现轻微肌肉痉挛。由于起跑区域差也影响了发挥。或许当时真实实力能达到1：35：00。",
                 "content_en": "1:40:42\nMy first half marathon. Due to a lack of experience, I didn't make adequate preparations in terms of pace and supplies. I had already experienced mild muscle spasms at the 20-kilometer mark. The performance was also affected because the starting area was far back. Perhaps the actual strength at that time could have reached 1:35:00.",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785262255441",
+                "title_zh": "高三 校运会",
+                "title_en": "Autumn school sports meeting of senior three",
+                "date": "2022-10-15",
+                "tags_zh": [
+                    "3km"
+                ],
+                "tags_en": [
+                    "3km"
+                ],
+                "content_zh": "",
+                "content_en": "",
                 "images": [],
                 "videos": [],
                 "links": []
