@@ -85,7 +85,7 @@
         const btn=$('#setupBtn'); btn.disabled=true; btn.textContent='连接中...';
         try {
             const url='https://api.github.com/repos/'+config.owner+'/'+config.repo+'/contents/data/content.json?ref='+config.branch;
-            const r=await fetch(url,{headers:{'Authorization':'token '+config.token,'Accept':'application/vnd.github.v3+json'}});
+            const r=await fetch(url,{headers:{'Authorization':'Bearer '+config.token,'Accept':'application/vnd.github+json'}});
             if(!r.ok) throw new Error('HTTP '+r.status);
             const f=await r.json(); contentSha=f.sha;
             var rawText=decodeURIComponent(escape(atob(f.content)));
@@ -252,7 +252,6 @@
                 if(confirm('删除?')){var a=siteContent[subId]||[];var i=a.findIndex(function(e){return e.id===entry.id;});if(i>=0)a.splice(i,1);cleanupUnreferencedPendingUploads();renderEntries(subId);markDirty();toast('已删除','info');}
             };
         });
-    }
     }
 
     function showWelcome(){hidePages();$('#welcomePage').style.display='';currentCategory=null;updateWelcomeText();}
@@ -714,7 +713,7 @@
         try{
             if(config.token){
                 var url='https://api.github.com/repos/'+config.owner+'/'+config.repo+'/contents/data/content.json?ref='+config.branch;
-                var r=await fetch(url,{headers:{'Authorization':'token '+config.token,'Accept':'application/vnd.github.v3+json'}});
+                var r=await fetch(url,{headers:{'Authorization':'Bearer '+config.token,'Accept':'application/vnd.github+json'}});
                 if(!r.ok)throw new Error('HTTP '+r.status);
                 var f=await r.json();contentSha=f.sha;
                 var rawText=decodeURIComponent(escape(atob(f.content)));
