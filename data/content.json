@@ -8,14 +8,14 @@
                 "en": "Reading"
             },
             "desc": {
-                "zh": "阅读书目、电影与影视作品的记录与感想",
+                "zh": "阅读、电影、音乐等输入方面",
                 "en": "Books, movies, and video reviews and thoughts"
             },
             "subItems": [
                 {
                     "id": "books",
                     "label": {
-                        "zh": "阅读书目",
+                        "zh": "阅读",
                         "en": "Books"
                     }
                 },
@@ -32,6 +32,13 @@
                         "zh": "其他作品",
                         "en": "TV & Videos"
                     }
+                },
+                {
+                    "id": "album",
+                    "label": {
+                        "zh": "唱片墙",
+                        "en": "Albums"
+                    }
                 }
             ]
         },
@@ -43,7 +50,7 @@
                 "en": "Art"
             },
             "desc": {
-                "zh": "音乐活动与书法习作的展示",
+                "zh": "关于艺术……主要是产出方面",
                 "en": "Music activities and calligraphy works"
             },
             "subItems": [
@@ -62,10 +69,10 @@
                     }
                 },
                 {
-                    "id": "albums",
+                    "id": "write",
                     "label": {
-                        "zh": "唱片墙",
-                        "en": "Albums"
+                        "zh": "写作",
+                        "en": "Writing"
                     }
                 }
             ]
@@ -507,23 +514,6 @@
         ],
         "journal": [
             {
-                "id": "example-journal",
-                "title_zh": "示例感想",
-                "title_en": "Sample Thought",
-                "date": "2026-07-28",
-                "tags_zh": [
-                    "随笔"
-                ],
-                "tags_en": [
-                    "Essay"
-                ],
-                "content_zh": "> 侏儒的话：人生不过是一行波德莱尔。\n\n今日的一些感想……",
-                "content_en": "> A dwarf's words: Life is but a line of Baudelaire.\n\nSome thoughts today...",
-                "images": [],
-                "videos": [],
-                "links": []
-            },
-            {
                 "id": "new-1785268542882",
                 "title_zh": "关于戒烟",
                 "title_en": "",
@@ -650,7 +640,38 @@
                 "videos": [],
                 "links": []
             }
-        ]
+        ],
+        "write": [
+            {
+                "id": "new-1785268937904",
+                "title_zh": "火星纪事",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "关于三百年后的火星",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785269014806",
+                "title_zh": "赤色彗星",
+                "title_en": "red comet",
+                "date": "2026-07-28",
+                "tags_zh": [
+                    "小说"
+                ],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "album": []
     },
     "welcome": {
         "welcomeTitle": {
