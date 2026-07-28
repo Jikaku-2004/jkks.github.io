@@ -8,8 +8,8 @@ const I18N = {
         en: "JKK's Personal Page"
     },
     welcomeTitle: {
-        zh: "欢迎来到 JKK 的个人网页",
-        en: "Welcome to JKK's Personal Page"
+        zh: "欢迎来到Jikaku的个人网页",
+        en: "Welcome to Jikaku's Personal Page"
     },
     welcomeSubtitle: {
         zh: "探索 · 思考 · 记录",
@@ -20,8 +20,8 @@ const I18N = {
         en: "<p>A personal space for recording reading, art, sports, and research.</p><p>Choose a category from the sidebar to start exploring.</p>"
     },
     welcomeQuote: {
-        zh: "\"人生还不如一行波德莱尔。\" —— 芥川龙之介",
-        en: "\"Life is not worth a line of Baudelaire.\" — Ryūnosuke Akutagawa"
+        zh: "“今天会是一个好日子” —— jkk",
+        en: "“Today will be a good day” — jkk"
     },
     contact: {
         zh: "联系方式",
