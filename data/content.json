@@ -15,8 +15,8 @@
                 {
                     "id": "books",
                     "label": {
-                        "zh": "阅读书目与感想",
-                        "en": "Books & Thoughts"
+                        "zh": "阅读书目",
+                        "en": "Books"
                     }
                 },
                 {
@@ -29,7 +29,7 @@
                 {
                     "id": "tv",
                     "label": {
-                        "zh": "其他影视作品",
+                        "zh": "其他作品",
                         "en": "TV & Videos"
                     }
                 }
@@ -37,7 +37,7 @@
         },
         {
             "id": "art",
-            "icon": "AR",
+            "icon": "ART",
             "label": {
                 "zh": "艺术",
                 "en": "Art"
@@ -60,12 +60,19 @@
                         "zh": "书法习作",
                         "en": "Calligraphy"
                     }
+                },
+                {
+                    "id": "albums",
+                    "label": {
+                        "zh": "唱片墙",
+                        "en": "Albums"
+                    }
                 }
             ]
         },
         {
             "id": "sports",
-            "icon": "SP",
+            "icon": "SPT",
             "label": {
                 "zh": "运动",
                 "en": "Sports"
@@ -93,7 +100,7 @@
         },
         {
             "id": "research",
-            "icon": "RS",
+            "icon": "RSC",
             "label": {
                 "zh": "研究",
                 "en": "Research"
@@ -149,16 +156,24 @@
         },
         {
             "id": "travel",
-            "icon": "",
+            "icon": "TRV",
             "label": {
                 "zh": "旅行",
                 "en": "Travel"
             },
             "desc": {
-                "zh": "",
+                "zh": "这个人类探索地球的进度。",
                 "en": ""
             },
-            "subItems": []
+            "subItems": [
+                {
+                    "id": "place",
+                    "label": {
+                        "zh": "去过的地方",
+                        "en": "Places"
+                    }
+                }
+            ]
         }
     ],
     "contact": {
@@ -167,7 +182,7 @@
                 "zh": "邮箱",
                 "en": "Email"
             },
-            "value": "jkk@example.com",
+            "value": "Jikaku0918@outlook.com",
             "icon": "ML"
         }
     },
@@ -458,6 +473,46 @@
                 "videos": [],
                 "links": []
             }
+        ],
+        "place": [],
+        "albums": [
+            {
+                "id": "new-1785266250059",
+                "title_zh": "Luv（sic）",
+                "title_en": "Luv（sic）",
+                "date": "2026-07-28",
+                "tags_zh": [
+                    "nujabes",
+                    "shing02"
+                ],
+                "tags_en": [
+                    "nujabes",
+                    "shing02"
+                ],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
         ]
+    },
+    "welcome": {
+        "welcomeTitle": {
+            "zh": "欢迎来到 Jikaku 的个人网页",
+            "en": "Welcome to Jikaku's Website"
+        },
+        "welcomeSubtitle": {
+            "zh": "探索 · 思考 · 记录",
+            "en": "Explore · Think · Record"
+        },
+        "welcomeDesc": {
+            "zh": "<p>这里是我记录阅读、艺术、运动与研究的个人空间。</p><p>请从左侧导航栏选择感兴趣的分类开始探索。</p>",
+            "en": "<p>A personal space for recording reading, art, sports, and research.</p><p>Choose a category from the sidebar to start exploring.</p>"
+        },
+        "welcomeQuote": {
+            "zh": "&ldquo;今天会是一个好日子。&rdquo; —— jkk",
+            "en": "&ldquo;Today is gonna be a good day.&rdquo; &mdash; jkk"
+        }
     }
 }
