@@ -1,5 +1,5 @@
 /**
- * admin.js - JKK 绠＄悊鍚庡彴锛堥暅鍍忓叕寮€缃戦〉甯冨眬 + 鍏ㄥ唴鑱旂紪杈戯級
+ * admin.js - JKK 管理后台（镜像公开网页布局 + 全内联编辑）
  */
 
 (function() {
@@ -13,10 +13,10 @@
     let contentSha = null, isDirty = false, editingEntry = null, editingSubId = null, editingCatIdx = null;
 
     const WELCOME_FIELDS = {
-        welcomeTitle: { zh: '娆㈣繋鏉ュ埌 JKK 鐨勪釜浜虹綉椤?, en: "Welcome to JKK's Personal Page" },
-        welcomeSubtitle: { zh: '鎺㈢储 路 鎬濊€?路 璁板綍', en: 'Explore 路 Think 路 Record' },
-        welcomeDesc: { zh: '<p>杩欓噷鏄垜璁板綍闃呰銆佽壓鏈€佽繍鍔ㄤ笌鐮旂┒鐨勪釜浜虹┖闂淬€?/p><p>璇蜂粠宸︿晶瀵艰埅鏍忛€夋嫨鎰熷叴瓒ｇ殑鍒嗙被寮€濮嬫帰绱€?/p>', en: '<p>A personal space for recording reading, art, sports, and research.</p><p>Choose a category from the sidebar to start exploring.</p>' },
-        welcomeQuote: { zh: '&ldquo;浜虹敓杩樹笉濡備竴琛屾尝寰疯幈灏斻€?rdquo; 鈥斺€?鑺ュ窛榫欎箣浠?, en: '&ldquo;Life is not worth a line of Baudelaire.&rdquo; &mdash; Ryunosuke Akutagawa' }
+        welcomeTitle: { zh: '欢迎来到 JKK 的个人网页', en: "Welcome to JKK's Personal Page" },
+        welcomeSubtitle: { zh: '探索 · 思考 · 记录', en: 'Explore · Think · Record' },
+        welcomeDesc: { zh: '<p>这里是我记录阅读、艺术、运动与研究的个人空间。</p><p>请从左侧导航栏选择感兴趣的分类开始探索。</p>', en: '<p>A personal space for recording reading, art, sports, and research.</p><p>Choose a category from the sidebar to start exploring.</p>' },
+        welcomeQuote: { zh: '&ldquo;人生还不如一行波德莱尔。&rdquo; —— 芥川龙之介', en: '&ldquo;Life is not worth a line of Baudelaire.&rdquo; &mdash; Ryunosuke Akutagawa' }
     };
 
     function init() {
@@ -54,10 +54,10 @@
             const btn = e.target.closest('.edit-btn'); if (!btn) return;
             const block = btn.closest('.editable-block'); if (!block) return;
             const key = block.dataset.key; if (!key || !WELCOME_FIELDS[key]) return;
-            window._textCb = val => { WELCOME_FIELDS[key][currentLang] = val; updateWelcomeText(); markDirty(); toast('宸叉洿鏂?,'success'); };
-            openTextEditor('缂栬緫: '+key, WELCOME_FIELDS[key][currentLang]);
+            window._textCb = val => { WELCOME_FIELDS[key][currentLang] = val; updateWelcomeText(); markDirty(); toast('已更新','success'); };
+            openTextEditor('编辑: '+key, WELCOME_FIELDS[key][currentLang]);
         });
-        // 璇█鍒囨崲
+        // 语言切换
         setupAdminLangToggle();
         if (config.owner && config.repo && config.token) connectRepo();
     }
@@ -65,9 +65,9 @@
     async function connectRepo() {
         config = { owner:$('#setupOwner').value.trim(), repo:$('#setupRepo').value.trim(),
             token:$('#setupToken').value.trim(), branch:$('#setupBranch').value.trim()||'main' };
-        if (!config.owner||!config.repo||!config.token) return showError('璇峰～鍐欏畬鏁翠俊鎭?);
+        if (!config.owner||!config.repo||!config.token) return showError('请填写完整信息');
         localStorage.setItem('jkk_admin_config', JSON.stringify(config));
-        const btn=$('#setupBtn'); btn.disabled=true; btn.textContent='杩炴帴涓?..';
+        const btn=$('#setupBtn'); btn.disabled=true; btn.textContent='连接中...';
         try {
             const url='https://api.github.com/repos/'+config.owner+'/'+config.repo+'/contents/data/content.json?ref='+config.branch;
             const r=await fetch(url,{headers:{'Authorization':'token '+config.token,'Accept':'application/vnd.github.v3+json'}});
@@ -75,25 +75,25 @@
             const f=await r.json(); contentSha=f.sha;
             var rawText=decodeURIComponent(escape(atob(f.content)));
             parseData(JSON.parse(rawText));
-            enterApp(); toast('宸茶繛鎺?,'success');
+            enterApp(); toast('已连接','success');
         } catch(e) {
             const m=e.message||'';
-            if(m.includes('401')) showError('Token鏃犳晥');
-            else if(m.includes('403')) showError('Token鏉冮檺涓嶈冻');
-            else if(m.includes('404')) showError('浠撳簱鎴栨枃浠朵笉瀛樺湪');
+            if(m.includes('401')) showError('Token无效');
+            else if(m.includes('403')) showError('Token权限不足');
+            else if(m.includes('404')) showError('仓库或文件不存在');
             else showError(m);
         }
-        btn.disabled=false; btn.textContent='杩炴帴浠撳簱';
+        btn.disabled=false; btn.textContent='连接仓库';
     }
 
     async function enterManualMode() {
-        const btn=$('#manualModeBtn'); btn.textContent='鍔犺浇涓?..';
+        const btn=$('#manualModeBtn'); btn.textContent='加载中...';
         try {
             const r=await fetch('data/content.json'); if(!r.ok) throw new Error('HTTP '+r.status);
             parseData(await r.json()); contentSha=null; config={};
-            enterApp(); toast('宸插姞杞?,'success');
+            enterApp(); toast('已加载','success');
         } catch(e) { showError(e.message); }
-        btn.textContent='鎵嬪姩妯″紡';
+        btn.textContent='手动模式';
     }
 
     function parseData(raw) {
@@ -105,7 +105,7 @@
     function enterApp() {
         $('#setupScreen').style.display='none';
         $('#adminTopBar').style.display=''; $('#adminLayout').style.display='';
-        $('#repoBadge').textContent=config.owner?config.owner+'/'+config.repo:'鎵嬪姩';
+        $('#repoBadge').textContent=config.owner?config.owner+'/'+config.repo:'手动';
         renderNav(); showWelcome();
     }
 
@@ -117,7 +117,7 @@
             item.className='nav-item'; item.dataset.ci=ci;
             var cl=cat.label?(cat.label[currentLang]||cat.label.zh||cat.id):cat.id;
             item.innerHTML='<span class="nav-icon">'+(cat.icon||'')+'</span><span class="nav-label">'+esc(cl)+'</span><span class="nav-arrow">\u25B6</span>'+
-                '<button class="nav-del" data-ci="'+ci+'" title="鍒犻櫎">\u2715</button>';
+                '<button class="nav-del" data-ci="'+ci+'" title="删除">\u2715</button>';
             item.onclick=function(){toggleCat(ci);};
             li.appendChild(item);
             if(cat.subItems&&cat.subItems.length>0){
@@ -137,12 +137,12 @@
         });
         var ali=document.createElement('li');
         ali.style.padding='10px 20px';
-        ali.innerHTML='<button class="admin-btn admin-btn-sm admin-btn-accent" id="addCatBtn" style="width:100%">+ 娣诲姞鏂板ぇ绫?/button>';
+        ali.innerHTML='<button class="admin-btn admin-btn-sm admin-btn-accent" id="addCatBtn" style="width:100%">+ 添加新大类</button>';
         list.appendChild(ali);
         document.getElementById('addCatBtn').onclick=addNewCategory;
         var dels=document.querySelectorAll('.nav-del');
         for(var i=0;i<dels.length;i++){(function(d){d.onclick=function(e){e.stopPropagation();
-            if(confirm('鍒犻櫎姝ゅぇ绫?')){siteNav.splice(parseInt(d.dataset.ci),1);renderNav();showWelcome();markDirty();toast('宸插垹闄?,'info');}
+            if(confirm('删除此大类?')){siteNav.splice(parseInt(d.dataset.ci),1);renderNav();showWelcome();markDirty();toast('已删除','info');}
         };})(dels[i]);}
     }
 
@@ -154,7 +154,7 @@
         s.classList.toggle('open');
         var item=document.querySelector('.nav-item[data-ci="'+ci+'"]');
         if(item)item.classList.toggle('expanded');
-        // 灞曞紑鏃惰嚜鍔ㄩ€変腑绗竴涓瓙绫?
+        // 展开时自动选中第一个子类
         if(isOpening){
             var firstSub=s.querySelector('.sub-nav-item');
             if(firstSub) selectSub(ci, parseInt(firstSub.dataset.si));
@@ -192,7 +192,7 @@
         var c=document.getElementById('entriesContainer'); c.innerHTML='';
         var entries=siteContent[subId]||[];
         if(entries.length===0){
-            c.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-secondary)"><p>鏆傛棤鏉＄洰</p><button class="admin-btn admin-btn-accent" onclick="document.getElementById(\'addEntryBtn\').click()">+ 娣诲姞鏂版潯鐩?/button></div>';
+            c.innerHTML='<div style="text-align:center;padding:40px;color:var(--text-secondary)"><p>暂无条目</p><button class="admin-btn admin-btn-accent" onclick="document.getElementById(\'addEntryBtn\').click()">+ 添加新条目</button></div>';
             return;
         }
         var sorted=entries.slice().sort(function(a,b){return(b.date||'').localeCompare(a.date||'');});
@@ -203,8 +203,8 @@
             var body=currentLang==='zh'?entry.content_zh:entry.content_en;
             card.innerHTML='<div class="entry-header"><h3 class="entry-title">'+esc(title)+'</h3>'+
                 '<span class="entry-date">'+(entry.date||'')+'</span>'+
-                '<button class="entry-edit-btn" title="缂栬緫">\u270E</button>'+
-                '<button class="entry-del-btn" title="鍒犻櫎">\uD83D\uDDD1</button></div>'+
+                '<button class="entry-edit-btn" title="编辑">\u270E</button>'+
+                '<button class="entry-del-btn" title="删除">\uD83D\uDDD1</button></div>'+
 
                 '<div class="entry-tags">'+tags.map(function(t){return'<span class="entry-tag">'+esc(t)+'</span>';}).join('')+'</div>'+
                 '<div class="entry-body"><p>'+esc((body||'').substring(0,200))+((body||'').length>200?'...':'')+'</p></div>';
@@ -213,7 +213,7 @@
             editBtns[0].onclick=function(){openEntryEditor(subId,entry);};
             var delBtns=card.querySelectorAll('.entry-del-btn');
             delBtns[0].onclick=function(){
-                if(confirm('鍒犻櫎?')){var a=siteContent[subId]||[];var i=a.findIndex(function(e){return e.id===entry.id;});if(i>=0)a.splice(i,1);renderEntries(subId);markDirty();toast('宸插垹闄?,'info');}
+                if(confirm('删除?')){var a=siteContent[subId]||[];var i=a.findIndex(function(e){return e.id===entry.id;});if(i>=0)a.splice(i,1);renderEntries(subId);markDirty();toast('已删除','info');}
             };
         });
     }
@@ -231,9 +231,9 @@
     function showContact(){
         hidePages();$('#contactPage').style.display='';
         var lang=currentLang;
-        var title=lang==='zh'?'鑱旂郴鏂瑰紡':'Contact';
-        var desc=lang==='zh'?'娆㈣繋閫氳繃浠ヤ笅鏂瑰紡涓庢垜鑱旂郴':'Feel free to reach out to me';
-        var c=Object.keys(siteContact).length>0?siteContact:{email:{label:{zh:'閭',en:'Email'},value:'jkk@example.com',icon:'\u2709'}};
+        var title=lang==='zh'?'联系方式':'Contact';
+        var desc=lang==='zh'?'欢迎通过以下方式与我联系':'Feel free to reach out to me';
+        var c=Object.keys(siteContact).length>0?siteContact:{email:{label:{zh:'邮箱',en:'Email'},value:'jkk@example.com',icon:'\u2709'}};
         var h='<div class="contact-card"><h2 class="contact-title">'+title+'</h2><p style="color:var(--text-secondary);margin-bottom:24px;">'+desc+'</p>';
         var vals=Object.values(c);
         vals.forEach(function(i){
@@ -253,17 +253,17 @@
         var isZh=currentLang==='zh';
         $('#entryModalTitle').textContent='Edit: '+(entry.title_zh||entry.title_en||entry.id);
         $('#entryModalBody').innerHTML=
-            '<div class="editor-row"><div class="editor-field"><label>'+(isZh?'涓枃鏍囬':'Title')+' *</label><input type="text" id="eeZh" value="'+esc(entry.title_zh||'')+'"></div>'+
-            '<div class="editor-field"><label>'+(isZh?'鑻辨枃鏍囬':'English Title')+' *</label><input type="text" id="eeEn" value="'+esc(entry.title_en||'')+'"></div></div>'+
-            '<div class="editor-row"><div class="editor-field"><label>鏃ユ湡</label><input type="date" id="eeDate" value="'+(entry.date||'')+'"></div>'+
+            '<div class="editor-row"><div class="editor-field"><label>'+(isZh?'中文标题':'Title')+' *</label><input type="text" id="eeZh" value="'+esc(entry.title_zh||'')+'"></div>'+
+            '<div class="editor-field"><label>'+(isZh?'英文标题':'English Title')+' *</label><input type="text" id="eeEn" value="'+esc(entry.title_en||'')+'"></div></div>'+
+            '<div class="editor-row"><div class="editor-field"><label>日期</label><input type="date" id="eeDate" value="'+(entry.date||'')+'"></div>'+
             '<div class="editor-field"><label>ID</label><input type="text" id="eeId" value="'+esc(entry.id||'')+'"></div></div>'+
-            '<div class="editor-row"><div class="editor-field"><label>'+(isZh?'涓枃鏍囩':'Chinese Tags')+'</label><input type="text" id="eeTagsZh" value="'+esc((entry.tags_zh||[]).join(', '))+'"></div>'+
-            '<div class="editor-field"><label>'+(isZh?'鑻辨枃鏍囩':'English Tags')+'</label><input type="text" id="eeTagsEn" value="'+esc((entry.tags_en||[]).join(', '))+'"></div></div>'+
-            '<div class="editor-field"><label>'+(isZh?'涓枃鍐呭 (Markdown)':'Chinese Content')+'</label><textarea id="eeContentZh" rows="4">'+esc(entry.content_zh||'')+'</textarea></div>'+
-            '<div class="editor-field"><label>'+(isZh?'鑻辨枃鍐呭':'English Content (Markdown)')+'</label><textarea id="eeContentEn" rows="4">'+esc(entry.content_en||'')+'</textarea></div>'+
-            '<div class="editor-row"><div class="editor-field"><label>'+(isZh?'鍥剧墖璺緞':'Images')+'</label><textarea id="eeImages" rows="2">'+esc((entry.images||[]).join('\n'))+'</textarea></div>'+
-            '<div class="editor-field"><label>'+(isZh?'閾炬帴 (鏂囧瓧,缃戝潃)':'Links')+'</label><textarea id="eeLinks" rows="2">'+esc((entry.links||[]).map(function(l){return l.text+','+l.url;}).join('\n'))+'</textarea></div>'+
-            '<div class="editor-field"><label>'+(isZh?'瑙嗛閾炬帴':'Videos')+'</label><textarea id="eeVideos" rows="2">'+esc((entry.videos||[]).map(function(v){return v.url;}).join('\n'))+'</textarea></div></div>';
+            '<div class="editor-row"><div class="editor-field"><label>'+(isZh?'中文标签':'Chinese Tags')+'</label><input type="text" id="eeTagsZh" value="'+esc((entry.tags_zh||[]).join(', '))+'"></div>'+
+            '<div class="editor-field"><label>'+(isZh?'英文标签':'English Tags')+'</label><input type="text" id="eeTagsEn" value="'+esc((entry.tags_en||[]).join(', '))+'"></div></div>'+
+            '<div class="editor-field"><label>'+(isZh?'中文内容 (Markdown)':'Chinese Content')+'</label><textarea id="eeContentZh" rows="4">'+esc(entry.content_zh||'')+'</textarea></div>'+
+            '<div class="editor-field"><label>'+(isZh?'英文内容':'English Content (Markdown)')+'</label><textarea id="eeContentEn" rows="4">'+esc(entry.content_en||'')+'</textarea></div>'+
+            '<div class="editor-row"><div class="editor-field"><label>'+(isZh?'图片路径':'Images')+'</label><textarea id="eeImages" rows="2">'+esc((entry.images||[]).join('\n'))+'</textarea></div>'+
+            '<div class="editor-field"><label>'+(isZh?'链接 (文字,网址)':'Links')+'</label><textarea id="eeLinks" rows="2">'+esc((entry.links||[]).map(function(l){return l.text+','+l.url;}).join('\n'))+'</textarea></div>'+
+            '<div class="editor-field"><label>'+(isZh?'视频链接':'Videos')+'</label><textarea id="eeVideos" rows="2">'+esc((entry.videos||[]).map(function(v){return v.url;}).join('\n'))+'</textarea></div></div>';
         $('#entryModal').style.display='flex';
     }
     function closeEntryEditor(){$('#entryModal').style.display='none';editingEntry=null;}
@@ -272,11 +272,11 @@
         var e=editingEntry;
         e.title_zh=$('#eeZh').value.trim(); e.title_en=$('#eeEn').value.trim();
         e.date=$('#eeDate').value; e.id=$('#eeId').value.trim()||e.id;
-        e.tags_zh=$('#eeTagsZh').value.split(/[,锛宂/).map(function(s){return s.trim();}).filter(Boolean);
-        e.tags_en=$('#eeTagsEn').value.split(/[,锛宂/).map(function(s){return s.trim();}).filter(Boolean);
+        e.tags_zh=$('#eeTagsZh').value.split(/[,，]/).map(function(s){return s.trim();}).filter(Boolean);
+        e.tags_en=$('#eeTagsEn').value.split(/[,，]/).map(function(s){return s.trim();}).filter(Boolean);
         e.content_zh=$('#eeContentZh').value.trim(); e.content_en=$('#eeContentEn').value.trim();
         e.images=$('#eeImages').value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
-        e.links=$('#eeLinks').value.split('\n').map(function(s){var p=s.split(/[,锛宂/);return p.length>=2?{url:p[1].trim(),text:p[0].trim()}:null;}).filter(Boolean);
+        e.links=$('#eeLinks').value.split('\n').map(function(s){var p=s.split(/[,，]/);return p.length>=2?{url:p[1].trim(),text:p[0].trim()}:null;}).filter(Boolean);
         e.videos=$('#eeVideos').value.split('\n').map(function(s){var u=s.trim();return u?{url:u,platform:u.includes('bilibili')?'bilibili':'youtube'}:null;}).filter(Boolean);
         closeEntryEditor();
         var arr=siteContent[editingSubId]||[];
@@ -287,10 +287,10 @@
             var cat=siteNav[currentCategory];var sub=cat.subItems?cat.subItems[currentSubcategory||0]:null;
             if(sub)showCatPage(cat,sub);
         }
-        markDirty();toast('宸蹭繚瀛?,'success');
+        markDirty();toast('已保存','success');
     }
     function deleteEntry(){
-        if(!editingEntry||!editingSubId||!confirm('鍒犻櫎?'))return;
+        if(!editingEntry||!editingSubId||!confirm('删除?'))return;
         var arr=siteContent[editingSubId]||[];
         var i=arr.findIndex(function(e){return e.id===editingEntry.id;});
         if(i>=0)arr.splice(i,1);
@@ -299,12 +299,12 @@
             var cat=siteNav[currentCategory];var sub=cat.subItems?cat.subItems[currentSubcategory||0]:null;
             if(sub)showCatPage(cat,sub);
         }
-        markDirty();toast('宸插垹闄?,'info');
+        markDirty();toast('已删除','info');
     }
 
     function addNewEntry(){
-        if(currentCategory===null)return toast('璇峰厛閫夋嫨鍒嗙被','error');
-        var cat=siteNav[currentCategory]; if(!cat||!cat.subItems||currentSubcategory===null)return toast('璇峰厛閫夋嫨瀛愮被','error');
+        if(currentCategory===null)return toast('请先选择分类','error');
+        var cat=siteNav[currentCategory]; if(!cat||!cat.subItems||currentSubcategory===null)return toast('请先选择子类','error');
         var sub=cat.subItems[currentSubcategory];
         var entry={id:'new-'+Date.now(),title_zh:'',title_en:'',date:new Date().toISOString().split('T')[0],tags_zh:[],tags_en:[],content_zh:'',content_en:'',images:[],videos:[],links:[]};
         var arr=siteContent[sub.id]||[];arr.push(entry);siteContent[sub.id]=arr;
@@ -314,13 +314,13 @@
     function openCatEditor(ci){
         var cat=siteNav[ci]; if(!cat)return;
         editingCatIdx=ci; var d=cat.desc||{};
-        $('#catModalTitle').textContent='缂栬緫澶х被';
+        $('#catModalTitle').textContent='编辑大类';
         $('#catModalBody').innerHTML=
-            '<div class="editor-field"><label>澶х被 ID</label><input type="text" id="ceId" value="'+esc(cat.id)+'"></div>'+
-            '<div class="editor-row"><div class="editor-field"><label>涓枃鍚嶇О</label><input type="text" id="ceZh" value="'+esc(cat.label?cat.label.zh:'')+'"></div>'+
+            '<div class="editor-field"><label>大类 ID</label><input type="text" id="ceId" value="'+esc(cat.id)+'"></div>'+
+            '<div class="editor-row"><div class="editor-field"><label>中文名称</label><input type="text" id="ceZh" value="'+esc(cat.label?cat.label.zh:'')+'"></div>'+
             '<div class="editor-field"><label>English</label><input type="text" id="ceEn" value="'+esc(cat.label?cat.label.en:'')+'"></div></div>'+
-            '<div class="editor-field"><label>鍥炬爣 Emoji</label><input type="text" id="ceIcon" value="'+esc(cat.icon||'')+'"></div>'+
-            '<div class="editor-field"><label>涓枃鎻忚堪</label><textarea id="ceDescZh" rows="2">'+esc(d.zh||'')+'</textarea></div>'+
+            '<div class="editor-field"><label>图标 Emoji</label><input type="text" id="ceIcon" value="'+esc(cat.icon||'')+'"></div>'+
+            '<div class="editor-field"><label>中文描述</label><textarea id="ceDescZh" rows="2">'+esc(d.zh||'')+'</textarea></div>'+
             '<div class="editor-field"><label>English Description</label><textarea id="ceDescEn" rows="2">'+esc(d.en||'')+'</textarea></div>';
         $('#catModal').style.display='flex';
     }
@@ -337,60 +337,60 @@
             var c=siteNav[currentCategory];var s=c.subItems?c.subItems[currentSubcategory||0]:null;
             if(s)showCatPage(c,s);
         }
-        markDirty();toast('宸叉洿鏂?,'success');
+        markDirty();toast('已更新','success');
     }
     function deleteCategory(){
-        if(editingCatIdx===null||!confirm('鍒犻櫎姝ゅぇ绫?'))return;
+        if(editingCatIdx===null||!confirm('删除此大类?'))return;
         siteNav.splice(editingCatIdx,1);closeCatEditor();renderNav();showWelcome();
-        markDirty();toast('宸插垹闄?,'info');
+        markDirty();toast('已删除','info');
     }
 
     function addNewCategory(){
-        var id=prompt('澶х被ID (濡?travel):');if(!id)return;
-        var zh=prompt('涓枃鍚嶇О (濡?鏃呰):');if(!zh)return;
+        var id=prompt('大类ID (如 travel):');if(!id)return;
+        var zh=prompt('中文名称 (如 旅行):');if(!zh)return;
         var en=prompt('English name:');if(!en)return;
-        var icon=prompt('鍥炬爣 Emoji:','');
+        var icon=prompt('图标 Emoji:','');
         siteNav.push({id:id,icon:icon||'',label:{zh:zh,en:en},desc:{zh:'',en:''},subItems:[]});
-        renderNav();markDirty();toast('宸叉坊鍔? 璁板緱娣诲姞瀛愮被','success');
+        renderNav();markDirty();toast('已添加, 记得添加子类','success');
     }
 
     function manageSubcategories(){
         if(currentCategory===null)return;
         var cat=siteNav[currentCategory];if(!cat)return;
-        $('#subModalTitle').textContent='绠＄悊瀛愮被: '+(cat.label?cat.label.zh:cat.id);
-        var h='<p style="margin-bottom:12px;color:var(--text-secondary);font-size:0.9rem;">鐐瑰嚮鍒犻櫎, 搴曢儴娣诲姞鏂板瓙绫?/p>';
+        $('#subModalTitle').textContent='管理子类: '+(cat.label?cat.label.zh:cat.id);
+        var h='<p style="margin-bottom:12px;color:var(--text-secondary);font-size:0.9rem;">点击删除, 底部添加新子类</p>';
         (cat.subItems||[]).forEach(function(sub,si){
             h+='<div style="display:flex;align-items:center;padding:8px 10px;background:var(--bg);border-radius:6px;margin-bottom:4px;">'+
                 '<span style="flex:1">'+esc(sub.label?sub.label.zh:sub.id)+'</span>'+
-                '<button class="admin-btn admin-btn-sm admin-btn-danger sub-del" data-si="'+si+'">鍒犻櫎</button></div>';
+                '<button class="admin-btn admin-btn-sm admin-btn-danger sub-del" data-si="'+si+'">删除</button></div>';
         });
         h+='<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:12px;">'+
-            '<h4 style="margin-bottom:8px;font-size:0.9rem;">娣诲姞鏂板瓙绫?/h4>'+
-            '<div class="editor-field"><label>瀛愮被 ID</label><input type="text" id="nsId" placeholder="places"></div>'+
-            '<div class="editor-row"><div class="editor-field"><label>涓枃鍚嶇О</label><input type="text" id="nsZh" placeholder="鍘昏繃鐨勫湴鏂?></div>'+
+            '<h4 style="margin-bottom:8px;font-size:0.9rem;">添加新子类</h4>'+
+            '<div class="editor-field"><label>子类 ID</label><input type="text" id="nsId" placeholder="places"></div>'+
+            '<div class="editor-row"><div class="editor-field"><label>中文名称</label><input type="text" id="nsZh" placeholder="去过的地方"></div>'+
             '<div class="editor-field"><label>English</label><input type="text" id="nsEn" placeholder="Places"></div></div>'+
-            '<button class="admin-btn admin-btn-accent admin-btn-sm" id="nsAddBtn">+ 娣诲姞</button></div>';
+            '<button class="admin-btn admin-btn-accent admin-btn-sm" id="nsAddBtn">+ 添加</button></div>';
         $('#subModalBody').innerHTML=h;$('#subModal').style.display='flex';
         var dels=$('#subModalBody').querySelectorAll('.sub-del');
         for(var i=0;i<dels.length;i++){(function(d){d.onclick=function(){
-            var si=parseInt(d.dataset.si);if(confirm('鍒犻櫎?')){cat.subItems.splice(si,1);manageSubcategories();renderNav();markDirty();toast('宸插垹闄?,'info');}
+            var si=parseInt(d.dataset.si);if(confirm('删除?')){cat.subItems.splice(si,1);manageSubcategories();renderNav();markDirty();toast('已删除','info');}
         };})(dels[i]);}
         document.getElementById('nsAddBtn').onclick=function(){
             var id=document.getElementById('nsId').value.trim();
             var zh=document.getElementById('nsZh').value.trim();
             var en=document.getElementById('nsEn').value.trim();
-            if(!id||!zh)return toast('璇峰～鍐欏瓙绫籌D鍜屽悕绉?,'error');
+            if(!id||!zh)return toast('请填写子类ID和名称','error');
             if(!cat.subItems)cat.subItems=[];
             cat.subItems.push({id:id,label:{zh:zh,en:en||zh}});
             if(!siteContent[id])siteContent[id]=[];
-            manageSubcategories();renderNav();markDirty();toast('宸叉坊鍔?,'success');
+            manageSubcategories();renderNav();markDirty();toast('已添加','success');
         };
     }
     function closeSubEditor(){document.getElementById('subModal').style.display='none';}
 
     async function saveToGitHub(){
-        if(!config.token){downloadContent();toast('鎵嬪姩妯″紡: 宸蹭笅杞?,'info');return;}
-        var btn=$('#saveBtn');btn.disabled=true;btn.textContent='淇濆瓨涓?..';
+        if(!config.token){downloadContent();toast('手动模式: 已下载','info');return;}
+        var btn=$('#saveBtn');btn.disabled=true;btn.textContent='保存中...';
         try{
             var url='https://api.github.com/repos/'+config.owner+'/'+config.repo+'/contents/data/content.json?ref='+config.branch;
             var cr=await fetch(url,{headers:{'Authorization':'token '+config.token,'Accept':'application/vnd.github.v3+json'}});
@@ -402,14 +402,14 @@
             var pr=await fetch('https://api.github.com/repos/'+config.owner+'/'+config.repo+'/contents/data/content.json',{
                 method:'PUT',
                 headers:{'Authorization':'token '+config.token,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'},
-                body:JSON.stringify({message:'鍚庡彴缂栬緫鏇存柊',content:enc,sha:sha||undefined,branch:config.branch})
+                body:JSON.stringify({message:'后台编辑更新',content:enc,sha:sha||undefined,branch:config.branch})
             });
             if(!pr.ok){var ed={};try{ed=await pr.json();}catch(e){}throw new Error(ed.message||'HTTP '+pr.status);}
             var res=await pr.json();contentSha=res.content.sha;
             isDirty=false;updateStatus();
-            toast('淇濆瓨鎴愬姛! 1-2鍒嗛挓鍚庢洿鏂?,'success');
-        }catch(e){toast('淇濆瓨澶辫触: '+e.message,'error');}
-        btn.disabled=false;btn.textContent='淇濆瓨鍒?GitHub';
+            toast('保存成功! 1-2分钟后更新','success');
+        }catch(e){toast('保存失败: '+e.message,'error');}
+        btn.disabled=false;btn.textContent='保存到 GitHub';
     }
 
     function downloadContent(){
@@ -422,7 +422,7 @@
     }
 
     async function reloadData(){
-        if(isDirty&&!confirm('鏈夋湭淇濆瓨鏇存敼, 閲嶆柊鍔犺浇灏嗕涪澶便€傜‘瀹?'))return;
+        if(isDirty&&!confirm('有未保存更改, 重新加载将丢失。确定?'))return;
         try{
             if(config.token){
                 var url='https://api.github.com/repos/'+config.owner+'/'+config.repo+'/contents/data/content.json?ref='+config.branch;
@@ -432,12 +432,12 @@
                 var rawText=decodeURIComponent(escape(atob(f.content)));
                 parseData(JSON.parse(rawText));
             }else{var r=await fetch('data/content.json');parseData(await r.json());}
-            renderNav();showWelcome();toast('宸查噸鏂板姞杞?,'success');
+            renderNav();showWelcome();toast('已重新加载','success');
         }catch(e){toast(e.message,'error');}
     }
 
     function markDirty(){isDirty=true;updateStatus();}
-    function updateStatus(){var s=$('#adminStatus');if(!s)return;s.textContent=isDirty?'鏈繚瀛?:'宸蹭繚瀛?;s.style.color=isDirty?'#ff9800':'';}
+    function updateStatus(){var s=$('#adminStatus');if(!s)return;s.textContent=isDirty?'未保存':'已保存';s.style.color=isDirty?'#ff9800':'';}
 
     function toast(msg,type){
         var el=document.createElement('div');el.className='toast '+(type||'info');
@@ -447,7 +447,7 @@
     function showError(msg){var el=$('#setupError');el.textContent=msg;el.style.display='block';}
     function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
 
-    // 鈹€鈹€ 璇█鍒囨崲 鈹€鈹€
+    // ── 语言切换 ──
     function setupAdminLangToggle(){
         var toggle=$('#adminLangToggle');
         if(!toggle)return;
@@ -459,7 +459,7 @@
             currentLang=lang;
             var opts=toggle.querySelectorAll('.lang-option');
             for(var i=0;i<opts.length;i++)opts[i].classList.toggle('active',opts[i].dataset.lang===lang);
-            // 閲嶆柊娓叉煋瀵艰埅鍜屽綋鍓嶉〉闈?
+            // 重新渲染导航和当前页面
             renderNav();
             updateWelcomeText();
             if(currentCategory!==null&&siteNav[currentCategory]){
@@ -467,7 +467,7 @@
                 if(sub)showCatPage(cat,sub);
             }
             showContact();
-            toast('宸插垏鎹㈠埌'+(lang==='zh'?'涓枃':'English'),'info');
+            toast('已切换到'+(lang==='zh'?'中文':'English'),'info');
         };
     }
 
@@ -478,6 +478,6 @@
         if(window.innerWidth<=768&&s.classList.contains('open')&&!s.contains(e.target)&&!t.contains(e.target))closeMenu();
     });
 
-    window.addEventListener('beforeunload',function(e){if(isDirty){e.preventDefault();e.returnValue='鏈夋湭淇濆瓨鏇存敼';}});
+    window.addEventListener('beforeunload',function(e){if(isDirty){e.preventDefault();e.returnValue='有未保存更改';}});
     document.addEventListener('DOMContentLoaded',init);
 })();
