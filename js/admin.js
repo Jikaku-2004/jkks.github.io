@@ -57,6 +57,8 @@
             window._textCb = val => { WELCOME_FIELDS[key][currentLang] = val; updateWelcomeText(); markDirty(); toast('已更新','success'); };
             openTextEditor('编辑: '+key, WELCOME_FIELDS[key][currentLang]);
         });
+        // 语言切换
+        setupAdminLangToggle();
         if (config.owner && config.repo && config.token) connectRepo();
     }
 
@@ -112,7 +114,7 @@
             var li=document.createElement('li');
             var item=document.createElement('div');
             item.className='nav-item'; item.dataset.ci=ci;
-            var cl=cat.label?cat.label.zh||cat.id:cat.id;
+            var cl=cat.label?(cat.label[currentLang]||cat.label.zh||cat.id):cat.id;
             item.innerHTML='<span class="nav-icon">'+(cat.icon||'')+'</span><span class="nav-label">'+esc(cl)+'</span><span class="nav-arrow">\u25B6</span>'+
                 '<button class="nav-del" data-ci="'+ci+'" title="删除">\u2715</button>';
             item.onclick=function(){toggleCat(ci);};
@@ -123,7 +125,7 @@
                     var sli=document.createElement('li');
                     var sel=document.createElement('div');
                     sel.className='sub-nav-item'; sel.dataset.ci=ci; sel.dataset.si=si;
-                    var sl=sub.label?sub.label.zh||sub.id:sub.id;
+                    var sl=sub.label?(sub.label[currentLang]||sub.label.zh||sub.id):sub.id;
                     sel.innerHTML='<span>'+esc(sl)+'</span>';
                     sel.onclick=function(e){e.stopPropagation();selectSub(ci,si);};
                     sli.appendChild(sel); ul.appendChild(sli);
@@ -222,8 +224,11 @@
 
     function showContact(){
         hidePages();$('#contactPage').style.display='';
+        var lang=currentLang;
+        var title=lang==='zh'?'联系方式':'Contact';
+        var desc=lang==='zh'?'欢迎通过以下方式与我联系':'Feel free to reach out to me';
         var c=Object.keys(siteContact).length>0?siteContact:{email:{label:{zh:'邮箱',en:'Email'},value:'jkk@example.com',icon:'\u2709'}};
-        var h='<div class="contact-card"><h2 class="contact-title">联系方式</h2><p style="color:var(--text-secondary);margin-bottom:24px;">欢迎通过以下方式与我联系</p>';
+        var h='<div class="contact-card"><h2 class="contact-title">'+title+'</h2><p style="color:var(--text-secondary);margin-bottom:24px;">'+desc+'</p>';
         var vals=Object.values(c);
         vals.forEach(function(i){
             var lb=i.label?i.label[currentLang]||'':'';
@@ -434,6 +439,30 @@
     }
     function showError(msg){var el=$('#setupError');el.textContent=msg;el.style.display='block';}
     function esc(s){if(!s)return'';var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+
+    // ── 语言切换 ──
+    function setupAdminLangToggle(){
+        var toggle=$('#adminLangToggle');
+        if(!toggle)return;
+        toggle.onclick=function(e){
+            var opt=e.target.closest('.lang-option');
+            if(!opt)return;
+            var lang=opt.dataset.lang;
+            if(lang===currentLang)return;
+            currentLang=lang;
+            var opts=toggle.querySelectorAll('.lang-option');
+            for(var i=0;i<opts.length;i++)opts[i].classList.toggle('active',opts[i].dataset.lang===lang);
+            // 重新渲染导航和当前页面
+            renderNav();
+            updateWelcomeText();
+            if(currentCategory!==null&&siteNav[currentCategory]){
+                var cat=siteNav[currentCategory];var sub=cat.subItems?cat.subItems[currentSubcategory||0]:null;
+                if(sub)showCatPage(cat,sub);
+            }
+            showContact();
+            toast('已切换到'+(lang==='zh'?'中文':'English'),'info');
+        };
+    }
 
     function closeMenu(){var s=$('#sidebar'),t=$('#menuToggle');if(s)s.classList.remove('open');if(t)t.classList.remove('active');}
     document.addEventListener('click',function(e){

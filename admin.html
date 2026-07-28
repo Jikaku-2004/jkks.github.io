@@ -47,7 +47,12 @@
             <span class="site-title" style="color:var(--accent)">📝 JKK 管理后台</span>
             <span class="admin-repo-badge" id="repoBadge"></span>
             <div class="top-bar-right">
-                <span class="admin-status" id="adminStatus">✅ 已加载</span>
+                <div class="lang-toggle" id="adminLangToggle" style="display:flex;align-items:center;gap:4px;cursor:pointer;font-size:0.85rem;font-weight:600;">
+                    <span class="lang-option active" data-lang="zh">中</span>
+                    <span style="opacity:0.3">|</span>
+                    <span class="lang-option" data-lang="en">EN</span>
+                </div>
+                <span class="admin-status" id="adminStatus">已保存</span>
                 <button class="admin-btn admin-btn-sm admin-btn-outline" id="reloadBtn" title="重新加载">🔄</button>
                 <button class="admin-btn admin-btn-sm" id="saveBtn">💾 保存到 GitHub</button>
             </div>
@@ -193,6 +198,7 @@
     <!-- ── Toast ── -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <script src="js/i18n.js"></script>
     <script src="js/data.js"></script>
     <script src="js/admin.js"></script>
 </body>
