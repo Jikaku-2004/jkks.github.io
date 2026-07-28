@@ -23,10 +23,10 @@
     });
 
     const WELCOME_FIELDS = {
-        welcomeTitle: { zh: '欢迎来到 JKK 的个人网页', en: "Welcome to JKK's Personal Page" },
+        welcomeTitle: { zh: '欢迎来到Jikaku的个人网页', en: "Welcome to Jikaku's Personal Page" },
         welcomeSubtitle: { zh: '探索 · 思考 · 记录', en: 'Explore · Think · Record' },
         welcomeDesc: { zh: '<p>这里是我记录阅读、艺术、运动与研究的个人空间。</p><p>请从左侧导航栏选择感兴趣的分类开始探索。</p>', en: '<p>A personal space for recording reading, art, sports, and research.</p><p>Choose a category from the sidebar to start exploring.</p>' },
-        welcomeQuote: { zh: '&ldquo;人生还不如一行波德莱尔。&rdquo; —— 芥川龙之介', en: '&ldquo;Life is not worth a line of Baudelaire.&rdquo; &mdash; Ryunosuke Akutagawa' }
+        welcomeQuote: { zh: '“今天会是一个好日子” —— jkk', en: '&ldquo;Today will be a good day&rdquo; &mdash; jkk' }
     };
 
     function init() {
