@@ -227,8 +227,7 @@
         if(entries.length===0){
             var empty=document.createElement('div');
             empty.className='empty-state admin-empty-state';
-            empty.innerHTML='<p>NO RECORDS // 暂无条目</p><button class="admin-btn admin-btn-accent">[+] 添加新条目</button>';
-            empty.querySelector('button').onclick=addNewEntry;
+            empty.innerHTML='<p>NO RECORDS // 暂无条目</p>';
             c.appendChild(empty);
             return;
         }
@@ -253,11 +252,7 @@
                 if(confirm('删除?')){var a=siteContent[subId]||[];var i=a.findIndex(function(e){return e.id===entry.id;});if(i>=0)a.splice(i,1);cleanupUnreferencedPendingUploads();renderEntries(subId);markDirty();toast('已删除','info');}
             };
         });
-        // 始终显示添加新条目按钮
-        var addBtn=document.createElement('div'); addBtn.style.cssText='text-align:center;padding:24px 0;';
-        addBtn.innerHTML='<button class="admin-btn admin-btn-accent">[+] 添加新条目</button>';
-        addBtn.querySelector('button').onclick=function(){addNewEntry();};
-        c.appendChild(addBtn);
+    }
     }
 
     function showWelcome(){hidePages();$('#welcomePage').style.display='';currentCategory=null;updateWelcomeText();}
