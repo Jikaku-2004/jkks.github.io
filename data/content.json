@@ -425,8 +425,8 @@
             },
             {
                 "id": "new-1785262255441",
-                "title_zh": "高三 校运会",
-                "title_en": "Autumn school sports meeting of senior three",
+                "title_zh": "校运会",
+                "title_en": "High School Sports Meeting",
                 "date": "2022-10-15",
                 "tags_zh": [
                     "3km"
@@ -446,7 +446,7 @@
                 "id": "new-1785264594822",
                 "title_zh": "斯诺克的终结",
                 "title_en": "",
-                "date": "2026-07-28",
+                "date": "2026-01-01",
                 "tags_zh": [],
                 "tags_en": [],
                 "content_zh": "随着东盛台球的消失，失去了线下练习斯诺克的场地。",
@@ -529,21 +529,8 @@
         ],
         "place": [
             {
-                "id": "new-1785268208891",
-                "title_zh": "深圳&香港",
-                "title_en": "",
-                "date": "2026-07-28",
-                "tags_zh": [],
-                "tags_en": [],
-                "content_zh": "",
-                "content_en": "",
-                "images": [],
-                "videos": [],
-                "links": []
-            },
-            {
                 "id": "new-1785268414510",
-                "title_zh": "东京&北海道",
+                "title_zh": "日本",
                 "title_en": "",
                 "date": "2026-07-28",
                 "tags_zh": [],
@@ -556,7 +543,7 @@
             },
             {
                 "id": "new-1785268434966",
-                "title_zh": "海南全域",
+                "title_zh": "海南",
                 "title_en": "",
                 "date": "2026-07-28",
                 "tags_zh": [],
@@ -569,7 +556,7 @@
             },
             {
                 "id": "new-1785268474309",
-                "title_zh": "广州",
+                "title_zh": "广东&香港",
                 "title_en": "",
                 "date": "2026-07-28",
                 "tags_zh": [],
@@ -595,7 +582,7 @@
             },
             {
                 "id": "new-1785268493915",
-                "title_zh": "淄博",
+                "title_zh": "山东",
                 "title_en": "",
                 "date": "2026-07-28",
                 "tags_zh": [],
