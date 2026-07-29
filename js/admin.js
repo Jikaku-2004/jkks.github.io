@@ -63,7 +63,11 @@
         $('#subModalCancel').onclick = closeSubEditor;
         $('#subModalClose').onclick = closeSubEditor;
         $('#aboutAdminSave').onclick = saveAbout;
-        $('#musicAdminSave').onclick = saveMusic;
+        $('#musicAdminSave').onclick = function() { saveMusic({ silent: false }); };
+        $('#musicAdminAdd').onclick = addMusicRow;
+        $('#musicAdminList').addEventListener('click', handleMusicRowAction);
+        $('#musicAdminList').addEventListener('input', handleMusicFieldEdit);
+        $('#musicAdminList').addEventListener('change', handleMusicFieldEdit);
         document.addEventListener('click', e => {
             const btn = e.target.closest('.edit-btn'); if (!btn) return;
             const block = btn.closest('.editable-block'); if (!block) return;
@@ -139,12 +143,12 @@
                 var f=await r.json();
                 var rawText=decodeURIComponent(escape(atob(f.content)));
                 var data=JSON.parse(rawText);
-                siteMusicList=data.songs||[];
+                siteMusicList=normalizeMusicList(data.songs);
             } else {
                 var r=await fetch('data/music-list.json');
                 if (!r.ok) { siteMusicList=[]; return; }
                 var data=await r.json();
-                siteMusicList=data.songs||[];
+                siteMusicList=normalizeMusicList(data.songs);
             }
         } catch(e) { siteMusicList=[]; }
     }
@@ -641,27 +645,135 @@
     function closeSubEditor(){document.getElementById('subModal').style.display='none';}
     function showMusicAdmin(){
         hidePages();$('#musicAdminPage').style.display='';
-        var lines = siteMusicList.map(function(s){ return s.name + ' | ' + (s.url || ''); });
-        $('#musicAdminEditor').value = lines.join('\n');
+        renderMusicAdmin();
     }
-    function saveMusic(){
-        var raw = $('#musicAdminEditor').value;
-        var lines = raw.split('\n');
-        var songs = [];
-        lines.forEach(function(line){
-            var trimmed = line.trim();
-            if (!trimmed || trimmed.startsWith('#')) return;
-            var parts = trimmed.split('|');
-            if (parts.length >= 2) {
-                var name = parts[0].trim();
-                var url = parts.slice(1).join('|').trim();
-                if (name) songs.push({ name: name, url: url });
-            }
+
+    function normalizeMusicList(songs){
+        return (Array.isArray(songs)?songs:[]).slice(0,10).map(function(song){
+            return {
+                name:String(song&&song.name||'').trim(),
+                url:String(song&&song.url||'').trim(),
+                type:window.JKKMusic?window.JKKMusic.normalizeType(song&&song.type):String(song&&song.type||'auto')
+            };
         });
-        if (songs.length > 10) { toast('最多10首，已截取前10首','error'); songs = songs.slice(0,10); }
-        siteMusicList = songs;
+    }
+
+    function renderMusicAdmin(){
+        var list=$('#musicAdminList');
+        var empty=$('#musicAdminEmpty');
+        list.innerHTML='';
+        siteMusicList.slice(0,10).forEach(function(song,index){
+            var row=document.createElement('div');
+            row.className='music-admin-row';
+            row.dataset.index=index;
+            row.innerHTML=
+                '<span class="music-admin-index">'+String(index+1).padStart(2,'0')+'</span>'+
+                '<input class="music-admin-input" data-field="name" type="text" maxlength="100" placeholder="曲目名称" aria-label="第'+(index+1)+'首曲名">'+
+                '<input class="music-admin-input" data-field="url" type="url" placeholder="https://example.com/media.mp3" aria-label="第'+(index+1)+'首媒体 URL">'+
+                '<select class="music-admin-select" data-field="type" aria-label="第'+(index+1)+'首媒体类型">'+
+                    '<option value="auto">AUTO</option>'+
+                    '<option value="audio">AUDIO</option>'+
+                    '<option value="video">VIDEO</option>'+
+                '</select>'+
+                '<div class="music-admin-row-actions">'+
+                    '<button class="music-row-btn" type="button" data-action="up" title="上移" aria-label="上移第'+(index+1)+'首">UP</button>'+
+                    '<button class="music-row-btn" type="button" data-action="down" title="下移" aria-label="下移第'+(index+1)+'首">DN</button>'+
+                    '<button class="music-row-btn music-row-delete" type="button" data-action="delete" title="删除" aria-label="删除第'+(index+1)+'首">DEL</button>'+
+                '</div>';
+            row.querySelector('[data-field="name"]').value=song.name||'';
+            row.querySelector('[data-field="url"]').value=song.url||'';
+            row.querySelector('[data-field="type"]').value=window.JKKMusic?window.JKKMusic.normalizeType(song.type):'auto';
+            row.querySelector('[data-action="up"]').disabled=index===0;
+            row.querySelector('[data-action="down"]').disabled=index===siteMusicList.length-1;
+            list.appendChild(row);
+        });
+        empty.hidden=siteMusicList.length>0;
+        $('#musicAdminAdd').disabled=siteMusicList.length>=10;
+        $('#musicAdminCount').textContent=String(siteMusicList.length).padStart(2,'0')+' / 10';
+    }
+
+    function readMusicRows(validate){
+        var rows=Array.from($('#musicAdminList').querySelectorAll('.music-admin-row'));
+        var songs=[];
+        var firstInvalid=null;
+        var errorMessage='';
+        rows.forEach(function(row){
+            row.classList.remove('is-invalid');
+            var song={
+                name:row.querySelector('[data-field="name"]').value.trim(),
+                url:row.querySelector('[data-field="url"]').value.trim(),
+                type:row.querySelector('[data-field="type"]').value
+            };
+            if(validate){
+                var result=window.JKKMusic?window.JKKMusic.validateSong(song):{valid:Boolean(song.name&&song.url),message:'请填写完整信息。',song:song};
+                if(!result.valid){
+                    row.classList.add('is-invalid');
+                    if(!firstInvalid){firstInvalid=row;errorMessage=result.message;}
+                }else{
+                    song=result.song;
+                }
+            }
+            songs.push(song);
+        });
+        return {songs:songs,firstInvalid:firstInvalid,message:errorMessage};
+    }
+
+    function handleMusicFieldEdit(e){
+        var row=e.target.closest('.music-admin-row');
+        if(!row)return;
+        row.classList.remove('is-invalid');
+        siteMusicList=readMusicRows(false).songs;
         markDirty();
-        toast('music-list 已更新 ('+songs.length+'首)','success');
+    }
+
+    function handleMusicRowAction(e){
+        var button=e.target.closest('[data-action]');
+        if(!button)return;
+        var row=button.closest('.music-admin-row');
+        var index=Number(row.dataset.index);
+        siteMusicList=readMusicRows(false).songs;
+        var action=button.dataset.action;
+        if(action==='delete'){
+            siteMusicList.splice(index,1);
+        }else if(action==='up'&&index>0){
+            var previous=siteMusicList[index-1];
+            siteMusicList[index-1]=siteMusicList[index];
+            siteMusicList[index]=previous;
+        }else if(action==='down'&&index<siteMusicList.length-1){
+            var next=siteMusicList[index+1];
+            siteMusicList[index+1]=siteMusicList[index];
+            siteMusicList[index]=next;
+        }
+        renderMusicAdmin();
+        markDirty();
+    }
+
+    function addMusicRow(){
+        siteMusicList=readMusicRows(false).songs;
+        if(siteMusicList.length>=10)return toast('播放列表最多10首','error');
+        siteMusicList.push({name:'',url:'',type:'auto'});
+        renderMusicAdmin();
+        markDirty();
+        var rows=$('#musicAdminList').querySelectorAll('.music-admin-row');
+        var input=rows[rows.length-1]&&rows[rows.length-1].querySelector('[data-field="name"]');
+        if(input)input.focus();
+    }
+
+    function saveMusic(options){
+        options=options||{};
+        var result=readMusicRows(true);
+        if(result.firstInvalid){
+            result.firstInvalid.scrollIntoView({behavior:'smooth',block:'center'});
+            var input=result.firstInvalid.querySelector('input');
+            if(input)input.focus();
+            if(!options.silent)toast(result.message||'请检查播放列表','error');
+            return false;
+        }
+        siteMusicList=normalizeMusicList(result.songs);
+        renderMusicAdmin();
+        markDirty();
+        if(!options.silent)toast('music-list 已应用 ('+siteMusicList.length+'首)，请点击右上角 SAVE','success');
+        return true;
     }
     function saveAbout(){
         if (!siteAbout.content) siteAbout.content = {zh:'',en:''};
@@ -671,6 +783,10 @@
     }
 
     async function saveToGitHub(){
+        if($('#musicAdminPage').style.display!=='none'&&!saveMusic({silent:true})){
+            toast('播放列表中有未完成或不支持的项目','error');
+            return;
+        }
         if(!config.token){
             downloadContent();
             toast(pendingUploads.size?'手动模式已下载 JSON；本地图片需手动上传到 images 文件夹':'手动模式: 已下载','info');
@@ -703,7 +819,11 @@
             });
             treeItems.push({path:'data/content.json',mode:'100644',type:'blob',sha:contentBlob.sha});
             // 上传 music-list.json
-            var musicData={songs:siteMusicList};
+            var musicData={
+                _comment:'音乐盒播放列表 - Music Player Playlist',
+                _instruction:'每首曲目包含 name、url 与 type。type 可为 auto、audio 或 video；video 只输出声音，不显示画面。最多10首。',
+                songs:normalizeMusicList(siteMusicList)
+            };
             var musicJson=JSON.stringify(musicData,null,4);
             var musicBlob=await githubRequest('/git/blobs',{
                 method:'POST',

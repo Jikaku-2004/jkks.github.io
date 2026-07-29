@@ -135,14 +135,31 @@
             </div>
 
             <!-- 音乐列表编辑 -->
-            <div class="about-admin-page" id="musicAdminPage" style="display:none;">
-                <div class="about-admin-card">
-                    <h2>编辑 music-list.json</h2>
-                    <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:12px;">每行一首：<code>曲名 | URL</code>，最多10首。#开头为注释</p>
-                    <textarea id="musicAdminEditor" rows="16" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:0;background:#050409;color:#f5eef8;font-family:var(--font-pixel);font-size:0.96rem;resize:vertical;"></textarea>
-                    <div style="margin-top:12px;">
-                        <button class="admin-btn admin-btn-primary" id="musicAdminSave">[SAVE] 保存</button>
+            <div class="about-admin-page music-admin-page" id="musicAdminPage" style="display:none;">
+                <div class="about-admin-card music-admin-card">
+                    <div class="music-admin-heading">
+                        <div>
+                            <p class="music-admin-kicker">JUKEBOX DATABASE</p>
+                            <h2>编辑 music-list</h2>
+                        </div>
+                        <span class="music-admin-count" id="musicAdminCount">00 / 10</span>
                     </div>
+                    <p class="music-admin-help">
+                        支持音频直链，以及 MP4 / WEBM / MOV 等视频媒体直链；选择 VIDEO 时仅输出声音，不显示视频画面。
+                        第三方视频网站的普通页面链接不能作为隐藏播放器使用。
+                    </p>
+                    <div class="music-admin-columns" aria-hidden="true">
+                        <span>#</span><span>曲名</span><span>媒体 URL</span><span>类型</span><span>操作</span>
+                    </div>
+                    <div class="music-admin-list" id="musicAdminList"></div>
+                    <div class="music-admin-empty" id="musicAdminEmpty">
+                        PLAYLIST EMPTY // 点击下方按钮添加曲目
+                    </div>
+                    <div class="music-admin-actions">
+                        <button class="admin-btn admin-btn-outline" id="musicAdminAdd" type="button">[+] 添加曲目</button>
+                        <button class="admin-btn admin-btn-primary" id="musicAdminSave" type="button">[APPLY] 应用更改</button>
+                    </div>
+                    <p class="music-admin-save-hint">应用后，请点击右上角 [SAVE] 保存到 GitHub。</p>
                 </div>
             </div>
             <!-- 关于Jikaku -->
@@ -230,6 +247,7 @@
 
     <script src="js/i18n.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/music-player.js"></script>
     <script src="js/admin.js"></script>
 </body>
 </html>

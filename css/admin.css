@@ -702,6 +702,203 @@ body.admin-mode .sidebar-footer {
     color: #fff;
 }
 
+/* ── Music list editor ── */
+.music-admin-page {
+    max-width: 1120px;
+}
+
+.music-admin-card {
+    border-color: #4d4357;
+    background:
+        repeating-linear-gradient(0deg, transparent 0 3px, rgba(255,255,255,.018) 3px 4px),
+        #050507;
+    box-shadow: 8px 8px 0 #020203, 11px 11px 0 #302739;
+}
+
+.music-admin-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding-bottom: 13px;
+    border-bottom: 2px solid #f4f3ef;
+    gap: 16px;
+}
+
+.music-admin-heading h2 {
+    margin: 0;
+    color: #fff;
+    text-shadow: 2px 0 0 #315cff;
+}
+
+.music-admin-kicker {
+    margin-bottom: 5px;
+    color: #ffb100;
+    font-family: var(--pixel);
+    font-size: .66rem;
+    letter-spacing: .08em;
+}
+
+.music-admin-count {
+    color: #fff;
+    font-family: var(--pixel);
+    font-size: .86rem;
+    white-space: nowrap;
+}
+
+.music-admin-help {
+    margin: 14px 0 18px;
+    color: #bbb3c1;
+    font-size: .9rem;
+    line-height: 1.75;
+}
+
+.music-admin-columns,
+.music-admin-row {
+    display: grid;
+    grid-template-columns: 38px minmax(140px, .8fr) minmax(240px, 1.5fr) 118px 148px;
+    align-items: center;
+    gap: 8px;
+}
+
+.music-admin-columns {
+    padding: 0 10px 7px;
+    color: #77717e;
+    font-family: var(--pixel);
+    font-size: .64rem;
+    letter-spacing: .05em;
+}
+
+.music-admin-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.music-admin-row {
+    position: relative;
+    padding: 9px;
+    border: 1px solid #51465d;
+    background: #020204;
+    box-shadow: 3px 3px 0 #121017;
+}
+
+.music-admin-row::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background: #315cff;
+    content: "";
+}
+
+.music-admin-row.is-invalid {
+    border-color: var(--danger);
+    box-shadow: 3px 3px 0 #571126;
+}
+
+.music-admin-index {
+    color: #ffb100;
+    font-family: var(--pixel);
+    font-size: .72rem;
+    text-align: center;
+}
+
+.music-admin-input,
+.music-admin-select {
+    width: 100%;
+    min-width: 0;
+    height: 38px;
+    padding: 7px 9px;
+    border: 1px solid #5a5062;
+    border-radius: 0;
+    background: #0a090c;
+    color: #fff;
+    font-family: var(--font-pixel);
+    font-size: .84rem;
+}
+
+.music-admin-input:focus,
+.music-admin-select:focus {
+    outline: 2px solid #315cff;
+    outline-offset: 1px;
+    border-color: #fff;
+}
+
+.music-admin-input::placeholder {
+    color: #625c68;
+}
+
+.music-admin-select {
+    cursor: pointer;
+}
+
+.music-admin-row-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+
+.music-row-btn {
+    display: grid;
+    place-items: center;
+    min-width: 42px;
+    height: 34px;
+    padding: 0 7px;
+    border: 2px solid #fff;
+    background: #f4f3ef;
+    box-shadow: inset -2px -2px 0 #77727b, 2px 2px 0 #000;
+    color: #050507;
+    font-family: var(--pixel);
+    font-size: .62rem;
+    cursor: pointer;
+}
+
+.music-row-btn:hover,
+.music-row-btn:focus-visible {
+    outline: 2px solid #315cff;
+    outline-offset: 1px;
+    background: #fff;
+}
+
+.music-row-btn:disabled {
+    cursor: not-allowed;
+    filter: grayscale(1);
+    opacity: .28;
+}
+
+.music-row-btn.music-row-delete {
+    border-color: #ff8aa5;
+    background: #1d0910;
+    box-shadow: 2px 2px 0 #5c1024;
+    color: #ff8aa5;
+}
+
+.music-admin-empty {
+    padding: 30px 16px;
+    border: 1px dashed #51465d;
+    color: #716b77;
+    font-family: var(--pixel);
+    font-size: .72rem;
+    letter-spacing: .04em;
+    text-align: center;
+}
+
+.music-admin-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    margin-top: 18px;
+    gap: 9px;
+}
+
+.music-admin-save-hint {
+    margin-top: 10px;
+    color: #77717e;
+    font-size: .78rem;
+    text-align: right;
+}
+
 .toast-container {
     position: fixed;
     top: calc(var(--topbar-height) + 14px);
@@ -771,6 +968,38 @@ body.admin-mode .sidebar-footer {
 
     .image-upload-meta {
         flex-basis: calc(100% - 70px);
+    }
+
+    .music-admin-page {
+        padding: 12px;
+    }
+
+    .music-admin-card {
+        padding: 20px 14px;
+    }
+
+    .music-admin-columns {
+        display: none;
+    }
+
+    .music-admin-row {
+        grid-template-columns: 34px 1fr;
+        align-items: stretch;
+    }
+
+    .music-admin-row > .music-admin-input,
+    .music-admin-row > .music-admin-select,
+    .music-admin-row-actions {
+        grid-column: 2;
+    }
+
+    .music-admin-index {
+        grid-row: 1 / span 4;
+        align-self: center;
+    }
+
+    .music-admin-row-actions {
+        justify-content: flex-start;
     }
 }
 

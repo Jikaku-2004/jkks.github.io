@@ -1,12 +1,17 @@
 {
+    "_comment": "音乐盒播放列表 - Music Player Playlist",
+    "_instruction": "每首曲目包含 name、url 与 type。type 可为 auto、audio 或 video；视频媒体只输出声音，不显示画面。最多支持 10 首。",
+    "_example_url": "请使用允许跨域访问的音频或视频文件直链，例如 https://example.com/media/song.mp3 或 https://example.com/media/clip.mp4。",
     "songs": [
         {
             "name": "示例曲目 - 像素星空",
-            "url": ""
+            "url": "",
+            "type": "auto"
         },
         {
             "name": "示例曲目 - 赛博午夜",
-            "url": ""
+            "url": "",
+            "type": "auto"
         }
     ]
 }

@@ -42,19 +42,31 @@
             <div class="sidebar-footer">
                 <div class="music-player" id="musicPlayer">
                     <div class="music-player-header">
-                        <span class="sidebar-label music-label">MUSIC PLAYER</span>
+                        <span class="music-label">MUSIC PLAYER</span>
+                        <span class="music-counter" id="musicCounter">00/00</span>
                     </div>
-                    <div class="music-info" id="musicInfo">
-                        <span class="music-title" id="musicTitle">--</span>
+                    <div class="music-display">
+                        <div class="music-display-meta">
+                            <span class="music-status" id="musicStatus" aria-live="polite">STANDBY</span>
+                            <span class="music-source" id="musicSource">--</span>
+                        </div>
+                        <div class="music-title-window">
+                            <span class="music-title" id="musicTitle">NO TRACKS // EDIT MUSIC-LIST</span>
+                        </div>
+                        <div class="music-progress" aria-hidden="true">
+                            <span id="musicProgress"></span>
+                        </div>
                     </div>
-                    <div class="music-controls">
-                        <button class="music-btn" id="musicPrev" title="上一首">⏮</button>
-                        <button class="music-btn music-btn-play" id="musicPlay" title="播放/暂停">▶</button>
-                        <button class="music-btn" id="musicNext" title="下一首">⏭</button>
-                        <button class="music-btn" id="musicRandom" title="随机">🔀</button>
-                        <button class="music-btn" id="musicLoop" title="循环">🔁</button>
+                    <div class="music-controls" role="group" aria-label="音乐播放控制">
+                        <button class="music-btn music-btn-skip" id="musicPrev" type="button" title="上一首" aria-label="上一首">◀◀</button>
+                        <button class="music-btn music-btn-play" id="musicPlay" type="button" title="播放或暂停" aria-label="播放">▶</button>
+                        <button class="music-btn music-btn-skip" id="musicNext" type="button" title="下一首" aria-label="下一首">▶▶</button>
+                        <button class="music-btn music-btn-mode" id="musicRandom" type="button" title="随机模式" aria-label="随机模式" aria-pressed="false">RND</button>
+                        <button class="music-btn music-btn-mode" id="musicLoop" type="button" title="循环模式" aria-label="循环模式" aria-pressed="false">LOOP</button>
                     </div>
-                    <audio id="musicAudio" preload="none"></audio>
+                    <p class="music-player-hint">MEDIA URL // AUDIO OUTPUT</p>
+                    <audio class="music-media-backend" id="musicAudio" preload="metadata"></audio>
+                    <video class="music-media-backend" id="musicVideo" preload="metadata" playsinline></video>
                 </div>
                 <a href="#" class="nav-item" id="navAbout">
                     <span class="nav-icon"><span class="pixel-icon">AB</span></span>
@@ -143,6 +155,7 @@
     <!-- 脚本 -->
     <script src="js/i18n.js"></script>
     <script src="js/data.js"></script>
+    <script src="js/music-player.js"></script>
     <script src="js/app.js"></script>
 </body>
 </html>

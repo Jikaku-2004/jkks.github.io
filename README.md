@@ -50,6 +50,7 @@ git add . && git commit -m "初始化" && git push
 | 管理大类 | 导航底部 `[+] 添加新大类`，支持编辑名称 / 图标 / 描述 / 删除 |
 | 管理子类 | 进入大类后点击 `[+] 添加子类`，支持新增 / 编辑名称 / 删除 |
 | 编辑条目 | 点击条目卡片 `EDIT`，支持标题 / 日期 / 标签 / Markdown / 图片 / 链接 / 视频 |
+| 编辑播放列表 | 左侧「编辑 music-list」，可新增、删除、排序并选择音频或视频媒体类型 |
 | 同步保存 | 顶部 `[SAVE] 保存到 GitHub`，所有修改一次性提交到仓库 |
 
 > 编辑先在本地生效，点击 **SAVE** 后通过 GitHub API 提交，约 1 分钟后公开页面自动更新。
@@ -131,6 +132,8 @@ git add . && git commit -m "初始化" && git push
 |------|------|
 | Bilibili | `{ "url": "https://www.bilibili.com/video/BVxxx", "platform": "bilibili" }` |
 | YouTube | `{ "url": "https://www.youtube.com/watch?v=xxx", "platform": "youtube" }` |
+
+侧边栏音乐播放器使用 `data/music-list.json`。它支持音频文件直链，以及 MP4 / WEBM / MOV 等视频媒体文件直链；视频类型只输出声音，不显示画面。第三方视频网站的普通页面链接不用于隐藏播放。
 
 ---
 
