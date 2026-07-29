@@ -8,7 +8,7 @@
     const $$ = s => document.querySelectorAll(s);
 
     let config = {};
-    let siteNav = [], siteContact = {}, siteContent = {}, siteWelcome = {}, siteAbout = {};
+    let siteNav = [], siteContact = {}, siteContent = {}, siteWelcome = {}, siteAbout = {}, siteMusicList = [];
     let currentLang = 'zh', currentCategory = null, currentSubcategory = null;
     let contentSha = null, isDirty = false, editingEntry = null, editingSubId = null, editingCatIdx = null;
     let pendingUploads = new Map(), editingPendingUploads = new Map();
@@ -41,6 +41,7 @@
         $('#saveBtn').onclick = saveToGitHub;
         $('#reloadBtn').onclick = reloadData;
         $('#navWelcome').onclick = showWelcome;
+        $('#navMusic').onclick = showMusicAdmin;
         $('#navAbout').onclick = showAboutAdmin;
         $('#navContact').onclick = showContact;
         $('#navDownload').onclick = downloadContent;
@@ -61,6 +62,7 @@
         $('#subModalCancel').onclick = closeSubEditor;
         $('#subModalClose').onclick = closeSubEditor;
         $('#aboutAdminSave').onclick = saveAbout;
+        $('#musicAdminSave').onclick = saveMusic;
         document.addEventListener('click', e => {
             const btn = e.target.closest('.edit-btn'); if (!btn) return;
             const block = btn.closest('.editable-block'); if (!block) return;
@@ -116,22 +118,40 @@
         clearAllPendingUploads();
         siteNav=raw.navigation||[]; siteContact=raw.contact||{}; siteContent=raw.content||raw;
         if(Object.keys(siteContent).length===0&&!raw.navigation) siteContent=raw;
-        // 加载欢迎页数据，合并默认值
         siteWelcome = raw.welcome || {};
         Object.keys(WELCOME_FIELDS).forEach(function(k){
             if (!siteWelcome[k]) siteWelcome[k] = {};
             if (!siteWelcome[k].zh) siteWelcome[k].zh = WELCOME_FIELDS[k].zh;
             if (!siteWelcome[k].en) siteWelcome[k].en = WELCOME_FIELDS[k].en;
         });
-        // 加载关于页面数据
         siteAbout = raw.about || {};
         if (!siteAbout.content) siteAbout.content = {zh:'',en:''};
         isDirty=false; updateStatus();
     }
 
-    function enterApp() {
+    async function loadMusicList() {
+        try {
+            if (config.token) {
+                var url='https://api.github.com/repos/'+config.owner+'/'+config.repo+'/contents/data/music-list.json?ref='+config.branch;
+                var r=await fetch(url,{headers:{'Authorization':'Bearer '+config.token,'Accept':'application/vnd.github+json'}});
+                if (!r.ok) { siteMusicList=[]; return; }
+                var f=await r.json();
+                var rawText=decodeURIComponent(escape(atob(f.content)));
+                var data=JSON.parse(rawText);
+                siteMusicList=data.songs||[];
+            } else {
+                var r=await fetch('data/music-list.json');
+                if (!r.ok) { siteMusicList=[]; return; }
+                var data=await r.json();
+                siteMusicList=data.songs||[];
+            }
+        } catch(e) { siteMusicList=[]; }
+    }
+
+    async function enterApp() {
         $('#setupScreen').style.display='none';
         $('#adminTopBar').style.display=''; $('#adminLayout').style.display='';
+        await loadMusicList();
         renderNav(); showWelcome();
     }
 
@@ -305,7 +325,7 @@
         }
     }
 
-    function hidePages(){['welcomePage','categoryPage','contactPage','aboutAdminPage'].forEach(function(id){$('#'+id).style.display='none';});}
+    function hidePages(){['welcomePage','categoryPage','contactPage','aboutAdminPage','musicAdminPage'].forEach(function(id){$('#'+id).style.display='none';});}
 
     function showAboutAdmin(){
         hidePages();$('#aboutAdminPage').style.display='';
@@ -612,6 +632,30 @@
         };
     }
     function closeSubEditor(){document.getElementById('subModal').style.display='none';}
+    function showMusicAdmin(){
+        hidePages();$('#musicAdminPage').style.display='';
+        var lines = siteMusicList.map(function(s){ return s.name + ' | ' + (s.url || ''); });
+        $('#musicAdminEditor').value = lines.join('\n');
+    }
+    function saveMusic(){
+        var raw = $('#musicAdminEditor').value;
+        var lines = raw.split('\n');
+        var songs = [];
+        lines.forEach(function(line){
+            var trimmed = line.trim();
+            if (!trimmed || trimmed.startsWith('#')) return;
+            var parts = trimmed.split('|');
+            if (parts.length >= 2) {
+                var name = parts[0].trim();
+                var url = parts.slice(1).join('|').trim();
+                if (name) songs.push({ name: name, url: url });
+            }
+        });
+        if (songs.length > 10) { toast('最多10首，已截取前10首','error'); songs = songs.slice(0,10); }
+        siteMusicList = songs;
+        markDirty();
+        toast('music-list 已更新 ('+songs.length+'首)','success');
+    }
     function saveAbout(){
         if (!siteAbout.content) siteAbout.content = {zh:'',en:''};
         siteAbout.content[currentLang] = $('#aboutAdminEditor').value;
@@ -651,6 +695,14 @@
                 body:JSON.stringify({content:utf8ToBase64(json),encoding:'base64'})
             });
             treeItems.push({path:'data/content.json',mode:'100644',type:'blob',sha:contentBlob.sha});
+            // 上传 music-list.json
+            var musicData={songs:siteMusicList};
+            var musicJson=JSON.stringify(musicData,null,4);
+            var musicBlob=await githubRequest('/git/blobs',{
+                method:'POST',
+                body:JSON.stringify({content:utf8ToBase64(musicJson),encoding:'base64'})
+            });
+            treeItems.push({path:'data/music-list.json',mode:'100644',type:'blob',sha:musicBlob.sha});
             var tree=await githubRequest('/git/trees',{
                 method:'POST',
                 body:JSON.stringify({base_tree:headCommit.tree.sha,tree:treeItems})
@@ -736,6 +788,7 @@
             }else{var r=await fetch('data/content.json');parseData(await r.json());}
             renderNav();showWelcome();toast('已重新加载','success');
         }catch(e){toast(e.message,'error');}
+        await loadMusicList();
     }
 
     function markDirty(){isDirty=true;updateStatus();}

@@ -71,6 +71,10 @@
                     <span class="nav-icon"><span class="pixel-icon">HM</span></span>
                     <span class="nav-label">欢迎页编辑</span>
                 </div>
+                <div class="nav-item" id="navMusic" style="cursor:pointer;">
+                    <span class="nav-icon"><span class="pixel-icon">MC</span></span>
+                    <span class="nav-label">编辑 music-list</span>
+                </div>
                 <div class="nav-item" id="navAbout" style="cursor:pointer;">
                     <span class="nav-icon"><span class="pixel-icon">AB</span></span>
                     <span class="nav-label">关于Jikaku</span>
@@ -127,6 +131,17 @@
                 </div>
             </div>
 
+            <!-- 音乐列表编辑 -->
+            <div class="about-admin-page" id="musicAdminPage" style="display:none;">
+                <div class="about-admin-card">
+                    <h2>编辑 music-list.json</h2>
+                    <p style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:12px;">每行一首：<code>曲名 | URL</code>，最多10首。#开头为注释</p>
+                    <textarea id="musicAdminEditor" rows="16" style="width:100%;padding:12px;border:1px solid var(--border);border-radius:0;background:#050409;color:#f5eef8;font-family:var(--font-pixel);font-size:0.96rem;resize:vertical;"></textarea>
+                    <div style="margin-top:12px;">
+                        <button class="admin-btn admin-btn-primary" id="musicAdminSave">[SAVE] 保存</button>
+                    </div>
+                </div>
+            </div>
             <!-- 关于Jikaku -->
             <div class="about-admin-page" id="aboutAdminPage" style="display:none;">
                 <div class="about-admin-card">
