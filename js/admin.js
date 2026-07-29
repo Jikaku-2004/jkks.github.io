@@ -8,7 +8,7 @@
     const $$ = s => document.querySelectorAll(s);
 
     let config = {};
-    let siteNav = [], siteContact = {}, siteContent = {}, siteWelcome = {};
+    let siteNav = [], siteContact = {}, siteContent = {}, siteWelcome = {}, siteAbout = {};
     let currentLang = 'zh', currentCategory = null, currentSubcategory = null;
     let contentSha = null, isDirty = false, editingEntry = null, editingSubId = null, editingCatIdx = null;
     let pendingUploads = new Map(), editingPendingUploads = new Map();
@@ -42,6 +42,7 @@
         $('#saveBtn').onclick = saveToGitHub;
         $('#reloadBtn').onclick = reloadData;
         $('#navWelcome').onclick = showWelcome;
+        $('#navAbout').onclick = showAboutAdmin;
         $('#navContact').onclick = showContact;
         $('#navDownload').onclick = downloadContent;
         $('#addEntryBtn').onclick = addNewEntry;
@@ -60,6 +61,7 @@
         $('#catModalDelete').onclick = deleteCategory;
         $('#subModalCancel').onclick = closeSubEditor;
         $('#subModalClose').onclick = closeSubEditor;
+        $('#aboutAdminSave').onclick = saveAbout;
         document.addEventListener('click', e => {
             const btn = e.target.closest('.edit-btn'); if (!btn) return;
             const block = btn.closest('.editable-block'); if (!block) return;
@@ -122,13 +124,15 @@
             if (!siteWelcome[k].zh) siteWelcome[k].zh = WELCOME_FIELDS[k].zh;
             if (!siteWelcome[k].en) siteWelcome[k].en = WELCOME_FIELDS[k].en;
         });
+        // 加载关于页面数据
+        siteAbout = raw.about || {};
+        if (!siteAbout.content) siteAbout.content = {zh:'',en:''};
         isDirty=false; updateStatus();
     }
 
     function enterApp() {
         $('#setupScreen').style.display='none';
         $('#adminTopBar').style.display=''; $('#adminLayout').style.display='';
-        $('#repoBadge').textContent=config.owner?config.owner+'/'+config.repo:'手动';
         renderNav(); showWelcome();
     }
 
@@ -302,7 +306,13 @@
         }
     }
 
-    function hidePages(){['welcomePage','categoryPage','contactPage'].forEach(function(id){$('#'+id).style.display='none';});}
+    function hidePages(){['welcomePage','categoryPage','contactPage','aboutAdminPage'].forEach(function(id){$('#'+id).style.display='none';});}
+
+    function showAboutAdmin(){
+        hidePages();$('#aboutAdminPage').style.display='';
+        var lang=currentLang;
+        $('#aboutAdminEditor').value = (siteAbout.content && siteAbout.content[lang]) || '';
+    }
 
     function openTextEditor(title,val){$('#textEditorTitle').textContent=title;$('#textEditorInput').value=val;$('#textEditorModal').style.display='flex';}
     function closeTextEditor(){$('#textEditorModal').style.display='none';window._textCb=null;}
@@ -603,6 +613,12 @@
         };
     }
     function closeSubEditor(){document.getElementById('subModal').style.display='none';}
+    function saveAbout(){
+        if (!siteAbout.content) siteAbout.content = {zh:'',en:''};
+        siteAbout.content[currentLang] = $('#aboutAdminEditor').value;
+        markDirty();
+        toast('关于页面已更新','success');
+    }
 
     async function saveToGitHub(){
         if(!config.token){
@@ -629,7 +645,7 @@
                 treeItems.push({path:path,mode:'100644',type:'blob',sha:imageBlob.sha});
             }
             btn.textContent='[WRITE] 写入内容...';
-            var data={navigation:siteNav,contact:siteContact,content:siteContent,welcome:siteWelcome};
+            var data={navigation:siteNav,contact:siteContact,content:siteContent,welcome:siteWelcome,about:siteAbout};
             var json=JSON.stringify(data,null,4);
             var contentBlob=await githubRequest('/git/blobs',{
                 method:'POST',
@@ -700,7 +716,7 @@
     }
 
     function downloadContent(){
-        var data={navigation:siteNav,contact:siteContact,content:siteContent,welcome:siteWelcome};
+        var data={navigation:siteNav,contact:siteContact,content:siteContent,welcome:siteWelcome,about:siteAbout};
         var json=JSON.stringify(data,null,4);
         var blob=new Blob([json],{type:'application/json'});
         var url=URL.createObjectURL(blob);
@@ -766,6 +782,10 @@
                 if(sub)showCatPage(cat,sub);
             }
             showContact();
+            // 如果正在编辑关于页面，刷新
+            if ($('#aboutAdminPage').style.display !== 'none') {
+                showAboutAdmin();
+            }
             toast('已切换到'+(lang==='zh'?'中文':'English'),'info');
         };
     }

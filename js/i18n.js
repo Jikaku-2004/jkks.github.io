@@ -27,6 +27,10 @@ const I18N = {
         zh: "联系方式",
         en: "Contact"
     },
+    aboutJikaku: {
+        zh: "关于Jikaku",
+        en: "About Jikaku"
+    },
     contactTitle: {
         zh: "联系方式",
         en: "Contact Information"

@@ -14,9 +14,10 @@
     let siteNavigation = [];   // 从 content.json 加载的导航
     let siteContact = {};      // 从 content.json 加载的联系方式
     let siteWelcome = {};      // 从 content.json 加载的欢迎页数据
+    let siteAbout = {};        // 从 content.json 加载的关于页面数据
     const PIXEL_ICONS = Object.freeze({
         reading: 'RD', art: 'AR', sports: 'SP', research: 'RS',
-        kappa: 'KP', contact: 'CT', email: 'ML'
+        kappa: 'KP', contact: 'CT', email: 'ML', about: 'AB'
     });
 
     // ── DOM引用 ──
@@ -27,6 +28,8 @@
     const welcomePage = $('#welcomePage');
     const categoryPage = $('#categoryPage');
     const contactPage = $('#contactPage');
+    const aboutPage = $('#aboutPage');
+    const aboutContent = $('#aboutContent');
     const categoryTitle = $('#categoryTitle');
     const categoryDesc = $('#categoryDesc');
     const subcategoryTabs = $('#subcategoryTabs');
@@ -45,6 +48,8 @@
         setupMenuToggle();
         setupLightbox();
         setupContactNav();
+        setupAboutNav();
+        setupMusicPlayer();
         setupSystemClock();
         applyLanguage(currentLang);
     }
@@ -58,12 +63,14 @@
             siteContact = data.contact || {};
             siteContent = data.content || {};
             siteWelcome = data.welcome || {};
+            siteAbout = data.about || {};
         } catch (e) {
             console.warn('无法加载 content.json，使用后备数据', e);
             siteNavigation = SITE_DATA.navigation || [];
             siteContact = SITE_DATA.contact || {};
             siteContent = {};
             siteWelcome = {};
+            siteAbout = {};
         }
     }
 
@@ -170,10 +177,20 @@
             return;
         }
 
+        // 如果是关于Jikaku
+        if (category === 'about') {
+            currentCategory = 'about';
+            currentSubCategory = null;
+            showAboutPage();
+            closeMenu();
+            return;
+        }
+
         // 显示分类页面
         welcomePage.style.display = 'none';
         categoryPage.style.display = 'block';
         contactPage.style.display = 'none';
+        aboutPage.style.display = 'none';
 
         renderCategoryPage(category, subCategory);
         closeMenu();
@@ -347,6 +364,149 @@
         contactPage.innerHTML = html;
     }
 
+    // ── 关于Jikaku导航 ──
+    function setupAboutNav() {
+        const navAbout = $('#navAbout');
+        if (navAbout) {
+            navAbout.addEventListener('click', (e) => {
+                e.preventDefault();
+                navigateTo('about', null);
+            });
+        }
+    }
+
+    // ── 关于Jikaku页面 ──
+    function showAboutPage() {
+        welcomePage.style.display = 'none';
+        categoryPage.style.display = 'none';
+        contactPage.style.display = 'none';
+        aboutPage.style.display = 'block';
+
+        const aboutMd = (siteAbout.content && siteAbout.content[currentLang]) || siteAbout.content_zh || '';
+        if (aboutContent) {
+            aboutContent.innerHTML = aboutMd ? marked.parse(aboutMd) : '<p style="color:var(--text-secondary);">' + (currentLang === 'zh' ? '暂无内容' : 'No content yet.') + '</p>';
+        }
+    }
+
+    // ── 音乐播放器 ──
+    function setupMusicPlayer() {
+        const audio = $('#musicAudio');
+        const playBtn = $('#musicPlay');
+        const prevBtn = $('#musicPrev');
+        const nextBtn = $('#musicNext');
+        const randomBtn = $('#musicRandom');
+        const loopBtn = $('#musicLoop');
+        const musicTitle = $('#musicTitle');
+        const musicPlayer = $('#musicPlayer');
+
+        if (!audio || !playBtn) return;
+
+        let playlist = [];
+        let currentIndex = 0;
+        let isRandom = false;
+        let isLoop = false;
+
+        // 加载播放列表
+        async function loadPlaylist() {
+            try {
+                const resp = await fetch('data/music-list.json');
+                const data = await resp.json();
+                playlist = (data.songs || []).filter(s => s.url && s.url.trim()).slice(0, 10);
+                if (playlist.length > 0) {
+                    updateDisplay();
+                }
+            } catch (e) {
+                console.warn('无法加载音乐列表', e);
+                playlist = [];
+            }
+        }
+
+        function updateDisplay() {
+            if (playlist.length === 0) {
+                musicTitle.textContent = '--';
+                return;
+            }
+            const song = playlist[currentIndex];
+            musicTitle.textContent = song.name || 'Unknown';
+        }
+
+        function loadAndPlay() {
+            if (playlist.length === 0) return;
+            const song = playlist[currentIndex];
+            audio.src = song.url;
+            audio.load();
+            audio.play().catch(() => {});
+            updateDisplay();
+        }
+
+        playBtn.addEventListener('click', () => {
+            if (playlist.length === 0) return;
+            if (audio.paused) {
+                if (!audio.src || audio.src === window.location.href) {
+                    loadAndPlay();
+                } else {
+                    audio.play().catch(() => {});
+                }
+                playBtn.textContent = '⏸';
+            } else {
+                audio.pause();
+                playBtn.textContent = '▶';
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (playlist.length === 0) return;
+            currentIndex = (currentIndex - 1 + playlist.length) % playlist.length;
+            loadAndPlay();
+            playBtn.textContent = '⏸';
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (playlist.length === 0) return;
+            currentIndex = (currentIndex + 1) % playlist.length;
+            loadAndPlay();
+            playBtn.textContent = '⏸';
+        });
+
+        randomBtn.addEventListener('click', () => {
+            isRandom = !isRandom;
+            randomBtn.classList.toggle('active', isRandom);
+        });
+
+        loopBtn.addEventListener('click', () => {
+            isLoop = !isLoop;
+            loopBtn.classList.toggle('active', isLoop);
+            audio.loop = isLoop;
+        });
+
+        audio.addEventListener('ended', () => {
+            if (isLoop) {
+                audio.currentTime = 0;
+                audio.play().catch(() => {});
+                return;
+            }
+            if (isRandom && playlist.length > 1) {
+                let newIndex;
+                do {
+                    newIndex = Math.floor(Math.random() * playlist.length);
+                } while (newIndex === currentIndex && playlist.length > 1);
+                currentIndex = newIndex;
+            } else {
+                currentIndex = (currentIndex + 1) % playlist.length;
+            }
+            loadAndPlay();
+        });
+
+        audio.addEventListener('play', () => { playBtn.textContent = '⏸'; });
+        audio.addEventListener('pause', () => { playBtn.textContent = '▶'; });
+        audio.addEventListener('error', () => {
+            playBtn.textContent = '▶';
+            console.warn('音频加载失败');
+        });
+
+        loadPlaylist();
+    }
+
     // ── 语言切换 ──
     function setupLanguageToggle() {
         langToggle.addEventListener('click', (e) => {
@@ -365,6 +525,8 @@
             if (currentCategory) {
                 if (currentCategory === 'contact') {
                     showContactPage();
+                } else if (currentCategory === 'about') {
+                    showAboutPage();
                 } else {
                     renderCategoryPage(currentCategory, currentSubCategory);
                 }

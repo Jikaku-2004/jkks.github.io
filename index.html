@@ -40,7 +40,26 @@
                 <!-- 由JS动态生成 -->
             </ul>
             <div class="sidebar-footer">
-                <span class="sidebar-label footer-label">UPLINK</span>
+                <div class="music-player" id="musicPlayer">
+                    <div class="music-player-header">
+                        <span class="sidebar-label music-label">MUSIC PLAYER</span>
+                    </div>
+                    <div class="music-info" id="musicInfo">
+                        <span class="music-title" id="musicTitle">--</span>
+                    </div>
+                    <div class="music-controls">
+                        <button class="music-btn" id="musicPrev" title="上一首">⏮</button>
+                        <button class="music-btn music-btn-play" id="musicPlay" title="播放/暂停">▶</button>
+                        <button class="music-btn" id="musicNext" title="下一首">⏭</button>
+                        <button class="music-btn" id="musicRandom" title="随机">🔀</button>
+                        <button class="music-btn" id="musicLoop" title="循环">🔁</button>
+                    </div>
+                    <audio id="musicAudio" preload="none"></audio>
+                </div>
+                <a href="#" class="nav-item" id="navAbout">
+                    <span class="nav-icon"><span class="pixel-icon">AB</span></span>
+                    <span class="nav-label" data-key="aboutJikaku">关于Jikaku</span>
+                </a>
                 <a href="#" class="nav-item" id="navContact">
                     <span class="nav-icon"><span class="pixel-icon">CT</span></span>
                     <span class="nav-label" data-key="contact">联系方式</span>
@@ -58,6 +77,7 @@
                         <span class="window-controls">■ □ ×</span>
                     </div>
                     <h1 class="welcome-title" data-key="welcomeTitle">欢迎来到Jikaku的个人网页</h1>
+                    <p class="welcome-motto">热爱 忠诚 荣光</p>
                     <p class="welcome-subtitle" data-key="welcomeSubtitle">探索 · 思考 · 记录</p>
                     <div class="welcome-desc" data-key="welcomeDesc">
                         <p>这里是我记录阅读、艺术、运动与研究的个人空间。</p>
@@ -87,6 +107,18 @@
                 </div>
             </div>
 
+            <!-- 关于Jikaku页面 -->
+            <div class="about-page" id="aboutPage" style="display:none;">
+                <div class="about-card">
+                    <div class="window-bar">
+                        <span>ABOUT.EXE</span>
+                        <span class="window-controls">■ □ ×</span>
+                    </div>
+                    <div class="about-content markdown-body" id="aboutContent">
+                        <!-- 由JS渲染Markdown -->
+                    </div>
+                </div>
+            </div>
             <!-- 联系方式页面 -->
             <div class="contact-page" id="contactPage" style="display:none;">
                 <!-- 由JS生成 -->

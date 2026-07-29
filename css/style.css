@@ -1204,3 +1204,245 @@ img {
         transition-duration: .001ms !important;
     }
 }
+
+/* ══════════════════════════════════════════
+   Music Player - 音乐盒
+   ══════════════════════════════════════════ */
+.music-player {
+    padding: 10px 14px 8px;
+    border-bottom: 1px solid #3b2847;
+    background: #0f0b1a;
+}
+
+.music-player-header {
+    margin-bottom: 6px;
+}
+
+.music-label {
+    display: block;
+    padding: 4px 0 6px;
+    border-bottom: 1px solid #2c2137;
+    color: #6f657b;
+    font-family: var(--pixel);
+    font-size: .62rem;
+    letter-spacing: .08em;
+}
+
+.music-info {
+    padding: 4px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.music-title {
+    color: var(--cyan);
+    font-family: var(--pixel);
+    font-size: .62rem;
+    letter-spacing: .04em;
+}
+
+.music-controls {
+    display: flex;
+    margin-top: 6px;
+    gap: 4px;
+}
+
+.music-btn {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 1px solid #362a44;
+    background: #100c19;
+    color: #8e8399;
+    font-size: .7rem;
+    cursor: pointer;
+    transition: color var(--transition), background var(--transition), border-color var(--transition);
+}
+
+.music-btn:hover {
+    border-color: var(--cyan);
+    background: #191328;
+    color: #fff;
+}
+
+.music-btn.active {
+    border-color: var(--accent);
+    background: rgba(255,47,135,.15);
+    color: var(--accent-light);
+}
+
+.music-btn-play {
+    width: 34px;
+    height: 28px;
+    border-color: var(--cyan);
+    background: rgba(40,230,219,.12);
+    color: var(--cyan);
+    font-size: .8rem;
+}
+
+/* ══════════════════════════════════════════
+   About Page - 关于Jikaku
+   ══════════════════════════════════════════ */
+.about-page {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    animation: page-in .38s steps(6, end) both;
+}
+
+.about-card {
+    position: relative;
+    border: 2px solid var(--border);
+    background: var(--bg-panel);
+    box-shadow:
+        7px 7px 0 #060409,
+        9px 9px 0 #2a1c33,
+        0 0 28px rgba(255,47,135,.055);
+    padding: 72px 34px 34px;
+}
+
+.about-card::before {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(var(--accent), transparent 42%, var(--cyan));
+    content: "";
+    opacity: .7;
+}
+
+.about-content {
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    font-size: 1.03rem;
+    line-height: 1.9;
+}
+
+.about-content h1,
+.about-content h2,
+.about-content h3 {
+    margin: 1.3em 0 .55em;
+    color: #fff;
+    font-family: var(--pixel);
+    font-weight: 400;
+    line-height: 1.4;
+}
+
+.about-content h2 {
+    color: var(--accent-light);
+    font-size: 1.4rem;
+}
+
+.about-content h3 {
+    color: var(--cyan);
+    font-size: 1.1rem;
+}
+
+.about-content p {
+    margin-bottom: .85em;
+}
+
+.about-content ul,
+.about-content ol {
+    margin: .7em 0 1em 1.6em;
+}
+
+.about-content blockquote {
+    margin: 1em 0;
+    padding: 12px 16px;
+    border-left: 4px solid var(--cyan);
+    background: rgba(40,230,219,.055);
+    color: #d9d0df;
+}
+
+.about-content a {
+    color: var(--cyan);
+}
+
+.about-content strong {
+    color: var(--accent-light);
+}
+
+/* ══════════════════════════════════════════
+   Welcome Page Enhancements
+   ══════════════════════════════════════════ */
+
+/* 欢迎标题光效动效 */
+.welcome-title {
+    position: relative;
+    animation: welcome-glow 2.8s ease-in-out infinite, title-float 4.2s ease-in-out infinite;
+    text-shadow:
+        0 0 10px rgba(255,47,135,.6),
+        0 0 25px rgba(255,47,135,.35),
+        0 0 50px rgba(104,135,255,.25),
+        0 0 80px rgba(40,230,219,.15),
+        2px 2px 0 #7d1244,
+        -1px -1px 0 #3044a7;
+    /* 固定单行显示 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@keyframes welcome-glow {
+    0%, 100% {
+        text-shadow:
+            0 0 10px rgba(255,47,135,.6),
+            0 0 25px rgba(255,47,135,.35),
+            0 0 50px rgba(104,135,255,.25),
+            0 0 80px rgba(40,230,219,.15),
+            2px 2px 0 #7d1244,
+            -1px -1px 0 #3044a7;
+    }
+    50% {
+        text-shadow:
+            0 0 18px rgba(255,47,135,.85),
+            0 0 40px rgba(255,47,135,.5),
+            0 0 70px rgba(104,135,255,.4),
+            0 0 100px rgba(40,230,219,.25),
+            2px 2px 0 #7d1244,
+            -1px -1px 0 #3044a7;
+    }
+}
+
+@keyframes title-float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-3px); }
+}
+
+/* 热爱忠诚荣光 - 居中单行 */
+.welcome-motto {
+    margin-bottom: 12px;
+    color: var(--warning);
+    font-family: var(--pixel);
+    font-size: clamp(.8rem, 1.6vw, 1.2rem);
+    letter-spacing: .25em;
+    text-align: center;
+    text-shadow: 0 0 12px rgba(255,209,102,.4), 2px 2px 0 #664400;
+}
+
+/* ── Admin About Page ── */
+.about-admin-page {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+.about-admin-card {
+    border: 2px solid var(--border);
+    background: var(--bg-card);
+    padding: 28px;
+}
+
+.about-admin-card h2 {
+    margin-bottom: 16px;
+    color: var(--accent-light);
+    font-family: var(--pixel);
+    font-weight: 400;
+    font-size: 1.3rem;
+}
