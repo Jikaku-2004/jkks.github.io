@@ -1382,10 +1382,8 @@ img {
         0 0 80px rgba(40,230,219,.15),
         2px 2px 0 #7d1244,
         -1px -1px 0 #3044a7;
-    /* 固定单行显示 */
+    /* 固定单行，但不截断，由自适应字号保证显示 */
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
 }
 
 @keyframes welcome-glow {
