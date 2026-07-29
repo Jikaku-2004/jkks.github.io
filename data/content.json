@@ -1,972 +1,718 @@
 {
-    "navigation":  [
-                       {
-                           "id":  "reading",
-                           "icon":  "RD",
-                           "label":  {
-                                         "zh":  "阅读",
-                                         "en":  "Reading"
-                                     },
-                           "desc":  {
-                                        "zh":  "阅读、电影、音乐等输入方面",
-                                        "en":  "Books, movies, and video reviews and thoughts"
-                                    },
-                           "subItems":  [
-                                            {
-                                                "id":  "books",
-                                                "label":  {
-                                                              "zh":  "阅读",
-                                                              "en":  "Books"
-                                                          }
-                                            },
-                                            {
-                                                "id":  "movies",
-                                                "label":  {
-                                                              "zh":  "电影",
-                                                              "en":  "Movies"
-                                                          }
-                                            },
-                                            {
-                                                "id":  "tv",
-                                                "label":  {
-                                                              "zh":  "其他作品",
-                                                              "en":  "TV \u0026 Videos"
-                                                          }
-                                            },
-                                            {
-                                                "id":  "album",
-                                                "label":  {
-                                                              "zh":  "唱片墙",
-                                                              "en":  "Albums"
-                                                          }
-                                            }
-                                        ]
-                       },
-                       {
-                           "id":  "art",
-                           "icon":  "ART",
-                           "label":  {
-                                         "zh":  "艺术",
-                                         "en":  "Art"
-                                     },
-                           "desc":  {
-                                        "zh":  "关于艺术……主要是产出方面",
-                                        "en":  "Music activities and calligraphy works"
-                                    },
-                           "subItems":  [
-                                            {
-                                                "id":  "music",
-                                                "label":  {
-                                                              "zh":  "音乐活动",
-                                                              "en":  "Music"
-                                                          }
-                                            },
-                                            {
-                                                "id":  "calligraphy",
-                                                "label":  {
-                                                              "zh":  "书法习作",
-                                                              "en":  "Calligraphy"
-                                                          }
-                                            },
-                                            {
-                                                "id":  "write",
-                                                "label":  {
-                                                              "zh":  "写作",
-                                                              "en":  "Writing"
-                                                          }
-                                            }
-                                        ]
-                       },
-                       {
-                           "id":  "sports",
-                           "icon":  "SPT",
-                           "label":  {
-                                         "zh":  "运动",
-                                         "en":  "Sports"
-                                     },
-                           "desc":  {
-                                        "zh":  "长跑及其他运动的记录",
-                                        "en":  "Running and other sports records"
-                                    },
-                           "subItems":  [
-                                            {
-                                                "id":  "running",
-                                                "label":  {
-                                                              "zh":  "长跑",
-                                                              "en":  "Long-distance Running"
-                                                          }
-                                            },
-                                            {
-                                                "id":  "other-sports",
-                                                "label":  {
-                                                              "zh":  "其他运动",
-                                                              "en":  "Other Sports"
-                                                          }
-                                            }
-                                        ]
-                       },
-                       {
-                           "id":  "research",
-                           "icon":  "RSC",
-                           "label":  {
-                                         "zh":  "研究",
-                                         "en":  "Research"
-                                     },
-                           "desc":  {
-                                        "zh":  "生态环境与社会学的研究进展",
-                                        "en":  "Research progress in ecology and sociology"
-                                    },
-                           "subItems":  [
-                                            {
-                                                "id":  "ecology",
-                                                "label":  {
-                                                              "zh":  "生态环境",
-                                                              "en":  "Ecology"
-                                                          }
-                                            },
-                                            {
-                                                "id":  "sociology",
-                                                "label":  {
-                                                              "zh":  "社会学",
-                                                              "en":  "Sociology"
-                                                          }
-                                            }
-                                        ]
-                       },
-                       {
-                           "id":  "kappa",
-                           "icon":  "KP",
-                           "label":  {
-                                         "zh":  "河童的话",
-                                         "en":  "Kappa\u0027s Words"
-                                     },
-                           "desc":  {
-                                        "zh":  "灵感来源于芥川龙之介《侏儒的话》——日志中的零星感想",
-                                        "en":  "Inspired by Akutagawa\u0027s \u0027The Words of a Dwarf\u0027 — scattered thoughts in journals"
-                                    },
-                           "subItems":  [
-                                            {
-                                                "id":  "journal",
-                                                "label":  {
-                                                              "zh":  "日志感想",
-                                                              "en":  "Journal"
-                                                          }
-                                            }
-                                        ]
-                       },
-                       {
-                           "id":  "travel",
-                           "icon":  "TRV",
-                           "label":  {
-                                         "zh":  "旅行",
-                                         "en":  "Travel"
-                                     },
-                           "desc":  {
-                                        "zh":  "这个人类探索地球的进度。",
-                                        "en":  ""
-                                    },
-                           "subItems":  [
-                                            {
-                                                "id":  "place",
-                                                "label":  {
-                                                              "zh":  "去过的地方",
-                                                              "en":  "Places"
-                                                          }
-                                            }
-                                        ]
-                       }
-                   ],
-    "contact":  {
-                    "email":  {
-                                  "label":  {
-                                                "zh":  "邮箱",
-                                                "en":  "Email"
-                                            },
-                                  "value":  "Jikaku0918@outlook.com",
-                                  "icon":  "ML"
-                              }
+    "navigation": [
+        {
+            "id": "reading",
+            "icon": "RD",
+            "label": {
+                "zh": "阅读",
+                "en": "Reading"
+            },
+            "desc": {
+                "zh": "阅读、电影、音乐等输入方面",
+                "en": "Books, movies, and video reviews and thoughts"
+            },
+            "subItems": [
+                {
+                    "id": "books",
+                    "label": {
+                        "zh": "阅读",
+                        "en": "Books"
+                    }
                 },
-    "welcome":  {
-                    "welcomeTitle":  {
-                                         "zh":  "欢迎来到 Jikaku 的个人网页",
-                                         "en":  "Welcome to Jikaku\u0027s Website"
-                                     },
-                    "welcomeSubtitle":  {
-                                            "zh":  "热爱 · 忠诚 · 荣光",
-                                            "en":  "Passion · Loyalty · Glory"
-                                        },
-                    "welcomeDesc":  {
-                                        "zh":  "\u003cp\u003e这里是我记录阅读、艺术、运动与研究的个人空间。\u003c/p\u003e\u003cp\u003e请从左侧导航栏选择感兴趣的分类开始探索。\u003c/p\u003e",
-                                        "en":  "\u003cp\u003eA personal space for recording reading, art, sports, and research.\u003c/p\u003e\u003cp\u003eChoose a category from the sidebar to start exploring.\u003c/p\u003e"
-                                    },
-                    "welcomeQuote":  {
-                                         "zh":  "\u0026ldquo;今天会是一个好日子。\u0026rdquo; —— jkk",
-                                         "en":  "\u0026ldquo;Today is gonna be a good day.\u0026rdquo; \u0026mdash; jkk"
-                                     }
+                {
+                    "id": "movies",
+                    "label": {
+                        "zh": "电影",
+                        "en": "Movies"
+                    }
                 },
-    "content":  {
-                    "123":  [
-                                {
-                                    "id":  "new-1785264069810",
-                                    "title_zh":  "12",
-                                    "title_en":  "12",
-                                    "date":  "2026-07-28",
-                                    "tags_zh":  [
-                                                    "1"
-                                                ],
-                                    "tags_en":  [
-                                                    "1"
-                                                ],
-                                    "content_zh":  "123",
-                                    "content_en":  "231",
-                                    "images":  [
-
-                                               ],
-                                    "videos":  [
-
-                                               ],
-                                    "links":  [
-
-                                              ]
-                                }
-                            ],
-                    "books":  [
-                                  {
-                                      "id":  "example-book",
-                                      "title_zh":  "示例书目",
-                                      "title_en":  "Sample Book",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-                                                      "小说",
-                                                      "日本文学"
-                                                  ],
-                                      "tags_en":  [
-                                                      "Fiction",
-                                                      "Japanese Literature"
-                                                  ],
-                                      "content_zh":  "这是一本示例书目的笔记。\n\n**感想：** 这是一本很棒的书。\n\n\u003e \"有名的句子引用\"",
-                                      "content_en":  "This is a sample book note.\n\n**Thoughts:** This is a great book.\n\n\u003e \"Famous quote\"",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-                                                    {
-                                                        "url":  "https://example.com/book",
-                                                        "text":  "豆瓣链接"
-                                                    }
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785254781821",
-                                      "title_zh":  "维特根斯坦私人笔记1914-1916",
-                                      "title_en":  "Wittgenstein Private Notebooks 1914-1916",
-                                      "date":  "2026-07-27",
-                                      "tags_zh":  [
-                                                      "哲学",
-                                                      "日记"
-                                                  ],
-                                      "tags_en":  [
-                                                      "philosophy",
-                                                      "diary"
-                                                  ],
-                                      "content_zh":  "我觉得还是有所收获的。至少让我知道W也是跟我相同：为卑劣感到不满，为世界不遵守一个应然秩序恼怒，对自己也感到不满。",
-                                      "content_en":  "I think I still gained something. At least let me know that W is the same as me: dissatisfied with baseness, angry that the world does not follow a proper order, and dissatisfied with himself.",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  }
-                              ],
-                    "movies":  [
-                                   {
-                                       "id":  "example-movie",
-                                       "title_zh":  "情书",
-                                       "title_en":  "Love Letter",
-                                       "date":  "2026-07-28",
-                                       "tags_zh":  [
-                                                       "岩井俊二",
-                                                       "日本"
-                                                   ],
-                                       "tags_en":  [
-                                                       "Shunji Iwai",
-                                                       "Japan"
-                                                   ],
-                                       "content_zh":  "关于爱，生死，我们如何去应对失去。",
-                                       "content_en":  "Regarding love, life and death, and how do we deal with loss?",
-                                       "images":  [
-
-                                                  ],
-                                       "videos":  [
-
-                                                  ],
-                                       "links":  [
-
-                                                 ]
-                                   },
-                                   {
-                                       "id":  "new-1785254567840",
-                                       "title_zh":  "",
-                                       "title_en":  "",
-                                       "date":  "2026-07-28",
-                                       "tags_zh":  [
-
-                                                   ],
-                                       "tags_en":  [
-
-                                                   ],
-                                       "content_zh":  "",
-                                       "content_en":  "",
-                                       "images":  [
-
-                                                  ],
-                                       "videos":  [
-
-                                                  ],
-                                       "links":  [
-
-                                                 ]
-                                   },
-                                   {
-                                       "id":  "new-1785264238073",
-                                       "title_zh":  "最后一封信",
-                                       "title_en":  "Last Letter",
-                                       "date":  "2026-07-28",
-                                       "tags_zh":  [
-                                                       "岩井俊二",
-                                                       "日本"
-                                                   ],
-                                       "tags_en":  [
-                                                       "Shunji Iwai",
-                                                       "Japan"
-                                                   ],
-                                       "content_zh":  "",
-                                       "content_en":  "",
-                                       "images":  [
-
-                                                  ],
-                                       "videos":  [
-
-                                                  ],
-                                       "links":  [
-
-                                                 ]
-                                   }
-                               ],
-                    "tv":  [
-                               {
-                                   "id":  "new-1785266424905",
-                                   "title_zh":  "混沌武士",
-                                   "title_en":  "",
-                                   "date":  "2026-07-28",
-                                   "tags_zh":  [
-
-                                               ],
-                                   "tags_en":  [
-
-                                               ],
-                                   "content_zh":  "",
-                                   "content_en":  "",
-                                   "images":  [
-
-                                              ],
-                                   "videos":  [
-
-                                              ],
-                                   "links":  [
-
-                                             ]
-                               },
-                               {
-                                   "id":  "new-1785266455585",
-                                   "title_zh":  "星际牛仔",
-                                   "title_en":  "",
-                                   "date":  "2026-07-28",
-                                   "tags_zh":  [
-
-                                               ],
-                                   "tags_en":  [
-
-                                               ],
-                                   "content_zh":  "",
-                                   "content_en":  "",
-                                   "images":  [
-
-                                              ],
-                                   "videos":  [
-
-                                              ],
-                                   "links":  [
-
-                                             ]
-                               }
-                           ],
-                    "music":  [
-                                  {
-                                      "id":  "new-1785254579419",
-                                      "title_zh":  "情人节演出",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "\u003e 本人贝斯演奏水平最高峰",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785268616589",
-                                      "title_zh":  "百团大战招新演出",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785268629074",
-                                      "title_zh":  "筹备中：毕业演出",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  }
-                              ],
-                    "calligraphy":  [
-                                        {
-                                            "id":  "new-1785264676310",
-                                            "title_zh":  "学习三笔三迹",
-                                            "title_en":  "",
-                                            "date":  "2026-07-28",
-                                            "tags_zh":  [
-
-                                                        ],
-                                            "tags_en":  [
-
-                                                        ],
-                                            "content_zh":  "",
-                                            "content_en":  "",
-                                            "images":  [
-
-                                                       ],
-                                            "videos":  [
-
-                                                       ],
-                                            "links":  [
-
-                                                      ]
-                                        }
-                                    ],
-                    "running":  [
-                                    {
-                                        "id":  "example-run",
-                                        "title_zh":  "海南儋州半程马拉松",
-                                        "title_en":  "Half-marathon in Danzhou, Hainan",
-                                        "date":  "2025-12-21",
-                                        "tags_zh":  [
-                                                        "半马"
-                                                    ],
-                                        "tags_en":  [
-                                                        "Half marathon"
-                                                    ],
-                                        "content_zh":  "1:48:44\n24年和25年训练很少。这个成绩比预想中的好。原本计划1：55：00。\n赛道走洋浦大桥来回。爬升很大。",
-                                        "content_en":  "1:48:44\nThere was very little training in 2024 and 2025. This result is better than expected. The original plan was 1:55：00\nThe track runs back and forth across Yangpu Bridge. There is a significant climb.",
-                                        "images":  [
-
-                                                   ],
-                                        "videos":  [
-
-                                                   ],
-                                        "links":  [
-
-                                                  ]
-                                    },
-                                    {
-                                        "id":  "new-1785261231308",
-                                        "title_zh":  "厦门海沧半程马拉松",
-                                        "title_en":  "Half-marathon in Haicang， Xiamen， Fujian",
-                                        "date":  "2023-12-03",
-                                        "tags_zh":  [
-                                                        "半马"
-                                                    ],
-                                        "tags_en":  [
-                                                        "Half-marathon"
-                                                    ],
-                                        "content_zh":  "1：40：42\n第一次半程马拉松。经验不足，在配速和补给上没有做充分的准备，20km处已经出现轻微肌肉痉挛。由于起跑区域差也影响了发挥。或许当时真实实力能达到1：35：00。",
-                                        "content_en":  "1:40:42\nMy first half marathon. Due to a lack of experience, I didn\u0027t make adequate preparations in terms of pace and supplies. I had already experienced mild muscle spasms at the 20-kilometer mark. The performance was also affected because the starting area was far back. Perhaps the actual strength at that time could have reached 1:35:00.",
-                                        "images":  [
-
-                                                   ],
-                                        "videos":  [
-
-                                                   ],
-                                        "links":  [
-
-                                                  ]
-                                    },
-                                    {
-                                        "id":  "new-1785262255441",
-                                        "title_zh":  "高三 校运会",
-                                        "title_en":  "Autumn school sports meeting of senior three",
-                                        "date":  "2022-10-15",
-                                        "tags_zh":  [
-                                                        "3km"
-                                                    ],
-                                        "tags_en":  [
-                                                        "3km"
-                                                    ],
-                                        "content_zh":  "",
-                                        "content_en":  "",
-                                        "images":  [
-
-                                                   ],
-                                        "videos":  [
-
-                                                   ],
-                                        "links":  [
-
-                                                  ]
-                                    }
-                                ],
-                    "other-sports":  [
-                                         {
-                                             "id":  "new-1785264594822",
-                                             "title_zh":  "斯诺克的终结",
-                                             "title_en":  "",
-                                             "date":  "2026-07-28",
-                                             "tags_zh":  [
-
-                                                         ],
-                                             "tags_en":  [
-
-                                                         ],
-                                             "content_zh":  "随着东盛台球的消失，失去了线下练习斯诺克的场地。",
-                                             "content_en":  "",
-                                             "images":  [
-
-                                                        ],
-                                             "videos":  [
-
-                                                        ],
-                                             "links":  [
-
-                                                       ]
-                                         },
-                                         {
-                                             "id":  "new-1785268324676",
-                                             "title_zh":  "网球",
-                                             "title_en":  "tennis",
-                                             "date":  "2026-07-28",
-                                             "tags_zh":  [
-
-                                                         ],
-                                             "tags_en":  [
-
-                                                         ],
-                                             "content_zh":  "",
-                                             "content_en":  "",
-                                             "images":  [
-
-                                                        ],
-                                             "videos":  [
-
-                                                        ],
-                                             "links":  [
-
-                                                       ]
-                                         },
-                                         {
-                                             "id":  "new-1785268571173",
-                                             "title_zh":  "滑板",
-                                             "title_en":  "",
-                                             "date":  "2026-07-28",
-                                             "tags_zh":  [
-
-                                                         ],
-                                             "tags_en":  [
-
-                                                         ],
-                                             "content_zh":  "",
-                                             "content_en":  "",
-                                             "images":  [
-
-                                                        ],
-                                             "videos":  [
-
-                                                        ],
-                                             "links":  [
-
-                                                       ]
-                                         }
-                                     ],
-                    "ecology":  [
-                                    {
-                                        "id":  "new-1785264448672",
-                                        "title_zh":  "加入实验室",
-                                        "title_en":  "attend Lab.",
-                                        "date":  "2026-03-01",
-                                        "tags_zh":  [
-
-                                                    ],
-                                        "tags_en":  [
-
-                                                    ],
-                                        "content_zh":  "加入蓝碳课题组",
-                                        "content_en":  "",
-                                        "images":  [
-
-                                                   ],
-                                        "videos":  [
-
-                                                   ],
-                                        "links":  [
-
-                                                  ]
-                                    }
-                                ],
-                    "sociology":  [
-                                      {
-                                          "id":  "new-1785264500604",
-                                          "title_zh":  "关于篮球场使用权规则的论文设想",
-                                          "title_en":  "",
-                                          "date":  "2026-07-28",
-                                          "tags_zh":  [
-
-                                                      ],
-                                          "tags_en":  [
-
-                                                      ],
-                                          "content_zh":  "1",
-                                          "content_en":  "",
-                                          "images":  [
-
-                                                     ],
-                                          "videos":  [
-
-                                                     ],
-                                          "links":  [
-
-                                                    ]
-                                      }
-                                  ],
-                    "journal":  [
-                                    {
-                                        "id":  "new-1785268542882",
-                                        "title_zh":  "关于戒烟",
-                                        "title_en":  "",
-                                        "date":  "2026-07-28",
-                                        "tags_zh":  [
-
-                                                    ],
-                                        "tags_en":  [
-
-                                                    ],
-                                        "content_zh":  "",
-                                        "content_en":  "",
-                                        "images":  [
-
-                                                   ],
-                                        "videos":  [
-
-                                                   ],
-                                        "links":  [
-
-                                                  ]
-                                    }
-                                ],
-                    "place":  [
-                                  {
-                                      "id":  "new-1785268208891",
-                                      "title_zh":  "深圳\u0026香港",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785268414510",
-                                      "title_zh":  "东京\u0026北海道",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785268434966",
-                                      "title_zh":  "海南全域",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785268474309",
-                                      "title_zh":  "广州",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785268485939",
-                                      "title_zh":  "台湾",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785268493915",
-                                      "title_zh":  "淄博",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785268506960",
-                                      "title_zh":  "上海",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  }
-                              ],
-                    "albums":  [
-                                   {
-                                       "id":  "new-1785266250059",
-                                       "title_zh":  "Luv（sic）",
-                                       "title_en":  "Luv（sic）",
-                                       "date":  "2026-07-28",
-                                       "tags_zh":  [
-                                                       "nujabes",
-                                                       "shing02"
-                                                   ],
-                                       "tags_en":  [
-                                                       "nujabes",
-                                                       "shing02"
-                                                   ],
-                                       "content_zh":  "",
-                                       "content_en":  "",
-                                       "images":  [
-
-                                                  ],
-                                       "videos":  [
-
-                                                  ],
-                                       "links":  [
-
-                                                 ]
-                                   }
-                               ],
-                    "write":  [
-                                  {
-                                      "id":  "new-1785268937904",
-                                      "title_zh":  "火星纪事",
-                                      "title_en":  "",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "关于三百年后的火星",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  },
-                                  {
-                                      "id":  "new-1785269014806",
-                                      "title_zh":  "赤色彗星",
-                                      "title_en":  "red comet",
-                                      "date":  "2026-07-28",
-                                      "tags_zh":  [
-                                                      "小说"
-                                                  ],
-                                      "tags_en":  [
-
-                                                  ],
-                                      "content_zh":  "",
-                                      "content_en":  "",
-                                      "images":  [
-
-                                                 ],
-                                      "videos":  [
-
-                                                 ],
-                                      "links":  [
-
-                                                ]
-                                  }
-                              ],
-                    "album":  [
-
-                              ]
+                {
+                    "id": "tv",
+                    "label": {
+                        "zh": "其他作品",
+                        "en": "TV & Videos"
+                    }
                 },
-    "about":  {
-                  "content":  {
-                                  "zh":  "## 关于我\n\n你好，我是 Jikaku。\n\n这里是我的个人空间，记录阅读、艺术、运动与研究的点滴。\n\n### 年表\n\n- **2026** 建立了这个个人网页\n- **2025** 开始系统性地记录阅读与思考\n- **2024** 开始长跑训练\n\n\u003e \"今天会是一个好日子\"",
-                                  "en":  "## About Me\n\nHi, I\u0027m Jikaku.\n\nThis is my personal space where I record bits of reading, art, sports, and research.\n\n### Timeline\n\n- **2026** Built this personal website\n- **2025** Started systematically recording reading and thoughts\n- **2024** Started long-distance running\n\n\u003e \"Today will be a good day\""
-                              }
-              }
+                {
+                    "id": "album",
+                    "label": {
+                        "zh": "唱片墙",
+                        "en": "Albums"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "art",
+            "icon": "ART",
+            "label": {
+                "zh": "艺术",
+                "en": "Art"
+            },
+            "desc": {
+                "zh": "关于艺术……主要是产出方面",
+                "en": "Music activities and calligraphy works"
+            },
+            "subItems": [
+                {
+                    "id": "music",
+                    "label": {
+                        "zh": "音乐活动",
+                        "en": "Music"
+                    }
+                },
+                {
+                    "id": "calligraphy",
+                    "label": {
+                        "zh": "书法习作",
+                        "en": "Calligraphy"
+                    }
+                },
+                {
+                    "id": "write",
+                    "label": {
+                        "zh": "写作",
+                        "en": "Writing"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "sports",
+            "icon": "SPT",
+            "label": {
+                "zh": "运动",
+                "en": "Sports"
+            },
+            "desc": {
+                "zh": "长跑及其他运动的记录",
+                "en": "Running and other sports records"
+            },
+            "subItems": [
+                {
+                    "id": "running",
+                    "label": {
+                        "zh": "长跑",
+                        "en": "Long-distance Running"
+                    }
+                },
+                {
+                    "id": "other-sports",
+                    "label": {
+                        "zh": "其他运动",
+                        "en": "Other Sports"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "research",
+            "icon": "RSC",
+            "label": {
+                "zh": "研究",
+                "en": "Research"
+            },
+            "desc": {
+                "zh": "生态环境与社会学的研究进展",
+                "en": "Research progress in ecology and sociology"
+            },
+            "subItems": [
+                {
+                    "id": "ecology",
+                    "label": {
+                        "zh": "生态环境",
+                        "en": "Ecology"
+                    }
+                },
+                {
+                    "id": "sociology",
+                    "label": {
+                        "zh": "社会学",
+                        "en": "Sociology"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "kappa",
+            "icon": "KP",
+            "label": {
+                "zh": "河童的话",
+                "en": "Kappa's Words"
+            },
+            "desc": {
+                "zh": "灵感来源于芥川龙之介《侏儒的话》——日志中的零星感想",
+                "en": "Inspired by Akutagawa's 'The Words of a Dwarf' — scattered thoughts in journals"
+            },
+            "subItems": [
+                {
+                    "id": "journal",
+                    "label": {
+                        "zh": "日志感想",
+                        "en": "Journal"
+                    }
+                }
+            ]
+        },
+        {
+            "id": "travel",
+            "icon": "TRV",
+            "label": {
+                "zh": "旅行",
+                "en": "Travel"
+            },
+            "desc": {
+                "zh": "这个人类探索地球的进度。",
+                "en": ""
+            },
+            "subItems": [
+                {
+                    "id": "place",
+                    "label": {
+                        "zh": "去过的地方",
+                        "en": "Places"
+                    }
+                }
+            ]
+        }
+    ],
+    "contact": {
+        "email": {
+            "label": {
+                "zh": "邮箱",
+                "en": "Email"
+            },
+            "value": "Jikaku0918@outlook.com",
+            "icon": "ML"
+        }
+    },
+    "content": {
+        "123": [
+            {
+                "id": "new-1785264069810",
+                "title_zh": "12",
+                "title_en": "12",
+                "date": "2026-07-28",
+                "tags_zh": [
+                    "1"
+                ],
+                "tags_en": [
+                    "1"
+                ],
+                "content_zh": "123",
+                "content_en": "231",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "books": [
+            {
+                "id": "example-book",
+                "title_zh": "示例书目",
+                "title_en": "Sample Book",
+                "date": "2026-07-28",
+                "tags_zh": [
+                    "小说",
+                    "日本文学"
+                ],
+                "tags_en": [
+                    "Fiction",
+                    "Japanese Literature"
+                ],
+                "content_zh": "这是一本示例书目的笔记。\n\n**感想：** 这是一本很棒的书。\n\n> \"有名的句子引用\"",
+                "content_en": "This is a sample book note.\n\n**Thoughts:** This is a great book.\n\n> \"Famous quote\"",
+                "images": [],
+                "videos": [],
+                "links": [
+                    {
+                        "url": "https://example.com/book",
+                        "text": "豆瓣链接"
+                    }
+                ]
+            },
+            {
+                "id": "new-1785254781821",
+                "title_zh": "维特根斯坦私人笔记1914-1916",
+                "title_en": "Wittgenstein Private Notebooks 1914-1916",
+                "date": "2026-07-27",
+                "tags_zh": [
+                    "哲学",
+                    "日记"
+                ],
+                "tags_en": [
+                    "philosophy",
+                    "diary"
+                ],
+                "content_zh": "我觉得还是有所收获的。至少让我知道W也是跟我相同：为卑劣感到不满，为世界不遵守一个应然秩序恼怒，对自己也感到不满。",
+                "content_en": "I think I still gained something. At least let me know that W is the same as me: dissatisfied with baseness, angry that the world does not follow a proper order, and dissatisfied with himself.",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "movies": [
+            {
+                "id": "example-movie",
+                "title_zh": "情书",
+                "title_en": "Love Letter",
+                "date": "2026-07-28",
+                "tags_zh": [
+                    "岩井俊二",
+                    "日本"
+                ],
+                "tags_en": [
+                    "Shunji Iwai",
+                    "Japan"
+                ],
+                "content_zh": "关于爱，生死，我们如何去应对失去。",
+                "content_en": "Regarding love, life and death, and how do we deal with loss?",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785254567840",
+                "title_zh": "",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785264238073",
+                "title_zh": "最后一封信",
+                "title_en": "Last Letter",
+                "date": "2026-07-28",
+                "tags_zh": [
+                    "岩井俊二",
+                    "日本"
+                ],
+                "tags_en": [
+                    "Shunji Iwai",
+                    "Japan"
+                ],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "tv": [
+            {
+                "id": "new-1785266424905",
+                "title_zh": "混沌武士",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785266455585",
+                "title_zh": "星际牛仔",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "music": [
+            {
+                "id": "new-1785254579419",
+                "title_zh": "情人节演出",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "> 本人贝斯演奏水平最高峰",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268616589",
+                "title_zh": "百团大战招新演出",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268629074",
+                "title_zh": "筹备中：毕业演出",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "calligraphy": [
+            {
+                "id": "new-1785264676310",
+                "title_zh": "学习三笔三迹",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "running": [
+            {
+                "id": "example-run",
+                "title_zh": "海南儋州半程马拉松",
+                "title_en": "Half-marathon in Danzhou, Hainan",
+                "date": "2025-12-21",
+                "tags_zh": [
+                    "半马"
+                ],
+                "tags_en": [
+                    "Half marathon"
+                ],
+                "content_zh": "1:48:44\n24年和25年训练很少。这个成绩比预想中的好。原本计划1：55：00。\n赛道走洋浦大桥来回。爬升很大。",
+                "content_en": "1:48:44\nThere was very little training in 2024 and 2025. This result is better than expected. The original plan was 1:55：00\nThe track runs back and forth across Yangpu Bridge. There is a significant climb.",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785261231308",
+                "title_zh": "厦门海沧半程马拉松",
+                "title_en": "Half-marathon in Haicang， Xiamen， Fujian",
+                "date": "2023-12-03",
+                "tags_zh": [
+                    "半马"
+                ],
+                "tags_en": [
+                    "Half-marathon"
+                ],
+                "content_zh": "1：40：42\n第一次半程马拉松。经验不足，在配速和补给上没有做充分的准备，20km处已经出现轻微肌肉痉挛。由于起跑区域差也影响了发挥。或许当时真实实力能达到1：35：00。",
+                "content_en": "1:40:42\nMy first half marathon. Due to a lack of experience, I didn't make adequate preparations in terms of pace and supplies. I had already experienced mild muscle spasms at the 20-kilometer mark. The performance was also affected because the starting area was far back. Perhaps the actual strength at that time could have reached 1:35:00.",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785262255441",
+                "title_zh": "高三 校运会",
+                "title_en": "Autumn school sports meeting of senior three",
+                "date": "2022-10-15",
+                "tags_zh": [
+                    "3km"
+                ],
+                "tags_en": [
+                    "3km"
+                ],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "other-sports": [
+            {
+                "id": "new-1785264594822",
+                "title_zh": "斯诺克的终结",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "随着东盛台球的消失，失去了线下练习斯诺克的场地。",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268324676",
+                "title_zh": "网球",
+                "title_en": "tennis",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268571173",
+                "title_zh": "滑板",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "ecology": [
+            {
+                "id": "new-1785264448672",
+                "title_zh": "加入实验室",
+                "title_en": "attend Lab.",
+                "date": "2026-03-01",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "加入蓝碳课题组",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "sociology": [
+            {
+                "id": "new-1785264500604",
+                "title_zh": "关于篮球场使用权规则的论文设想",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "1",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "journal": [
+            {
+                "id": "new-1785268542882",
+                "title_zh": "关于戒烟",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "place": [
+            {
+                "id": "new-1785268208891",
+                "title_zh": "深圳&香港",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268414510",
+                "title_zh": "东京&北海道",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268434966",
+                "title_zh": "海南全域",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268474309",
+                "title_zh": "广州",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268485939",
+                "title_zh": "台湾",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268493915",
+                "title_zh": "淄博",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785268506960",
+                "title_zh": "上海",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "albums": [
+            {
+                "id": "new-1785266250059",
+                "title_zh": "Luv（sic）",
+                "title_en": "Luv（sic）",
+                "date": "2026-07-28",
+                "tags_zh": [
+                    "nujabes",
+                    "shing02"
+                ],
+                "tags_en": [
+                    "nujabes",
+                    "shing02"
+                ],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "write": [
+            {
+                "id": "new-1785268937904",
+                "title_zh": "火星纪事",
+                "title_en": "",
+                "date": "2026-07-28",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "关于三百年后的火星",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            },
+            {
+                "id": "new-1785269014806",
+                "title_zh": "赤色彗星",
+                "title_en": "red comet",
+                "date": "2026-07-28",
+                "tags_zh": [
+                    "小说"
+                ],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ],
+        "album": [
+            {
+                "id": "new-1785314511035",
+                "title_zh": "bowa",
+                "title_en": "",
+                "date": "2026-07-29",
+                "tags_zh": [],
+                "tags_en": [],
+                "content_zh": "",
+                "content_en": "",
+                "images": [],
+                "videos": [],
+                "links": []
+            }
+        ]
+    },
+    "welcome": {
+        "welcomeTitle": {
+            "zh": "欢迎来到 Jikaku 的个人网页",
+            "en": "Welcome to Jikaku's Website"
+        },
+        "welcomeSubtitle": {
+            "zh": "热爱 · 忠诚 · 荣光",
+            "en": "Passion · Loyalty · Glory"
+        },
+        "welcomeDesc": {
+            "zh": "<p>这里是我记录阅读、艺术、运动与研究的个人空间。</p><p>请从左侧导航栏选择感兴趣的分类开始探索。</p>",
+            "en": "<p>A personal space for recording reading, art, sports, and research.</p><p>Choose a category from the sidebar to start exploring.</p>"
+        },
+        "welcomeQuote": {
+            "zh": "&ldquo;今天会是一个好日子。&rdquo; —— jkk",
+            "en": "&ldquo;Today is gonna be a good day.&rdquo; &mdash; jkk"
+        },
+        "welcomeMotto": {
+            "zh": "热爱 忠诚 荣光",
+            "en": "Passion Loyalty Glory"
+        }
+    },
+    "about": {
+        "content": {
+            "zh": "## 关于我\n\n你好，我是 Jikaku。一个罹患神经衰弱的人类男子。\n\n这里是我的个人空间，记录阅读、艺术、运动与研究的点滴。\n\n### 年表\n\n- **2026** 建立了这个个人网页\n- **2025** \n- **2024** \n- **2023** 海南大学 环境科学 专业\n\n> \"今天会是一个好日子\"",
+            "en": "## About Me\n\nHi, I'm Jikaku.\n\nThis is my personal space where I record bits of reading, art, sports, and research.\n\n### Timeline\n\n- **2026** Built this personal website\n- **2025** Started systematically recording reading and thoughts\n- **2024** Started long-distance running\n\n> \"Today will be a good day\""
+        }
+    }
 }

@@ -1,7 +1,4 @@
 {
-    "_comment": "音乐盒播放列表 - Music Player Playlist",
-    "_instruction": "每首歌包含 name（曲名）和 url（音频直链，支持 .mp3/.ogg/.wav 等格式）。最多支持 10 首歌，超出部分将被忽略。修改后刷新前端即可生效。",
-    "_example_url": "音频直链示例: https://example.com/music/song.mp3 （请使用支持跨域的直链）",
     "songs": [
         {
             "name": "示例曲目 - 像素星空",
