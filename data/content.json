@@ -141,8 +141,8 @@
                 "en": "Kappa's Words"
             },
             "desc": {
-                "zh": "灵感来源于芥川龙之介《侏儒的话》——日志中的零星感想",
-                "en": "Inspired by Akutagawa's 'The Words of a Dwarf' — scattered thoughts in journals"
+                "zh": "灵感来源于芥川龙之介《侏儒的话》",
+                "en": "Inspired by Akutagawa's 'The Words of a Dwarf'"
             },
             "subItems": [
                 {
@@ -162,7 +162,7 @@
                 "en": "Travel"
             },
             "desc": {
-                "zh": "这个人类探索地球的进度。",
+                "zh": "这个人类正在探索地球……",
                 "en": ""
             },
             "subItems": [
@@ -207,30 +207,6 @@
             }
         ],
         "books": [
-            {
-                "id": "example-book",
-                "title_zh": "示例书目",
-                "title_en": "Sample Book",
-                "date": "2026-07-28",
-                "tags_zh": [
-                    "小说",
-                    "日本文学"
-                ],
-                "tags_en": [
-                    "Fiction",
-                    "Japanese Literature"
-                ],
-                "content_zh": "这是一本示例书目的笔记。\n\n**感想：** 这是一本很棒的书。\n\n> \"有名的句子引用\"",
-                "content_en": "This is a sample book note.\n\n**Thoughts:** This is a great book.\n\n> \"Famous quote\"",
-                "images": [],
-                "videos": [],
-                "links": [
-                    {
-                        "url": "https://example.com/book",
-                        "text": "豆瓣链接"
-                    }
-                ]
-            },
             {
                 "id": "new-1785254781821",
                 "title_zh": "维特根斯坦私人笔记1914-1916",
@@ -692,8 +668,8 @@
             "en": "&ldquo;Today is gonna be a good day.&rdquo; &mdash; jkk"
         },
         "welcomeMotto": {
-            "zh": "热爱 忠诚 荣光",
-            "en": "Passion Loyalty Glory"
+            "zh": "热爱 · 忠诚 · 荣光",
+            "en": "Passion · Loyalty · Glory"
         }
     },
     "about": {
