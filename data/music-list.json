@@ -3,8 +3,8 @@
     "_instruction": "每首曲目包含 name、url 与 type。type 可为 auto、audio 或 video；video 只输出声音，不显示画面。最多10首。",
     "songs": [
         {
-            "name": "贝多芬五",
-            "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6f/Ludwig_van_Beethoven_-_Symphony_No._5_in_C_minor%2C_Op._67_-_I._Allegro_con_brio.ogg/Ludwig_van_Beethoven_-_Symphony_No._5_in_C_minor%2C_Op._67_-_I._Allegro_con_brio.ogg.mp3",
+            "name": "正在调试中",
+            "url": "https",
             "type": "auto"
         }
     ]
