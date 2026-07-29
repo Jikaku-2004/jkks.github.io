@@ -537,7 +537,7 @@
 
     function applyLanguage(lang) {
         // 欢迎页关键词（支持 content.json 覆盖，且使用 innerHTML 渲染 HTML 内容）
-        const WELCOME_KEYS = ['welcomeTitle','welcomeSubtitle','welcomeDesc','welcomeQuote'];
+        const WELCOME_KEYS = ['welcomeTitle','welcomeMotto','welcomeDesc','welcomeQuote'];
         // 更新所有 data-key 元素
         $$('[data-key]').forEach(el => {
             const key = el.dataset.key;

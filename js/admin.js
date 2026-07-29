@@ -24,6 +24,7 @@
 
     const WELCOME_FIELDS = {
         welcomeTitle: { zh: '欢迎来到Jikaku的个人网页', en: "Welcome to Jikaku's Personal Page" },
+        welcomeMotto: { zh: '热爱 忠诚 荣光', en: 'Passion Loyalty Glory' },
         welcomeDesc: { zh: '<p>这里是我记录阅读、艺术、运动与研究的个人空间。</p><p>请从左侧导航栏选择感兴趣的分类开始探索。</p>', en: '<p>A personal space for recording reading, art, sports, and research.</p><p>Choose a category from the sidebar to start exploring.</p>' },
         welcomeQuote: { zh: '“今天会是一个好日子” —— jkk', en: '&ldquo;Today will be a good day&rdquo; &mdash; jkk' }
     };
@@ -288,6 +289,12 @@
                 el.innerHTML=val;
             }
         });
+        // 更新 motto
+        var mottoEl = document.getElementById('adminMotto');
+        if (mottoEl) {
+            var mottoVal = (siteWelcome.welcomeMotto && siteWelcome.welcomeMotto[lang]) ? siteWelcome.welcomeMotto[lang] : WELCOME_FIELDS.welcomeMotto[lang];
+            mottoEl.textContent = mottoVal;
+        }
     }
 
     function showContact(){
