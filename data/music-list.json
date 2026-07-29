@@ -3,9 +3,9 @@
     "_instruction": "每首曲目包含 name、url 与 type。type 可为 auto、audio 或 video；video 只输出声音，不显示画面。最多10首。",
     "songs": [
         {
-            "name": "万能青年旅店",
-            "url": "<iframe src=\"//player.bilibili.com/player.html?isOutside=true&aid=830391138&bvid=BV19u4y1D7yJ&cid=1253588024&p=1\" scrolling=\"no\" border=\"0\" frameborder=\"no\" framespacing=\"0\" allowfullscreen=\"true\"></iframe>",
-            "type": "video"
+            "name": "贝多芬五",
+            "url": "https://upload.wikimedia.org/wikipedia/commons/transcoded/6/6f/Ludwig_van_Beethoven_-_Symphony_No._5_in_C_minor%2C_Op._67_-_I._Allegro_con_brio.ogg/Ludwig_van_Beethoven_-_Symphony_No._5_in_C_minor%2C_Op._67_-_I._Allegro_con_brio.ogg.mp3",
+            "type": "auto"
         }
     ]
 }
