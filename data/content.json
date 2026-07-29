@@ -244,38 +244,6 @@
                 "images": [],
                 "videos": [],
                 "links": []
-            },
-            {
-                "id": "new-1785254567840",
-                "title_zh": "",
-                "title_en": "",
-                "date": "2026-07-28",
-                "tags_zh": [],
-                "tags_en": [],
-                "content_zh": "",
-                "content_en": "",
-                "images": [],
-                "videos": [],
-                "links": []
-            },
-            {
-                "id": "new-1785264238073",
-                "title_zh": "最后一封信",
-                "title_en": "Last Letter",
-                "date": "2026-07-28",
-                "tags_zh": [
-                    "岩井俊二",
-                    "日本"
-                ],
-                "tags_en": [
-                    "Shunji Iwai",
-                    "Japan"
-                ],
-                "content_zh": "",
-                "content_en": "",
-                "images": [],
-                "videos": [],
-                "links": []
             }
         ],
         "tv": [
@@ -658,7 +626,7 @@
             "en": "Passion · Loyalty · Glory"
         },
         "welcomeDesc": {
-            "zh": "<p>这里是我记录阅读、艺术、运动与研究的个人空间。</p><p>请从左侧导航栏选择感兴趣的分类开始探索。</p>",
+            "zh": "<p>这里是我记录阅读、艺术、运动与研究的个人空间。</p><p>请从左侧导航栏选择感兴趣的分类开始探索。</p>\n正在准备中……",
             "en": "<p>A personal space for recording reading, art, sports, and research.</p><p>Choose a category from the sidebar to start exploring.</p>"
         },
         "welcomeQuote": {
