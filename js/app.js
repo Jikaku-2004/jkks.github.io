@@ -329,6 +329,7 @@
     function showContactPage() {
         welcomePage.style.display = 'none';
         categoryPage.style.display = 'none';
+        aboutPage.style.display = 'none';
         contactPage.style.display = 'flex';
 
         const contact = Object.keys(siteContact).length > 0 ? siteContact : (SITE_DATA.contact || {});
