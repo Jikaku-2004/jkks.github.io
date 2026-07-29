@@ -283,7 +283,7 @@
         var lang=currentLang;
         Object.keys(WELCOME_FIELDS).forEach(function(k){
             var b=document.querySelector('.editable-block[data-key="'+k+'"]'); if(!b)return;
-            var el=b.querySelector('.welcome-title,.welcome-subtitle,.welcome-desc,.welcome-quote');
+            var el=b.querySelector('.welcome-title,.welcome-subtitle,.welcome-desc,.welcome-quote,.welcome-status');
             if(el){
                 var val = (siteWelcome[k] && siteWelcome[k][lang]) ? siteWelcome[k][lang] : WELCOME_FIELDS[k][lang];
                 el.innerHTML=val;
