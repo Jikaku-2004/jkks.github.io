@@ -8,7 +8,7 @@
                 "en": "Reading"
             },
             "desc": {
-                "zh": "阅读、电影、音乐等输入方面",
+                "zh": "阅读、电影、音乐等输入方面……对我产生了影响的一些作品",
                 "en": "Books, movies, and video reviews and thoughts"
             },
             "subItems": [
@@ -99,7 +99,7 @@
                 {
                     "id": "other-sports",
                     "label": {
-                        "zh": "其他运动",
+                        "zh": "其他",
                         "en": "Other Sports"
                     }
                 }
@@ -230,19 +230,17 @@
         "movies": [
             {
                 "id": "example-movie",
-                "title_zh": "情书",
-                "title_en": "Love Letter",
+                "title_zh": "岩井俊二",
+                "title_en": "Shunji Iwai",
                 "date": "2026-07-28",
                 "tags_zh": [
-                    "岩井俊二",
                     "日本"
                 ],
                 "tags_en": [
-                    "Shunji Iwai",
                     "Japan"
                 ],
-                "content_zh": "关于爱，生死，我们如何去应对失去。",
-                "content_en": "Regarding love, life and death, and how do we deal with loss?",
+                "content_zh": "**情书**\n关于爱，生死，我们如何去应对失去。\n**最后一封信**",
+                "content_en": "**Love Letter**\nRegarding love, life and death, and how do we deal with loss?\n**Last Leteer**",
                 "images": [],
                 "videos": [],
                 "links": []
@@ -481,7 +479,7 @@
                 "date": "2026-07-28",
                 "tags_zh": [],
                 "tags_en": [],
-                "content_zh": "1",
+                "content_zh": "基于本人在漳州的公共球场的经验……",
                 "content_en": "",
                 "images": [],
                 "videos": [],
@@ -621,13 +619,13 @@
             {
                 "id": "new-1785269014806",
                 "title_zh": "赤色彗星",
-                "title_en": "red comet",
-                "date": "2026-07-28",
+                "title_en": "Red Comet",
+                "date": "2022-01-01",
                 "tags_zh": [
                     "小说"
                 ],
                 "tags_en": [],
-                "content_zh": "",
+                "content_zh": "学生一方面对于学科知识非常充盈、一方面对这个世界一无所知。这形成了一种张力……",
                 "content_en": "",
                 "images": [],
                 "videos": [],
